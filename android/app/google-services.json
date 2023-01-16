@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "687184224546",
+    "project_id": "o2fit-26235",
+    "storage_bucket": "o2fit-26235.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687184224546:android:9b6fc19f117605e881057b",
+        "android_client_info": {
+          "package_name": "com.o2fitt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "687184224546-3qsfo6n9m4qho8ro9ribsmdl4qn0adg2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.o2fitt",
+            "certificate_hash": "8a4a6d38ae6452299042193765aad0c7d7e50868"
+          }
+        },
+        {
+          "client_id": "687184224546-c3crm2o1ihjcbrs5hkqnc25ned6dnd09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdR1KFyl3-hYxtmhsZEIn1V1oPuFbBJ-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "687184224546-c3crm2o1ihjcbrs5hkqnc25ned6dnd09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

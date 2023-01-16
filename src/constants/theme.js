@@ -1,0 +1,26 @@
+export const defaultTheme = {
+    primaryColor : "#ff8000",
+    primaryLightColor : "#FFC6B6",
+    accentColor : "#af61df",
+    lightBackground : "#fff",
+    darkText : "#000",
+    error : "#FF2400",
+    transparent : "transparent",
+    dialogBackground : 'rgba(0,0,0,.35)',
+    gray : "#828282",
+    lightGray : "#C7C7C7",
+    grayBackground : "#F6F6F6",
+    green : "#3EB489",
+    green2 : "#28B1BB",
+    blue : "#37AAF6",
+    lightText : "#fff",
+    border : "#EFEFF4",
+    lightGray2 : "#575757",
+    darkGray : "#858585",
+    subText : "#A9A9AC",
+    mainText : "#5D5D5D",
+    gold : "#FF900D",
+    lightGrayBackground : "#FBFBFB",
+    white:"#fff"
+
+}

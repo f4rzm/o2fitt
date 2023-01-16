@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 47 47" style="enable-background:new 0 0 47 47;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#EA3A42;}
+	.st1{fill:#ED1C24;}
+	.st2{fill:#FAFCFB;}
+	.st3{fill:#FF0000;}
+	.st4{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<title>archery</title>
+<g id="archery">
+	<circle class="st0" cx="23.5" cy="23.5" r="22.9"/>
+	<circle class="st1" cx="23.5" cy="23.5" r="22.9"/>
+	<path class="st2" d="M23.5,41.8c-10.1,0-18.3-8.2-18.3-18.3S13.4,5.2,23.5,5.2s18.3,8.2,18.3,18.3c0,4.9-1.9,9.5-5.4,12.9
+		C33,39.9,28.4,41.8,23.5,41.8z"/>
+	<path class="st1" d="M23.5,37.2C16,37.2,9.8,31,9.8,23.5S16,9.7,23.5,9.8c7.5,0,13.7,6.1,13.7,13.7c0,3.7-1.4,7.1-4,9.7
+		C30.6,35.8,27.2,37.2,23.5,37.2z"/>
+	<path class="st2" d="M23.5,32.7c-5.1,0-9.2-4.1-9.2-9.2s4.1-9.2,9.2-9.2s9.2,4.1,9.2,9.2c0,2.4-1,4.7-2.7,6.5
+		C28.2,31.7,25.9,32.7,23.5,32.7z"/>
+	<path class="st3" d="M23.5,27.2c-2,0-3.7-1.6-3.7-3.7s1.6-3.7,3.7-3.7c1,0,1.9,0.4,2.6,1.1c1.4,1.4,1.4,3.8,0,5.3
+		C25.4,26.7,24.5,27.2,23.5,27.2z"/>
+	<line class="st4" x1="23.5" y1="23.5" x2="44.9" y2="2"/>
+	<g>
+		<polygon points="37.3,9.5 40.3,9.8 45.2,5 42.6,4.3 		"/>
+		<polygon points="37.4,9.6 37.1,6.7 41.9,1.8 42.6,4.4 		"/>
+	</g>
+</g>
+</svg>

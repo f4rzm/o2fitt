@@ -1,0 +1,65 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Almarai-Bold.ttf",
+      "sha1": "91e36b6ef56ff61b29ddc8ff9a57ee1b0cb84cd2"
+    },
+    {
+      "path": "assets/fonts/Almarai-Regular.ttf",
+      "sha1": "072a431232b97e251e354a24e741e15b2024e913"
+    },
+    {
+      "path": "assets/fonts/IRANSans.ttf",
+      "sha1": "f384346e328d77a7ab23348363d6d57d333f6242"
+    },
+    {
+      "path": "assets/fonts/IRANSansMobile_numberFa.ttf",
+      "sha1": "7307a575d6dd089e5717a6ad566150398f0c14cf"
+    },
+    {
+      "path": "assets/fonts/IRANSans_Bold.ttf",
+      "sha1": "deca9775d9254d23c400f88f17cf3493c8478090"
+    },
+    {
+      "path": "assets/fonts/IRANSans_Light.ttf",
+      "sha1": "4920991d8f9e49f8e395c07f13c5a963faef8a24"
+    },
+    {
+      "path": "assets/fonts/IRANYekanMobileFN-Bold.ttf",
+      "sha1": "e61861090e90d7bf35a09065305b225bb2a53d11"
+    },
+    {
+      "path": "assets/fonts/IRANYekanMobileFN.ttf",
+      "sha1": "807987de637449ca48cff845d218f993d94f0a74"
+    },
+    {
+      "path": "assets/fonts/O2Fit 2021-03-01 14-52-43/DistributionSummary.plist",
+      "sha1": "3b9578fb03ce4cb69405e048af8b220e49e3772c"
+    },
+    {
+      "path": "assets/fonts/O2Fit 2021-03-01 14-52-43/ExportOptions.plist",
+      "sha1": "8defa9afdd9e808bb6197c5f520642fde341b278"
+    },
+    {
+      "path": "assets/fonts/O2Fit 2021-03-01 14-52-43/Packaging.log",
+      "sha1": "352b807dd76ef73770c78f8b1d18d6c51223df4e"
+    },
+    {
+      "path": "assets/fonts/OpenSans-Bold.ttf",
+      "sha1": "1e3704ee48b5ff7e582488ead87b05249f14dc1c"
+    },
+    {
+      "path": "assets/fonts/OpenSans-Regular.ttf",
+      "sha1": "babe8dce93a3e48b6c3c79720a0c048e88dd1fe7"
+    },
+    {
+      "path": "assets/fonts/Roboto-Light.ttf",
+      "sha1": "51dbae4543aaa10096e344e48fcffe468bd314a9"
+    },
+    {
+      "path": "assets/fonts/Roboto-Regular.ttf",
+      "sha1": "84d102488738b0ebbc7a5087973effbd54c95bd5"
+    }
+  ]
+}

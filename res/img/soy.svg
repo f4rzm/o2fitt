@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="17.316" viewBox="0 0 22 17.316">
+  <g id="Group_3562" data-name="Group 3562" transform="translate(-106.833 -16.394)">
+    <g id="Group_3554" data-name="Group 3554" transform="translate(-22.564 -508.409)">
+      <g id="Group_3549" data-name="Group 3549" transform="translate(129.397 524.803)">
+        <g id="Group_3548" data-name="Group 3548" transform="translate(0 0)">
+          <path id="Path_8293" data-name="Path 8293" d="M140.405,524.8c-2.878,0-9.071.262-10.554,3.315-1.832,3.75,2.181,6.978,6.716,7.851h.052c-.014-.017.035-.022.21,0,3.489.61,8.373-.611,10.118-4.012C148.953,528.031,143.807,524.8,140.405,524.8Z" transform="translate(-129.397 -524.803)" fill="#ebb053"/>
+        </g>
+      </g>
+      <g id="Group_3550" data-name="Group 3550" transform="translate(129.397 526.029)" opacity="0.5" style="mix-blend-mode: multiply;isolation: isolate">
+        <path id="Path_8294" data-name="Path 8294" d="M147.1,532.917a6.141,6.141,0,0,1-4.335,5.378c-3.227,1.134-7.676,1.221-10.38-1.134-2.16-1.812-1.814-5.068-.076-6.973a4.658,4.658,0,0,0-2.454,2.089c-1.832,3.75,2.181,6.978,6.716,7.851h.052c-.014-.017.035-.022.21,0,3.489.61,8.373-.611,10.118-4.012A3.631,3.631,0,0,0,147.1,532.917Z" transform="translate(-129.397 -530.188)" fill="#ebb053"/>
+      </g>
+      <g id="Group_3553" data-name="Group 3553" transform="translate(136.704 524.883)">
+        <g id="Group_3551" data-name="Group 3551" transform="translate(0 0)" opacity="0.5" style="mix-blend-mode: multiply;isolation: isolate">
+          <path id="Path_8295" data-name="Path 8295" d="M163.537,525.19c-.756,0-3.14.64-1.454,1.279a6.262,6.262,0,0,0,3.9-.291c1.1-.989-1.716-1.105-2.413-.989" transform="translate(-161.493 -525.153)" fill="#bb7e48"/>
+        </g>
+        <g id="Group_3552" data-name="Group 3552" transform="translate(0.692 0.226)" opacity="0.5">
+          <path id="Path_8296" data-name="Path 8296" d="M166.047,526.156c-.557,0-2.327.622-1.072.47a10.907,10.907,0,0,1,2.917-.044c.815-.363-1.31-.469-1.824-.427" transform="translate(-164.535 -526.147)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="Group_3555" data-name="Group 3555" transform="translate(-18.564 -502.409)">
+      <g id="Group_3549-2" data-name="Group 3549" transform="translate(129.397 524.803)">
+        <g id="Group_3548-2" data-name="Group 3548" transform="translate(0 0)">
+          <path id="Path_8293-2" data-name="Path 8293" d="M140.405,524.8c-2.878,0-9.071.262-10.554,3.315-1.832,3.75,2.181,6.978,6.716,7.851h.052c-.014-.017.035-.022.21,0,3.489.61,8.373-.611,10.118-4.012C148.953,528.031,143.807,524.8,140.405,524.8Z" transform="translate(-129.397 -524.803)" fill="#ebb053"/>
+        </g>
+      </g>
+      <g id="Group_3550-2" data-name="Group 3550" transform="translate(129.397 526.029)" opacity="0.5" style="mix-blend-mode: multiply;isolation: isolate">
+        <path id="Path_8294-2" data-name="Path 8294" d="M147.1,532.917a6.141,6.141,0,0,1-4.335,5.378c-3.227,1.134-7.676,1.221-10.38-1.134-2.16-1.812-1.814-5.068-.076-6.973a4.658,4.658,0,0,0-2.454,2.089c-1.832,3.75,2.181,6.978,6.716,7.851h.052c-.014-.017.035-.022.21,0,3.489.61,8.373-.611,10.118-4.012A3.631,3.631,0,0,0,147.1,532.917Z" transform="translate(-129.397 -530.188)" fill="#ebb053"/>
+      </g>
+      <g id="Group_3553-2" data-name="Group 3553" transform="translate(135.704 525.883)">
+        <g id="Group_3551-2" data-name="Group 3551" transform="translate(0 0)" opacity="0.5" style="mix-blend-mode: multiply;isolation: isolate">
+          <path id="Path_8295-2" data-name="Path 8295" d="M164.11,525.2c-.968,0-4.02.82-1.861,1.638a8.016,8.016,0,0,0,4.988-.372c1.414-1.266-2.2-1.415-3.09-1.266" transform="translate(-161.493 -525.153)" fill="#bb7e48"/>
+        </g>
+        <g id="Group_3552-2" data-name="Group 3552" transform="translate(0.886 0.29)" opacity="0.5">
+          <path id="Path_8296-2" data-name="Path 8296" d="M166.471,526.158c-.713,0-2.98.8-1.372.6a13.965,13.965,0,0,1,3.734-.056c1.043-.465-1.677-.6-2.336-.546" transform="translate(-164.535 -526.147)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+<svg id="icons_info_black_copy" data-name="icons/info/black copy" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="Group" transform="translate(22 22) rotate(180)">
+    <path id="Path_5" data-name="Path 5" d="M1,0V3" transform="translate(10 8)" fill="none" stroke="#00c221" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+    <g id="Oval" fill="none" stroke="#00c221" stroke-miterlimit="10" stroke-width="2">
+      <circle cx="11" cy="11" r="11" stroke="none"/>
+      <circle cx="11" cy="11" r="10" fill="none"/>
+    </g>
+    <g id="Oval-2" data-name="Oval" transform="translate(10 13)" fill="#c1c7d0" stroke="#00c221" stroke-miterlimit="10" stroke-width="2">
+      <circle cx="1" cy="1" r="1" stroke="none"/>
+      <circle cx="1" cy="1" fill="none"/>
+    </g>
+  </g>
+  <g id="Group-2" data-name="Group" transform="translate(22 22) rotate(180)">
+    <path id="Path_5-2" data-name="Path 5" d="M1,0V3" transform="translate(10 8)" fill="none" stroke="#00c221" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
+    <g id="Oval-3" data-name="Oval" fill="none">
+      <path d="M11,0A11,11,0,1,1,0,11,11,11,0,0,1,11,0Z" stroke="none"/>
+      <path d="M 11 2 C 6.037380218505859 2 2 6.037380218505859 2 11 C 2 15.96261978149414 6.037380218505859 20 11 20 C 15.96261978149414 20 20 15.96261978149414 20 11 C 20 6.037380218505859 15.96261978149414 2 11 2 M 11 0 C 17.07513046264648 0 22 4.924869537353516 22 11 C 22 17.07513046264648 17.07513046264648 22 11 22 C 4.924869537353516 22 0 17.07513046264648 0 11 C 0 4.924869537353516 4.924869537353516 0 11 0 Z" stroke="none" fill="#00c221"/>
+    </g>
+    <g id="Oval-4" data-name="Oval" transform="translate(10 13)" fill="#c1c7d0" stroke="#00c221" stroke-miterlimit="10" stroke-width="2">
+      <circle cx="1" cy="1" r="1" stroke="none"/>
+      <circle cx="1" cy="1" fill="none"/>
+    </g>
+  </g>
+</svg>
