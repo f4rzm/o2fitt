@@ -326,12 +326,12 @@ const Tabs = (props) => {
   return (
     <>
 
-      <SafeAreaView style={{ flex: 1, zIndex: 10 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Tab.Navigator
           tabBar={props => <TabBar {...props} lang={lang} profile={profile} />}
           initialRouteName="HomeRouter"
           backBehavior="firstRoute"
-          screenOptions={{headerShown:false}}
+          screenOptions={{ headerShown: false }}
         >
           <Tab.Screen name="HomeRouter" component={HomeRouter} />
           <Tab.Screen name="DailyRouter" component={DailyRouter} />

@@ -11,6 +11,7 @@ import { defaultTheme } from '../constants/theme';
 import DrawerItems from '../components/DrawerComponents/DrawerItems';
 
 const DrawerNavigator = (props) => {
+
     const Drawer = createDrawerNavigator()
 
     const profile = useSelector(state => state.profile)

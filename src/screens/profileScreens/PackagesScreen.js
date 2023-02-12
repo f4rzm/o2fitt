@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { AppState, View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, ActivityIndicator, Linking, TextInput, TouchableWithoutFeedback, Easing } from 'react-native'
 import { ConfirmButton, Information, Toolbar, DietCaloriePayment, DiscountsList } from '../../components'
 import { useSelector } from 'react-redux'
@@ -23,9 +23,22 @@ import { updateProfileLocaly } from '../../redux/actions'
 import { setIsBuy } from '../../redux/actions/diet'
 // import { useBazaar } from '@cafebazaar/react-native-poolakey'
 import { setPackageSale } from '../../redux/actions/user'
+import BottomSheet from '@gorhom/bottom-sheet';
 
 
 function PackagesScreen(props) {
+
+    // ref
+    const bottomSheetRef = useRef < BottomSheet > (null);
+
+    // variables
+    const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+    // callbacks
+    const handleSheetChanges = useCallback((number) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
     const dispatch = useDispatch()
     // console.warn("this is packages props",props.route.params);
     const lang = useSelector(state => state.lang)
@@ -807,6 +820,16 @@ function PackagesScreen(props) {
                     trackingCode={trackingCode}
                 />
             }
+            {/* <BottomSheet
+                ref={bottomSheetRef}
+                index={1}
+                snapPoints={snapPoints}
+                onChange={handleSheetChanges}
+            >
+                <View style={styles.contentContainer}>
+                    <Text>Awesome 🎉</Text>
+                </View>
+            </BottomSheet> */}
         </SafeAreaView>
     )
 }

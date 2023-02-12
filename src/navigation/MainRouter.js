@@ -1,4 +1,4 @@
-import  React from "react"
+import React from "react"
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -96,9 +96,10 @@ const MainRoute = props => {
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
-                animationEnabled: false
+                animationEnabled: false,
+
             }}
-            
+
         >
             {
                 app.appIsLoading ?
@@ -106,17 +107,17 @@ const MainRoute = props => {
                     auth.access_token ?
                         profile.id && profile.id > 0 && parseInt(specification.weightSize) > 0 ?
                             <>
-                                <Stack.Screen 
-                                initialParams={{
+                                <Stack.Screen
+                                    initialParams={{
                                         lang: lang,
                                         profile: profile,
                                         auth: auth,
                                         app: app,
                                         user: user
-                                    }} 
-                                    name="Drawer" 
+                                    }}
+                                    name="Drawer"
                                     component={DrawerNavigator}
-                                     />
+                                />
                                 {/* <Stack.Screen
                                     name="Tabs"
                                     component={Tabs}
@@ -129,7 +130,7 @@ const MainRoute = props => {
                                         user: user
                                     }}
                                 /> */}
-                                <Stack.Screen name="EditGoalScreen" component={EditGoalScreen} options={options} />
+                                <Stack.Screen name="EditGoalScreen" component={EditGoalScreen} />
                                 <Stack.Screen name="EditGoalNutritionScreen" component={EditGoalNutritionScreen} options={options} />
                                 <Stack.Screen name="EditGoalBodyScreen" component={EditGoalBodyScreen} options={options} />
                                 <Stack.Screen name="RegisterWeightScreen" component={RegisterWeightScreen} options={options} />
