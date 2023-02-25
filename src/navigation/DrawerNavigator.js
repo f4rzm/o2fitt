@@ -24,7 +24,7 @@ const DrawerNavigator = (props) => {
 
 
     const CustomDrawer = (props) => {
-        const width = useWindowDimensions().width * 0.3;
+        const width = useWindowDimensions().width * 0.7;
         return (
             <DrawerContentScrollView >
                 <DrawerHeader
@@ -61,9 +61,15 @@ const DrawerNavigator = (props) => {
             drawerStyle={{
                 width: dimensions.WINDOW_WIDTH * 0.8,
             }}
-            screenOptions={{ headerShown: false,drawerStatusBarAnimation:'fade' }}
+            screenOptions={{
+                headerShown: false,
+                drawerStatusBarAnimation: 'fade',
+                drawerStyle:{
+                    width: dimensions.WINDOW_WIDTH * 0.8,
+                }
+            }}
             drawerType='slide'
-            
+
         >
             <Drawer.Screen
                 name="Tabs"

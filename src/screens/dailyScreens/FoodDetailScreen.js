@@ -109,7 +109,7 @@ const FoodDetailScreen = (props) => {
     value: '',
     measureUnitId: 0,
     foodMeal: 0,
-    insertDate:props.route.params.date
+    insertDate: props.route.params.date
       ? props.route.params.date
       : moment().format('YYYY-MM-DD'),
     foodNutrientValue: new Array(34).fill(0),
@@ -235,7 +235,7 @@ const FoodDetailScreen = (props) => {
           } else {
             foodMeasureunit = [...retrivedFood.measureUnits];
           }
-         // console.warn({ ffffff: f.food });
+          // console.warn({ ffffff: f.food });
 
 
           //  let unitData= allMeasureUnits.filter((element) => foodMeasureunit.includes(element.id))
@@ -302,11 +302,11 @@ const FoodDetailScreen = (props) => {
                 ? props.route.params.meal.measureUnitId
                 : retrivedFood.measureUnits[0].id,
             foodNutrientValue: nutrientValue,
-            measureUnitName:props.route.params &&
-            props.route.params.meal &&
-            props.route.params.meal.measureUnitName
-            ? props.route.params.meal.measureUnitName
-            : measureUnits[0].name,
+            measureUnitName: props.route.params &&
+              props.route.params.meal &&
+              props.route.params.meal.measureUnitName
+              ? props.route.params.meal.measureUnitName
+              : measureUnits[0].name,
           });
         } else {
           console.warn("log")
@@ -413,7 +413,7 @@ const FoodDetailScreen = (props) => {
             } else {
               updateSelectedMeasureUnit(retrivedFood.measureUnits[0]);
             }
-            console.log('retri',retrivedFood);
+            console.log('retri', retrivedFood);
             setMeal({
               ...meal,
               measureUnitId:
@@ -423,11 +423,11 @@ const FoodDetailScreen = (props) => {
                   ? props.route.params.meal.measureUnitId
                   : retrivedFood.measureUnits[0],
               foodNutrientValue: nutrientValue,
-              measureUnitName:props.route.params &&
-              props.route.params.meal &&
-              props.route.params.meal.measureUnitName
-              ? props.route.params.meal.measureUnitName
-              : measureUnits[0].name,
+              measureUnitName: props.route.params &&
+                props.route.params.meal &&
+                props.route.params.meal.measureUnitName
+                ? props.route.params.meal.measureUnitName
+                : measureUnits[0].name,
             });
           } else {
             console.warn("log")
@@ -445,11 +445,11 @@ const FoodDetailScreen = (props) => {
     let url = null;
 
     if (!isNaN(parseInt(food.personalFoodId))) {
-      console.error("personal");
+
       url =
         urls.foodBaseUrl + urls.personalFood + `?foodId=${food.personalFoodId}`;
     } else {
-      console.error("dd");
+
 
       url = urls.foodBaseUrl + urls.food + `?foodId=${food.foodId}`;
     }
@@ -514,16 +514,30 @@ const FoodDetailScreen = (props) => {
         allMeasureUnits.find((unit) => item === unit.id) !== undefined &&
         measureUnits.push(allMeasureUnits.find((unit) => item === unit.id)),
     );
-    setFood({
-      ...food,
-      ...response.data.data,
-      foodName: response.data.data.name[lang.langName],
-      measureUnits: measureUnits.map((unit) => ({
-        id: unit.id,
-        name: unit[lang.langName],
-        value: unit.value,
-      })),
-    });
+    if (food.personalFoodId > 0) {
+      setFood({
+        ...food,
+        ...response.data.data,
+        foodName: response.data.data.foodName,
+        measureUnits: measureUnits.map((unit) => ({
+          id: unit.id,
+          name: unit[lang.langName],
+          value: unit.value,
+        })),
+      });
+    }
+    else {
+      setFood({
+        ...food,
+        ...response.data.data,
+        foodName: response.data.data.name[lang.langName],
+        measureUnits: measureUnits.map((unit) => ({
+          id: unit.id,
+          name: unit[lang.langName],
+          value: unit.value,
+        })),
+      });
+    }
     setOriginalFood(response.data.data);
     if (
       props.route.params &&
@@ -534,20 +548,21 @@ const FoodDetailScreen = (props) => {
     } else {
       updateSelectedMeasureUnit(response.data.data.measureUnits[0]);
     }
+
     setMeal({
       ...meal,
       measureUnitId: meal.measureUnitId
         ? meal.measureUnitId
         : response.data.data.measureUnits[0],
       foodNutrientValue: response.data.data.nutrientValue,
-      measureUnitName:meal.measureUnitName
-      ? meal.measureUnitName
-      : response.data.data.measureUnitName[0],
+      measureUnitName: meal.measureUnitName
+        ? meal.measureUnitName
+        : response.data.data.measureUnitName[0],
     });
   };
 
   const getFailure = (err) => {
-    
+
     getFromDB()
   };
 
@@ -558,7 +573,7 @@ const FoodDetailScreen = (props) => {
   };
 
   const valueCahanged = (text) => {
-    
+
     (/^[0-9\.]+$/i.test(text) || text == '' || text == '.') ?
       setMeal({
         ...meal,
@@ -1069,7 +1084,7 @@ const FoodDetailScreen = (props) => {
               } else {
                 savePersonalFoodServer();
               }
-            } 
+            }
             else {
               setSaving(false);
               setButton1(null);
@@ -1082,7 +1097,7 @@ const FoodDetailScreen = (props) => {
                 visibilityTime: 800
               });
             }
-          } 
+          }
           else {
             // if (app.networkConnectivity) {
             //   if (
@@ -1098,35 +1113,35 @@ const FoodDetailScreen = (props) => {
             //     saveServer({ ...model });
             //   }
             // } else {
-              console.log('meal data', m);
-              offlineDB.allDocs({ include_docs: false }).then((records) => {
-                console.log('records', records.total_rows);
-                offlineDB.post({
-                  method: props.route.params.meal.insertDate ? 'put' : 'post',
-                  type: 'meal',
-                  url:props.route.params.meal.insertDate ? urls.foodBaseUrl2 + urls.userTrackFood: urls.foodBaseUrl + urls.userTrackFood,
-                  header: {
-                    headers: {
-                      Authorization: 'Bearer ' + auth.access_token,
-                      Language: lang.capitalName,
-                    },
+            console.log('meal data', m);
+            offlineDB.allDocs({ include_docs: false }).then((records) => {
+              console.log('records', records.total_rows);
+              offlineDB.post({
+                method: props.route.params.meal.insertDate ? 'put' : 'post',
+                type: 'meal',
+                url: props.route.params.meal.insertDate ? urls.foodBaseUrl2 + urls.userTrackFood : urls.foodBaseUrl + urls.userTrackFood,
+                header: {
+                  headers: {
+                    Authorization: 'Bearer ' + auth.access_token,
+                    Language: lang.capitalName,
                   },
-                  params: {
+                },
+                params: {
+                  ...m,
+                  foodId:
+                    parseInt(food.personalFoodId) > 0 ? null : food.foodId,
+                },
+                index: records.total_rows
+              })
+                .then((res) => {
+                  console.log(res);
+                  saveToDB({
                     ...m,
                     foodId:
                       parseInt(food.personalFoodId) > 0 ? null : food.foodId,
-                  },
-                  index: records.total_rows
-                })
-                  .then((res) => {
-                    console.log(res);
-                    saveToDB({
-                      ...m,
-                      foodId:
-                        parseInt(food.personalFoodId) > 0 ? null : food.foodId,
-                    });
                   });
-              })
+                });
+            })
             // }
           }
 
@@ -1287,7 +1302,7 @@ const FoodDetailScreen = (props) => {
                 onChangeText={valueCahanged}
                 keyboardType="decimal-pad"
                 placeholder="0"
-                editable={food.measureUnits &&food.measureUnits.length > 1?true:false}
+                editable={food.measureUnits && food.measureUnits.length > 1 ? true : false}
               />
               {food.measureUnits &&
                 food.measureUnits.length > 1 &&

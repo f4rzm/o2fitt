@@ -1,5 +1,13 @@
 {
   "name": "O2Fit",
   "displayName": "O2Fit",
-  "orientation": "landscape"
+  "orientation": "landscape",
+  "plugins": [
+    [
+      "react-native-vision-camera",
+      {
+        "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera."
+      }
+    ]
+  ]
 }

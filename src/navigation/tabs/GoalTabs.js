@@ -27,15 +27,28 @@ const GoalTabs = (props) => {
   return (
     <Tab.Navigator
       sceneContainerStyle={{ backgroundColor: null }}
-      tabBarOptions={{
-        activeTintColor: defaultTheme.primaryColor,
-        inactiveTintColor: defaultTheme.mainText,
-        labelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, top: Platform.OS === "ios" ? moderateScale(0) : moderateScale(-2) },
-        indicatorStyle: { backgroundColor: defaultTheme.primaryColor },
-        style: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0, borderBottomWidth: 1.5, borderColor: defaultTheme.border },
+      // tabBarOptions={{
+      //   activeTintColor: defaultTheme.primaryColor,
+      //   inactiveTintColor: defaultTheme.mainText,
+      //   labelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, marginBottom: Platform.OS === "ios" ? moderateScale(0) : moderateScale(0) },
+      //   indicatorStyle: { backgroundColor: defaultTheme.primaryColor },
+      //   style: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0, },
+      //   showIcon: true,
+      //   tabStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
+        
+      // }}
+      screenOptions={{
+        tabBarActiveTintColor: defaultTheme.primaryColor,
+        tabBarInactiveTintColor: defaultTheme.mainText,
+        tabBarLabelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, bottom: Platform.OS === "ios" ? moderateScale(0) : moderateScale(4) },
+        tabBarIndicatorStyle: { backgroundColor: defaultTheme.primaryColor },
+        tabBarStyle: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0,borderTopLeftRadius:20,borderTopRightRadius:20 },
         showIcon: true,
-        tabStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
+        tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
+        tabBarPressColor:defaultTheme.lightGray,
+        
       }}
+
       lazy={true}
     >
       <Tab.Screen name="GoalWeightScreen" component={GoalWeightScreen}

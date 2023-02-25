@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     premiumText: {
-        fontSize: moderateScale(17),
+        fontSize: moderateScale(16),
         color:defaultTheme.darkText
     },
     text:{
-        fontSize:moderateScale(17)
+        fontSize:moderateScale(15)
     },
     text2:{
         fontSize:moderateScale(15)

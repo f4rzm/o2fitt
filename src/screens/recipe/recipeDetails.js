@@ -1,5 +1,5 @@
-import { View, Text, Image, ImageBackground, ActivityIndicator, Platform } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Image, ImageBackground, ActivityIndicator, Platform, TouchableOpacity, Animated } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { dimensions } from '../../constants/Dimensions';
 import { moderateScale } from 'react-native-size-matters';
 import { defaultTheme } from '../../constants/theme';
@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import { urls } from '../../utils/urls';
 import axios from 'axios';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { allMeasureUnits } from '../../utils/measureUnits';
 import { nutritions } from '../../utils/nutritions'
 import FastImage from 'react-native-fast-image';
+import { StyleSheet } from 'react-native';
 
 function RecipeDetails(props) {
     const cookType = [
@@ -75,6 +76,24 @@ function RecipeDetails(props) {
             arabic: "باخرة"
         },
     ]
+    const scrollX = useRef(new Animated.Value(0)).current
+    useEffect(() => {
+        setTimeout(() => {
+            onPressActivate(1)
+
+        }, 100);
+    }, [])
+
+
+    const onPressActivate = (inx) => {
+        Animated.spring(scrollX, {
+            toValue: -dimensions.WINDOW_WIDTH * 0.3 * inx,
+            useNativeDriver: true
+        }).start()
+    }
+
+
+
     const lang = useSelector((state) => state.lang);
     const auth = useSelector((state) => state.auth);
     const user = useSelector((state) => state.user);
@@ -145,18 +164,22 @@ function RecipeDetails(props) {
                                 style={{ width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH * 0.30 }}
                                 resizeMode={"cover"}
                             >
-                                <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                                <TouchableOpacity
+                                    style={styles.backBtn}
+                                    activeOpacity={0.9}
+                                    onPress={() => props.navigation.goBack()}>
                                     <Image
                                         source={require("../../../res/img/back.png")}
-                                        style={{ tintColor: defaultTheme.lightBackground, transform: [{ rotate: "180deg" }], margin: moderateScale(15), width: moderateScale(25), height: moderateScale(25) }}
+                                        style={{ tintColor: defaultTheme.mainText, transform: [{ rotate: "180deg" }], margin: moderateScale(10), width: moderateScale(20), height: moderateScale(20) }}
                                         resizeMode="contain"
+                                        
                                     />
                                 </TouchableOpacity>
                             </FastImage>
                         </View>
 
-                        <View style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: defaultTheme.lightBackground, marginTop: moderateScale(-30), borderRadius: 30, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, borderBottomWidth: 1, borderColor: defaultTheme.border }} >
-                            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(18), padding: moderateScale(10), color: defaultTheme.darkText, marginHorizontal: moderateScale(15),textAlign:"left" }}>{props.route.params.items.name}</Text>
+                        <View style={styles.foodName} >
+                            <Text style={[styles.foodNameText, { fontFamily: lang.font, }]}>{props.route.params.items.name}</Text>
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-evenly", paddingVertical: moderateScale(20) }}>
 
@@ -174,13 +197,16 @@ function RecipeDetails(props) {
                                 ))
                             }
                         </View>
-                        <View style={{ marginTop: moderateScale(15), width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: 13, alignItems: "center", flexDirection: "row", alignSelf: "center", justifyContent: "space-between", borderWidth: 1, borderColor: defaultTheme.border }}>
+                        <View style={styles.pagerContainer}>
                             {
-                                tabs.map((item) => {
+                                tabs.map((item, index) => {
                                     return (
                                         <TouchableOpacity
-                                            onPress={() => setSelectedTab(item.id)}
-                                            style={{ backgroundColor: item.id === selectedTab ? defaultTheme.primaryColor : defaultTheme.light, borderRadius: moderateScale(10), padding: moderateScale(10), paddingVertical: Platform.OS == "ios" ? moderateScale(10) : moderateScale(5), width: dimensions.WINDOW_WIDTH * 0.3 }}
+                                            onPress={() => {
+                                                setSelectedTab(item.id)
+                                                onPressActivate(index)
+                                            }}
+                                            style={{ zIndex: 10, borderRadius: moderateScale(10), padding: moderateScale(10), paddingVertical: Platform.OS == "ios" ? moderateScale(10) : moderateScale(5), width: dimensions.WINDOW_WIDTH * 0.3 }}
                                         >
                                             <Text style={{ fontSize: moderateScale(17), color: item.id === selectedTab ? defaultTheme.white : defaultTheme.gray, fontFamily: lang.font, alignSelf: "center" }}>{item.neme}</Text>
                                         </TouchableOpacity>
@@ -188,6 +214,7 @@ function RecipeDetails(props) {
                                 })
 
                             }
+                            <Animated.View style={{ position: "absolute", width: dimensions.WINDOW_WIDTH * 0.3, height: "100%", backgroundColor: defaultTheme.primaryColor, transform: [{ translateX: scrollX }], borderRadius: moderateScale(10) }} />
                         </View>
                         {
                             selectedTab == 2 ?
@@ -264,4 +291,47 @@ function RecipeDetails(props) {
         </>
     )
 }
+const styles = StyleSheet.create({
+    pagerContainer: {
+        marginTop: moderateScale(15),
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        borderRadius: 13,
+        alignItems: "center",
+        flexDirection: "row",
+        alignSelf: "center",
+        justifyContent: "space-between",
+        overflow: "hidden",
+        elevation: 5,
+        backgroundColor: "white",
+        shadowColor: defaultTheme.darkText,
+
+    },
+    foodName: {
+        width: dimensions.WINDOW_WIDTH,
+        backgroundColor: defaultTheme.lightBackground,
+        marginTop: moderateScale(-30),
+        borderRadius: 30,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        borderBottomWidth: 1,
+        borderColor: defaultTheme.border,
+        
+    },
+    backBtn: {
+        backgroundColor: "white",
+        position: "absolute",
+        elevation: 10,
+        margin: moderateScale(20),
+        borderRadius: moderateScale(10),
+        opacity: 0.8,
+
+    },
+    foodNameText: {
+        fontSize: moderateScale(18),
+        padding: moderateScale(10),
+        color: defaultTheme.darkText,
+        marginHorizontal: moderateScale(15),
+        textAlign: "left"
+    }
+})
 export default RecipeDetails;

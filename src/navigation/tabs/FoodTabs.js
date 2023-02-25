@@ -24,17 +24,17 @@ const FoodTabs = (props) => {
   return (
       <Tab.Navigator  
         sceneContainerStyle={{backgroundColor : null}}
-        tabBarOptions={{
-          scrollEnabled:true,
-          activeTintColor : defaultTheme.primaryColor,
-          inactiveTintColor : defaultTheme.mainText,
-          labelStyle: { fontSize: lang.langName === "persian"?moderateScale(14):moderateScale(11) , fontFamily : lang.font , top : Platform.OS === "ios" ? moderateScale(5) : moderateScale(-3)} ,
-          indicatorStyle : {backgroundColor : defaultTheme.primaryColor , height : moderateScale(1.5),alignSelf:"baseline"},
-          style: { backgroundColor: defaultTheme.lightBackground , justifyContent : "center" ,height : moderateScale(42),elevation : 0 , borderBottomWidth : 1 , borderColor : defaultTheme.border,alignItems:"center",width:dimensions.WINDOW_WIDTH},
-          showIcon: !hasCredit,
-          tabStyle : {flexDirection : "row" , alignItems : "center" , justifyContent:"center" , height : moderateScale(42) , width : dimensions.WINDOW_WIDTH*0.33333},
-          
-        }}
+        screenOptions={{
+        tabBarActiveTintColor: defaultTheme.primaryColor,
+        tabBarInactiveTintColor: defaultTheme.mainText,
+        tabBarLabelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, bottom: Platform.OS === "ios" ? moderateScale(0) : moderateScale(4) },
+        tabBarIndicatorStyle: { backgroundColor: defaultTheme.primaryColor },
+        tabBarStyle: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0,borderTopLeftRadius:20,borderTopRightRadius:20 },
+        tabBarShowIcon: !hasCredit,
+        tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
+        tabBarPressColor:defaultTheme.lightGray
+      }}
+      
         lazy={true}
       >
         <Tab.Screen 

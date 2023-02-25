@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This allows us to use your device microphone when we need to search food by voice search</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>If you need to search food or activity by voice, this allows us to access speech recognition.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>When you need to search for the name of a food or exercise by voice, it allows us to use speech Recognition</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -36,7 +44,40 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>IRANYekanMobileRegular.ttf</string>
+		<string>IRANYekanMobileBold.ttf</string>
+		<string>Almarai-Bold.ttf</string>
+		<string>Almarai-Regular.ttf</string>
+		<string>IRANSans_Bold.ttf</string>
+		<string>IRANSans_Light.ttf</string>
+		<string>IRANSans.ttf</string>
+		<string>IRANSansMobile_numberFa.ttf</string>
+		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>IRANYekanMobileFN.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>IRANYekanMobileFN-Bold.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -46,25 +87,14 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Almarai-Bold.ttf</string>
-		<string>Almarai-Regular.ttf</string>
-		<string>IRANSans.ttf</string>
-		<string>IRANSansMobile_numberFa.ttf</string>
-		<string>IRANSans_Bold.ttf</string>
-		<string>IRANSans_Light.ttf</string>
-		<string>IRANYekanMobileFN-Bold.ttf</string>
-		<string>IRANYekanMobileFN.ttf</string>
-		<string>OpenSans-Bold.ttf</string>
-		<string>OpenSans-Regular.ttf</string>
-		<string>Roboto-Light.ttf</string>
-		<string>Roboto-Regular.ttf</string>
-	</array>
 </dict>
 </plist>

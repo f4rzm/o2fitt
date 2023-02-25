@@ -41,6 +41,7 @@ function RecipeCatScreen(props) {
         { id: 3, image: require("../../../res/img/desert.png"), title: "دسر" },
         { id: 4, image: require("../../../res/img/beverage.png"), title: "نوشیدنی" },
         { id: 6, image: require("../../../res/img/vegtable.png"), title: "گیاه خواری" },
+        { id: 9, image: require("../../../res/img/keto.png"), title: "کتو" },
         { id: 7, image: require("../../../res/img/sweet.png"), title: "شیرینی" },
 
     ]
@@ -65,12 +66,15 @@ function RecipeCatScreen(props) {
                await DB.get(`${items.name}_${items.id}`)
                     .then(async (records) => {
                         recipesArray.push(records)
+                        if(records.recipe==null){
+                            console.warn(records.foodId);
+                        }
                     }).catch((err) => {
                     //    console.warn(err);
                     })
         
             if (recipe.length - 1 == index) {
-                console.warn(recipesArray);
+                // console.warn(recipesArray);
                 setLoading(false)
                 setRecipesCat(recipesArray)
             }

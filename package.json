@@ -41,7 +41,7 @@
     "pouchdb-find": "^8.0.0",
     "react": "18.2.0",
     "react-circular-progressbar": "^2.1.0",
-    "react-native": "0.71.0",
+    "react-native": "0.71.3",
     "react-native-background-actions": "^3.0.0",
     "react-native-barcode-mask": "^1.2.4",
     "react-native-chart-kit": "^6.12.0",
@@ -94,8 +94,7 @@
     "shamsi-date-converter": "^1.0.5",
     "uuid": "^9.0.0",
     "victory-native": "^36.6.8",
-    "vision-camera-code-scanner": "^0.2.0",
-    "vision-camera-qrcode-scanner": "^0.1.4"
+    "vision-camera-code-scanner": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
