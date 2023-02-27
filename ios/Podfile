@@ -25,13 +25,14 @@ target 'o2fitt' do
   
   config = use_native_modules!
 
-  use_modular_headers!
-  # pod 'Firebase', :modular_headers => false
-  # pod 'GoogleUtilities', :modular_headers => false
-  # pod 'FirebaseCoreInternal', :modular_headers => false
-  # pod 'FirebaseMessaging', :modular_headers => false
-  # pod 'FirebaseRemoteConfig', :modular_headers => false
-  # pod 'Firebase/Analytics', :modular_headers => false
+  # use_modular_headers!
+  pod 'Firebase', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseMessaging', :modular_headers => true
+  pod 'FirebaseRemoteConfig', :modular_headers => true
+  pod 'Firebase/Analytics', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera/Permission-Camera.podspec"
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone/Permission-Microphone.podspec"

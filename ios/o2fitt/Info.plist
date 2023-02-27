@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This allows us to use your device microphone when we need to search food by voice search</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>If you need to search food or activity by voice, this allows us to access speech recognition.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>When you need to search for the name of a food or exercise by voice, it allows us to use speech Recognition</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -43,8 +35,16 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This allows us to use your device microphone when we need to search food by voice search</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>If you need to search food or activity by voice, this allows us to access speech recognition.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>When you need to search for the name of a food or exercise by voice, it allows us to use speech Recognition</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>IRANYekanMobileRegular.ttf</string>
