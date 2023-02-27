@@ -1,5 +1,5 @@
 import {urls} from "../utils/urls"
-import qs from "qs"
+// import qs from "qs"
 import {RestController} from "../classess/RestController"
 
 export class Login {

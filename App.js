@@ -209,13 +209,11 @@ import { setMarketMessageId } from './src/redux/actions/user';
 import linking from './src/linking';
 import 'react-native-gesture-handler'
 import { moderateScale } from 'react-native-size-matters';
-// 
 import { persistReducer, persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 enableScreens();
 
-// Orientation.lockToPortrait()
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
