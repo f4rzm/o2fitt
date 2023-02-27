@@ -234,15 +234,16 @@ const GoalBodyScreen = props => {
                     />
                 </RowSpaceAround>
             </ScrollView>
-            <LinearGradient colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']} style={styles.buttonGradient}>
-                <View style={{zIndex:50,height:moderateScale(60),bottom:moderateScale(60)}}>
+            <LinearGradient colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']} style={[styles.buttonGradient,{height:moderateScale(100),bottom:moderateScale(30)}]}>
+                {/* <View style={{}}> */}
                     <ConfirmButton
                         lang={lang}
                         style={styles.editButton}
                         title={lang.changeGol}
                         leftImage={require("../../../res/img/edit.png")}
                         onPress={editGoal}
-                    /></View>
+                    />
+                    {/* </View> */}
             </LinearGradient>
             <View style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(50) }} />
 

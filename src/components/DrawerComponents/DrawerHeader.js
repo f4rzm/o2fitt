@@ -11,7 +11,7 @@ const DrawerHeader = (props) => {
     const profile = props.profile
     const specification=props.specification
     return (
-        <TouchableOpacity onPress={()=>navigation.navigate("EditProfileScreen")} style={styles.container}>
+        <TouchableOpacity onPress={()=>navigation.navigate("EditProfileScreen")} activeOpacity={0.9} style={styles.container}>
             <View style={{ flexDirection: "row", alignItems: "center",marginTop:moderateScale(20) }}>
                 <View style={styles.imgcontainer}>
                     <Image
@@ -21,7 +21,7 @@ const DrawerHeader = (props) => {
                     />
                 </View>
                 <View style={{ paddingHorizontal: moderateScale(15) }}>
-                    <Text style={[styles.profileName, { fontFamily: props.lang.font }]}>{props.profile.fullName}</Text>
+                   {profile.fullName&& <Text style={[styles.profileName, { fontFamily: props.lang.font }]}>{props.profile.fullName}</Text>}
                     <Text style={[styles.profileName, { fontFamily: props.lang.font }]}>{props.user.username}</Text>
                 </View>
             </View>
@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     },
     profileName: {
         color: defaultTheme.white,
-        fontSize: moderateScale(17)
+        fontSize: moderateScale(17),
+        textAlign:'left'
     },
     row: {
         flexDirection: "row",

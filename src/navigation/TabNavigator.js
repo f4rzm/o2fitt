@@ -9,7 +9,7 @@ import { urls } from "../utils/urls"
 import { RestController } from "../classess/RestController"
 import { TabBar, MarketModal, ConfirmButton, TabPlusButton, VpnErrprModal, NoInternetModal, Information } from "../components";
 import { LocalFoodsHandler } from "../classess/LocalFoodsHandler"
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NativeSplashScreen from 'react-native-splash-screen'
 import analytics from '@react-native-firebase/analytics';
 import { dimensions } from "../constants/Dimensions";
@@ -113,17 +113,18 @@ const Tabs = (props) => {
   }
 
   const onMarketMessageSuccess = async (res) => {
+    console.error(res.data.data);
     if (res.data.data) {
-      let history = await AsyncStorage.getItem("marketHistory")
-      history = history ? JSON.parse(history) : []
-      if (history.findIndex(item => item == res.data.data.id) === -1) {
-        history.push(res.data.data.id)
-        await AsyncStorage.setItem("marketHistory", JSON.stringify(history))
-        setTimeout(() => {
-          setMarketMsg(res.data.data)
-          setShowMarketDialog(true)
-        }, 800);
-      }
+      //   let history = await AsyncStorage.getItem("marketHistory")
+      //   history = history ? JSON.parse(history) : []
+      //   if (history.findIndex(item => item == res.data.data.id) === -1) {
+      //     history.push(res.data.data.id)
+      //     await AsyncStorage.setItem("marketHistory", JSON.stringify(history))
+      setTimeout(() => {
+        setMarketMsg(res.data.data)
+        setShowMarketDialog(true)
+      }, 800);
+      // }
     }
   }
 
@@ -176,7 +177,8 @@ const Tabs = (props) => {
   }, [profile])
 
   useEffect(() => {
-    const url = `${urls.orderBaseUrl + urls.order}GetOrdersByUserId?UserId=${profile.userId}`;
+    const url = `${urls.orderBaseUrl + urls.order}GetOrdersByUserId?UserId=${profile.userId
+      }`;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -247,7 +249,6 @@ const Tabs = (props) => {
     );
   }, [])
   const onSuccessGetToday = async (res) => {
-    console.warn(parseInt(moment(res.data.data.utcDateTime).format("YYYYMMDD")) > parseInt(moment().format("YYYYMMDD")) + 3);
     console.error(moment(res.data.data.utcDateTime).format("YYYYMMDD"), moment().format("YYYYMMDD"));
     await AsyncStorage.setItem("serverTime", moment(res.data.data.utcDateTime).format("YYYY-MM-DD"))
     setServerTime(moment(res.data.data.utcDateTime).format("YYYYMMDD"))
@@ -331,7 +332,6 @@ const Tabs = (props) => {
           tabBar={props => <TabBar {...props} lang={lang} profile={profile} />}
           initialRouteName="HomeRouter"
           backBehavior="firstRoute"
-          screenOptions={{ headerShown: false }}
         >
           <Tab.Screen name="HomeRouter" component={HomeRouter} />
           <Tab.Screen name="DailyRouter" component={DailyRouter} />
@@ -382,7 +382,7 @@ const Tabs = (props) => {
               title={lang.forceUpdateBtn}
               style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
               onPress={() => {
-                Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
+                Linking.openURL("https://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170")
               }}
             />
           </View>

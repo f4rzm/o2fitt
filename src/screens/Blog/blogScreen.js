@@ -5,7 +5,7 @@ import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
 import { MainToolbar, Toolbar } from '../../components'
 
-export default function BlogScreen(props) {
+export default function blogScreen(props) {
     console.warn(props.route.params.data.thumbUri)
     const lang = props.route.params.lang
     return (

@@ -1044,6 +1044,4 @@ export const ar =
     "accept":"السماح",
     "disagree":"لا",
     "setPhoneNumber":"تسجيل الدخول"
-
-
 }

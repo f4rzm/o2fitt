@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { moderateScale } from 'react-native-size-matters'
 import { dimensions } from '../constants/Dimensions'
 import { defaultTheme } from '../constants/theme'
-// import BlogIcon from '../../res/img/blogIcon'
+import BlogIcon from '../../res/img/blogIcon'
 
 export default function blogCard(props) {
     const lang = props.lang
@@ -14,10 +14,10 @@ export default function blogCard(props) {
                 <Text style={{ flex: 3, fontFamily: lang.font, paddingHorizontal: moderateScale(10), fontSize: moderateScale(14), color: defaultTheme.darkText, lineHeight: moderateScale(23),marginTop:moderateScale(10) }}>{lang.blogTitle}</Text>
             </View>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: moderateScale(10) }}>
-                {/* <BlogIcon
+                <BlogIcon
                     width={moderateScale(80)}
                     height={moderateScale(80)}
-                /> */}
+                />
 
             </View>
         </TouchableOpacity>

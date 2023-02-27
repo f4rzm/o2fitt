@@ -1,4 +1,4 @@
-import React, { Profiler } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Platform,
@@ -10,7 +10,7 @@ import {
   View,
   BackHandler
 } from 'react-native';
-import { ColumnWrapper, ProfileHeader, RowCenter, RowSpaceAround, ProfileRow, TwoOptionModal } from "../../components"
+import { ColumnWrapper, ProfileHeader, RowCenter, RowSpaceAround, ProfileRow, TwoOptionModal, ConfirmButton } from "../../components"
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
 import { useSelector, useDispatch } from 'react-redux'
@@ -18,6 +18,10 @@ import { moderateScale } from 'react-native-size-matters';
 import LottieView from 'lottie-react-native';
 import moment from "moment"
 import FastImage from 'react-native-fast-image';
+import { Modal } from 'react-native-paper';
+import Power from '../../../res/img/power.svg'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 
 const ProfileScreen = props => {
 
@@ -28,6 +32,7 @@ const ProfileScreen = props => {
   const profile = useSelector(state => state.profile)
   const [packageEndDate, updatePackageEndDate] = React.useState(moment().diff(moment(profile.pkExpireDate), "d"))
   const [optionalDialogVisible, setOptionalDialogVisible] = React.useState(false)
+  const [deletationModal, setDeletationModal] = useState(false)
 
   const pkExpireDate = moment(profile.pkExpireDate, "YYYY-MM-DDTHH:mm:ss")
   const today = moment()
@@ -111,11 +116,11 @@ const ProfileScreen = props => {
       onPress: () => props.navigation.navigate("MessagesScreen")
     },
     (Platform.OS === "android" || lang.langName !== "english") && user.countryId == 128 ?
-    {
-      text: lang.bills,
-      img: require("../../../res/img/bills.png"),
-      onPress: () => props.navigation.navigate("BillScreen")
-    }:null,
+      {
+        text: lang.bills,
+        img: require("../../../res/img/bills.png"),
+        onPress: () => props.navigation.navigate("BillScreen")
+      } : null,
     // {
     //   text: lang.security,
     //   img: require("../../../res/img/phonelock.png"),
@@ -147,111 +152,160 @@ const ProfileScreen = props => {
       onPress: () => Linking.openURL("https://o2fitt.com/?culture=" + lang.langLocaleAbout)
     },
     {
+      text: lang.deletation,
+      img: require("../../../res/img/cross.png"),
+      onPress: () => setDeletationModal(true)
+    },
+    {
       text: lang.references,
       img: require("../../../res/img/amaze.png"),
       onPress: () => props.navigation.navigate("ReferencesScreen")
     },
+
+
   ]).current
 
+  const deleteAccount=async()=>{
+   await AsyncStorage.clear().then(()=>{
+    AsyncStorage.setItem('deletedAccount',user.username).then(()=>{
+
+      RNRestart.Restart()
+    })
+   })
+  }
+
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-    >
-      <ProfileHeader
-        lang={lang}
-        user={user}
-        profile={profile}
-      />
-      <View style={{ backgroundColor: defaultTheme.lightBackground, height: moderateScale(50), borderRadius: moderateScale(20), marginTop: moderateScale(-15) }} />
-      <RowCenter>
-        {
-          user.countryId == 128 ? <>{
-            packageEndDate < 0 ?
-              <Text style={[styles.text2, { fontFamily: lang.font, marginTop: moderateScale(-60) }]} allowFontScaling={false}>
-                <Text style={[styles.text, { fontFamily: lang.titleFont, color: defaultTheme.primaryColor }]} allowFontScaling={false}>
+    <>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom:moderateScale(60)}}
+      >
+
+        <ProfileHeader
+          lang={lang}
+          user={user}
+          profile={profile}
+        />
+        <View style={{ backgroundColor: defaultTheme.lightBackground, height: moderateScale(50), borderRadius: moderateScale(20), marginTop: moderateScale(-15) }} />
+        <RowCenter>
+          {
+            user.countryId == 128 ? <>{
+              packageEndDate < 0 ?
+                <Text style={[styles.text2, { fontFamily: lang.font, marginTop: moderateScale(-60) }]} allowFontScaling={false}>
+                  <Text style={[styles.text, { fontFamily: lang.titleFont, color: defaultTheme.primaryColor }]} allowFontScaling={false}>
+                    {
+                      Math.abs(parseInt(packageEndDate)) + 1
+                    }
+                  </Text>
                   {
-                    Math.abs(parseInt(packageEndDate)) + 1
+                    " " + lang.yourAccountToDate1
+                  }
+                </Text> : <Text style={[styles.text, { fontFamily: lang.font, color: defaultTheme.primaryColor }]} allowFontScaling={false}>
+                  {
+                    lang.noSubscribe
                   }
                 </Text>
-                {
-                  " " + lang.yourAccountToDate1
-                }
-              </Text> : <Text style={[styles.text, { fontFamily: lang.font, color: defaultTheme.primaryColor }]} allowFontScaling={false}>
-                {
-                  lang.noSubscribe
-                }
-              </Text>
+            }
+            </>
+              : null
+
           }
-          </>
-            : null
-
-        }
-      </RowCenter>
-      <RowSpaceAround>
-        <ColumnWrapper>
-          <Text style={[styles.text, { fontFamily: lang.titleFont }]} allowFontScaling={false}>
-            {specification[1].weightSize + " kg"}
-          </Text>
-          <Text style={[styles.text2, { fontFamily: lang.font }]} allowFontScaling={false}>
-            {lang.lastWeight}
-          </Text>
-        </ColumnWrapper>
-        <ColumnWrapper>
-          <Text style={[styles.text, { fontFamily: lang.titleFont }]} allowFontScaling={false}>
-            {profile.targetWeight + " kg"}
-          </Text>
-          <Text style={[styles.text2, { fontFamily: lang.font }]} allowFontScaling={false}>
-            {lang.golWeight}
-          </Text>
-        </ColumnWrapper>
-        <ColumnWrapper>
-          <Text style={[styles.text, { fontFamily: lang.titleFont }]} allowFontScaling={false}>
-            {specification[0].weightSize + " kg"}
-          </Text>
-          <Text style={[styles.text2, { fontFamily: lang.font }]} allowFontScaling={false}>
-            {lang.currentWeight}
-          </Text>
-        </ColumnWrapper>
-      </RowSpaceAround>
-      {
-        items.slice(0, Platform.OS === "ios" && lang.langName === "english" ? items.length : items.length - 1).filter(item => item != null).map(item => (
-
-          <ProfileRow
-            key={item.text}
-            lang={lang}
-            item={item}
-            hasCredit={hasCredit}
-          />
-        ))
-      }
-      {
-        lang.langName === "persian" &&
-        <RowCenter>
-          <TouchableOpacity onPress={() => Linking.openURL("Https://t.me/o2fit_fa")}>
-            <FastImage
-              source={require("../../../res/img/telegram.jpeg")}
-              style={{ width: moderateScale(30), height: moderateScale(30), margin: moderateScale(16) }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => Linking.openURL("http://www.instagram.com/o2fit.fa")}>
-            <FastImage
-              source={require("../../../res/img/instagram.jpeg")}
-              style={{ width: moderateScale(30), height: moderateScale(30), margin: moderateScale(16) }}
-            />
-          </TouchableOpacity>
         </RowCenter>
-      }
-      <TwoOptionModal
-        lang={lang}
-        visible={optionalDialogVisible}
-        onRequestClose={() => setOptionalDialogVisible(false)}
-        context={lang.subscribe1}
-        button1={lang.iBuy}
-        button2={lang.motevajeShodam}
-        button1Pressed={goToPackages}
-        button2Pressed={() => setOptionalDialogVisible(false)}
-      />
-    </ScrollView>
+        <RowSpaceAround>
+          <ColumnWrapper>
+            <Text style={[styles.text, { fontFamily: lang.titleFont }]} allowFontScaling={false}>
+              {specification[1].weightSize + " kg"}
+            </Text>
+            <Text style={[styles.text2, { fontFamily: lang.font }]} allowFontScaling={false}>
+              {lang.lastWeight}
+            </Text>
+          </ColumnWrapper>
+          <ColumnWrapper>
+            <Text style={[styles.text, { fontFamily: lang.titleFont }]} allowFontScaling={false}>
+              {profile.targetWeight + " kg"}
+            </Text>
+            <Text style={[styles.text2, { fontFamily: lang.font }]} allowFontScaling={false}>
+              {lang.golWeight}
+            </Text>
+          </ColumnWrapper>
+          <ColumnWrapper>
+            <Text style={[styles.text, { fontFamily: lang.titleFont }]} allowFontScaling={false}>
+              {specification[0].weightSize + " kg"}
+            </Text>
+            <Text style={[styles.text2, { fontFamily: lang.font }]} allowFontScaling={false}>
+              {lang.currentWeight}
+            </Text>
+          </ColumnWrapper>
+        </RowSpaceAround>
+        {
+          items.slice(0, Platform.OS === "ios" && lang.langName === "english" ? items.length : items.length-2).filter(item => item != null).map(item => (
+
+            <ProfileRow
+              key={item.text}
+              lang={lang}
+              item={item}
+              hasCredit={hasCredit}
+            />
+          ))
+        }
+        {
+          lang.langName === "persian" &&
+          <RowCenter>
+            <TouchableOpacity onPress={() => Linking.openURL("Https://t.me/o2fit_fa")}>
+              <FastImage
+                source={require("../../../res/img/telegram.jpeg")}
+                style={{ width: moderateScale(30), height: moderateScale(30), margin: moderateScale(16) }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL("http://www.instagram.com/o2fit.fa")}>
+              <FastImage
+                source={require("../../../res/img/instagram.jpeg")}
+                style={{ width: moderateScale(30), height: moderateScale(30), margin: moderateScale(16) }}
+              />
+            </TouchableOpacity>
+          </RowCenter>
+        }
+
+        <TwoOptionModal
+          lang={lang}
+          visible={optionalDialogVisible}
+          onRequestClose={() => setOptionalDialogVisible(false)}
+          context={lang.subscribe1}
+          button1={lang.iBuy}
+          button2={lang.motevajeShodam}
+          button1Pressed={goToPackages}
+          button2Pressed={() => setOptionalDialogVisible(false)}
+        />
+
+      </ScrollView>
+      <Modal
+        visible={deletationModal}
+        onDismiss={()=>setDeletationModal(false)}
+      >
+        <View style={{ alignItems: "center" }}>
+          <View style={{ width: dimensions.WINDOW_WIDTH * 0.8, height: dimensions.WINDOW_HEIGTH * 0.4, backgroundColor: defaultTheme.white, borderRadius: 13, alignItems: "center", justifyContent: "center" }}>
+            <Power width={moderateScale(50)} height={moderateScale(50)} />
+            <Text style={{ paddingVertical: moderateScale(50), fontSize: moderateScale(18), paddingHorizontal: moderateScale(20), textAlign: "center", lineHeight: moderateScale(27) }}>{lang.confirmationDeleteAccount}</Text>
+            <View style={{ bottom: moderateScale(20), position: "absolute", flexDirection: "row",width:dimensions.WINDOW_WIDTH*0.7,alignItems:"center",justifyContent:"center"}}>
+              <ConfirmButton
+                lang={lang}
+                title={"Yes"}
+                style={{ backgroundColor: defaultTheme.white, borderColor: defaultTheme.error, borderWidth: 1, width:moderateScale(110)}}
+                textStyle={{ color: defaultTheme.darkText }}
+                onPress={deleteAccount}
+              />
+              <ConfirmButton
+                lang={lang}
+                title={"No"}
+                style={{ backgroundColor: defaultTheme.green,  width: moderateScale(110)}}
+                textStyle={{  }}
+                onPress={()=>setDeletationModal(false)}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 

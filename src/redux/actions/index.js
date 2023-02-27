@@ -35,7 +35,6 @@ export {
     setActiveCounter,
     isEdit,
     setId,
-    setPedometerCounter
 } from './pedometer'
 export {
     setAlergy,

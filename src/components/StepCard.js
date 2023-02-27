@@ -14,11 +14,8 @@ const StepCard = props => {
     let step = 0
     let calories = 0
     let autoburnedCalorie = 0
-    props.steps.map(item => {
-        step += parseInt(item.stepsCount);
-        calories += parseFloat(item.burnedCalories)
-    })
-    // autoburnedCalorie = props.selectedDate == moment().format("YYYY-MM-DD") ? stepBurnedCalorie(parseFloat(props.autoSteps), parseFloat(props.specification.weightSize)) : 0
+   props.steps&& props.steps.map(item => { step += parseInt(item.stepsCount); calories += parseFloat(item.burnedCalories) })
+    autoburnedCalorie = props.selectedDate == moment().format("YYYY-MM-DD") ? stepBurnedCalorie(parseFloat(props.autoSteps), parseFloat(props.specification.weightSize)) : 0
 
 
     return (
@@ -35,7 +32,7 @@ const StepCard = props => {
                             </Text> */}
                             <View style={styles.container4}>
                                 <View style={{ alignItems: "center" }}>
-                                    <Text style={{ color: defaultTheme.mainText, marginRight: moderateScale(10), fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{(parseInt(calories))} {props.lang.calories}</Text>
+                                    <Text style={{ color: defaultTheme.mainText, marginRight: moderateScale(10), fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{moment().format("YYYY-MM-DD") == props.selectedDate ? parseInt(autoburnedCalorie) : (parseInt(calories))} {props.lang.calories}</Text>
                                     <Text style={[styles.text3, { color: defaultTheme.green, fontFamily: props.lang.font }]} allowFontScaling={false}>
                                         {parseInt(step)}
                                     </Text>

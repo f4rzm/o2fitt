@@ -30,14 +30,14 @@ export default function TimeZoneError(props) {
                 <ClockError/>
                 <Text style={[styles.textHeader, { fontFamily: lang.font }]}>{lang.timeZoneHeader}</Text>
                 <Text style={[styles.textDes, { fontFamily: lang.font }]}>{lang.timeZoneDes}</Text>
-                <ConfirmButton
+                {/* <ConfirmButton
                     lang={lang}
                     title={lang.changeTimeSetting}
                     style={{backgroundColor:defaultTheme.green2}}
                     onPress={()=>{
-                        openSettings("android.settings.DATE_SETTINGS")
+                        Linking.openURL('app-settings:3')
                     }}
-                />
+                /> */}
 
             </View>
         </TouchableOpacity>

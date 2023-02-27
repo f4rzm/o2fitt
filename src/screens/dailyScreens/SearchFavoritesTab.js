@@ -26,18 +26,20 @@ const searchHistoryDB = new PouchDB('searchHistory', { adapter: 'react-native-sq
 
 const SearchFavoritesTab = props => {
     const lang = useSelector(state => state.lang)
-    const auth = useSelector(state => state.auth)
     const app = useSelector(state => state.app)
     const user = useSelector(state => state.user)
+    const auth = useSelector(state => state.auth)
+
     const [favorites, setFavorites] = React.useState([])
+
     const meal = React.useRef({
         foodId: 0,
         foodMeal: props.mealId
     }).current
 
     React.useEffect(() => {
-        // favoriteFoodDB.changes({ since: 'now', live: true }).on('change', getFavorites)
-        getFavorites(false)
+        favoriteFoodDB.changes({ since: 'now', live: true }).on('change', getFavorites)
+        getFavorites()
     }, [])
 
     React.useEffect(() => {
@@ -58,7 +60,6 @@ const SearchFavoritesTab = props => {
         }
     }, [])
 
-
     const getFavorite = () => {
         if (app.networkConnectivity) {
             const url = urls.foodBaseUrl + urls.userFoodFavorite + `Get?UserId=${user.id}&Page=1&PageSize=50`
@@ -77,32 +78,27 @@ const SearchFavoritesTab = props => {
     }
 
     const syncFavoriteSuccess = (res) => {
-        console.warn('get favoritee success from server');
 
         if (res.data.data.items.length >= 0) {
             const SF = new SyncFavoriteFood()
             SF.syncFavoriteFoodsByLocal(favoriteFoodDB, res.data.data.items).then((res) => {
-                getFavorites(true)
+                getFavorites()
             })
         }
     }
-
 
     const syncFavoriteFailed = (error) => {
         console.error("fas")
     }
 
-    const getFavorites = (isSynced) => {
-        console.warn("get favorite",isSynced);
-
+    const getFavorites = () => {
         console.log("Changed")
         favoriteFoodDB.allDocs({
             include_docs: true
         }).then(recs => {
             console.warn("recs", recs.total_rows)
-            if (recs.total_rows !== 0 || isSynced) {
+            if (recs.total_rows !== 0) {
                 const records = recs.rows.map(item => item.doc)
-                console.warn("get favorite success");
                 setFavorites(records)
             } else {
                 getFavorite()
@@ -146,16 +142,15 @@ const SearchFavoritesTab = props => {
                             autoPlay
                             loop={false}
                         />
-                        {
-                            favorites.length < 0 ? <View style={{ alignItems: "center", justifyContent: "center", paddingTop: moderateScale(200) }}><ActivityIndicator color='#FF900D' size={moderateScale(30)} /></View> :
-                                favorites.filter((f) => f.name.includes(props.searchText)).map((item, index) => (
-                                    <SearchFoodRow
-                                        lang={lang}
-                                        item={{ ...item, foodMeal: props.mealId, foodName: item.name }}
-                                        key={item.foodId.toString() + index}
-                                        onPress={onFoodPressed}
-                                    />
-                                ))
+                        {favorites.length < 0 ? <View style={{ alignItems: "center", justifyContent: "center", paddingTop: moderateScale(200) }}><ActivityIndicator color='#FF900D' size={moderateScale(30)} /></View> :
+                            favorites.filter((f) => f.name.includes(props.searchText)).map((item, index) => (
+                                <SearchFoodRow
+                                    lang={lang}
+                                    item={{ ...item, foodMeal: props.mealId, foodName: item.name }}
+                                    key={item.foodId.toString() + index}
+                                    onPress={onFoodPressed}
+                                />
+                            ))
                         }
                     </ScrollView>
             }

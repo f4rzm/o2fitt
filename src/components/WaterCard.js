@@ -7,7 +7,7 @@ import Glass from "../../res/img/glass.svg";
 import { universalStyles } from "../constants/universalStyles"
 
 const WaterCard = props =>{
-    // console.log("pppppppppp",props)
+    console.log("pppppppppp",props)
     const pkExpireDate=moment(props.profile.pkExpireDate , "YYYY-MM-DDTHH:mm:ss")
     const today=moment()
     const hasCredit=pkExpireDate.diff(today , "seconds") > 0?true : false

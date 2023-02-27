@@ -369,7 +369,7 @@ const AddWaterScreen = props => {
               subText1={lang.waterDailyBudget}
             />
           </RowCenter> */}
-          <View style={{ flexDirection: "row", justifyContent: 'space-around', width: dimensions.WINDOW_WIDTH, marginVertical: moderateScale(50) }}>
+          <View style={{ flexDirection: "row", justifyContent: 'space-around', width: dimensions.WINDOW_WIDTH, marginVertical: moderateScale(50),marginTop:moderateScale(30) }}>
 
 
             <View style={styles.circleHeader}>
@@ -554,10 +554,11 @@ const styles = StyleSheet.create({
     width: dimensions.WINDOW_WIDTH * 0.30,
     height: dimensions.WINDOW_WIDTH * 0.30,
     backgroundColor: defaultTheme.lightBackground,
+
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-
+  
   },
   circleHeaderTxt: {
     color: defaultTheme.blue,

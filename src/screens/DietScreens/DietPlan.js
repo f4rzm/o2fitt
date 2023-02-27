@@ -666,9 +666,9 @@ function DietPlan(props) {
                     );
                 }
             });
-        // analytics().logEvent('setMeal', {
-        //     id: meal.foodMeal,
-        // });
+        analytics().logEvent('setMeal', {
+            id: meal.foodMeal,
+        });
     };
 
 

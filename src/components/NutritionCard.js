@@ -4,7 +4,7 @@ import { moderateScale } from "react-native-size-matters"
 import { defaultTheme } from "../constants/theme"
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import moment from "moment"
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import stepBurnedCalorie from "../utils/stepBurnedCalorie";
 import { dimensions } from "../constants/Dimensions";
 import Fire from '../../res/img/fire.svg'
@@ -184,7 +184,7 @@ const NutritionCard = props => {
         }
     })
 
-    props.userStep.map((item) => {
+    props.userStep && props.userStep.map((item) => {
         if (!isNaN(parseFloat(item.burnedCalories))) {
             burnedCalories += parseFloat(item.burnedCalories)
         }

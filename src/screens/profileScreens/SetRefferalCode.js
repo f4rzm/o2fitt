@@ -77,10 +77,8 @@ const SetRefferalCode = (props) => {
         }
     }
     const onRefreshTokenSuccess = () => {
-        console.warn('s');
     }
     const onRefreshTokenFailure = () => {
-        console.warn('s');
 
     }
     return (
@@ -113,7 +111,7 @@ const SetRefferalCode = (props) => {
                 </Text>
 
                 <TextInput
-                    style={{ width: dimensions.WINDOW_WIDTH * 0.6, borderRadius: moderateScale(10), fontFamily: lang.font, fontSize: moderateScale(15), textAlign: "center", borderWidth: 1, borderColor: defaultTheme.border }}
+                    style={{ width: dimensions.WINDOW_WIDTH * 0.6, borderRadius: moderateScale(10), fontFamily: lang.font, fontSize: moderateScale(15), textAlign: "center", borderWidth: 1, borderColor: defaultTheme.border,height:moderateScale(40) }}
                     placeholder={user.referreralInviter ? user.referreralInviter : lang.enterReferalHere}
                     maxLength={6}
                     value={refferal}

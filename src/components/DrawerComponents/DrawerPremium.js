@@ -16,7 +16,6 @@ const DrawerPremium = (props) => {
     return (
         <TouchableRipple
             onPress={() => {
-                
                 navigation.navigate("PackagesScreen")
                 setTimeout(() => {
                     navigation.dispatch(DrawerActions.closeDrawer());
@@ -77,14 +76,16 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     premiumText: {
-        fontSize: moderateScale(16),
-        color:defaultTheme.darkText
+        fontSize: moderateScale(17),
+        color:defaultTheme.darkText,
+        textAlign:"left"
     },
     text:{
-        fontSize:moderateScale(15)
+        fontSize:moderateScale(17)
     },
     text2:{
-        fontSize:moderateScale(15)
+        fontSize:moderateScale(15),
+        textAlign:"left"
     }
 })
 

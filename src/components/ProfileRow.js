@@ -59,7 +59,7 @@ const ProfileRow = props => {
 const styles = StyleSheet.create({
     conntainer: {
         flexDirection: "row",
-        width: dimensions.WINDOW_WIDTH * 0.8,
+        width: dimensions.WINDOW_WIDTH,
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: moderateScale(10),

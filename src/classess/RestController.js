@@ -1,6 +1,6 @@
-import axios, { AxiosHeaders } from "axios"
+import axios from "axios"
 import { TokenController } from "./TokenController"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 export class RestController {
@@ -53,93 +53,44 @@ export class RestController {
             case "delete":
                 this.delete(url, params, header, onSuccess, onFailure)
                 break
-            case "postWithAbort":
-                this.postWithAbort(url, params, header, onSuccess, onFailure)
         }
     }
 
     get(url, header, onSuccess, onFailure) {
-
-        // const id = setTimeout(
-        //   () => abort.cancel('time out 5000'),
-        //   5000
-        // )  
-        const CancelToken = axios.CancelToken;
-        const source = CancelToken.source();
-        const timeout = setTimeout(() => {
-            console.warn('cancel');
-            source.cancel();
-        }, 2000)
         axios.defaults.timeout = 8000
         axios.get(url, header).then(async (response) => {
             console.log("get => response => ", response)
             await onSuccess(response)
-            // clearTimeout(timeout)
         }).catch(error => {
-            // clearTimeout(timeout)
-            console.warn("get => error => ", error.message, url)
-            onFailure(error)
+            console.log("get => error => ", error)
             // if(error.response.status === 401){
             //     AsyncStorage.clear()
             // }
-            // if (axios.isCancel(error)) {
-            //     console.warn('Request canceled', error.message);
-            //   } else {
-            //     // handle error
-            //   }
+            onFailure(error)
         })
-
-        // axios({
-        //     method: "GET",
-        //     baseURL: url,
-        //     headers:header,
-
-        //     // timeout: 5000,
-        //     // timeoutErrorMessage:"error time out",
-        //     // xsrfHeaderName:""
-        // }).then(async (response) => {
-        //     console.log("get => response => ", response)
-        //     await onSuccess(response)
-        //     // clearTimeout(timeout)
-        // }).catch(error => {
-        //     // clearTimeout(timeout)
-        //     console.error("get => error => ", error, url)
-        //     onFailure(error)
-        //     // if(error.response.status === 401){
-        //     //     AsyncStorage.clear()
-        //     // }
-        //     // if (axios.isCancel(error)) {
-        //     //     console.warn('Request canceled', error.message);
-        //     //   } else {
-        //     //     // handle error
-        //     //   }
-        // })
-
     }
 
     post(url, params, header, onSuccess, onFailure) {
-        // const abort = axios.CancelToken.source()
-        // const id = setTimeout(
-        //     () => abort.cancel(`Timeout of 5000 ms.`),
-        //     2000
-        // )
-        axios.defaults.timeout = 8000
+        const abort = axios.CancelToken.source()
+        const id = setTimeout(
+            () => abort.cancel(`Timeout of 5000 ms.`),
+            3000
+        )
+
         axios.post(url, params, header).then(response => {
             console.log("post => response -> ", response)
-            // clearTimeout(id)
+            clearTimeout(id)
             onSuccess(response)
         }).catch(error => {
-            onFailure(error)
-            // clearTimeout(id)
+            clearTimeout(id)
             console.log("post => error code => ", error.response)
             console.log("post => error => ", error)
             // if(error.response && error.response.status === 401){
             //     AsyncStorage.clear()
             // }
+            onFailure(error)
         })
-
     }
-
 
     put(url, params, header, onSuccess, onFailure) {
         const abort = axios.CancelToken.source()

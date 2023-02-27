@@ -131,28 +131,28 @@ const InformationProductScreen = ({ navigation, route }) => {
   const requestCameraPermission = async index => {
     setShowPopupWrapper(true)
     setIndex(index)
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Cool Photo App Camera Permission',
-          message:
-            'O2Fit needs access to your camera ' +
-            'so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        setIndex(index);
-        pressUpload();
-      } else {
-        // console.log('Camera permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
+    // try {
+    //   const granted = await PermissionsAndroid.request(
+    //     PermissionsAndroid.PERMISSIONS.CAMERA,
+    //     {
+    //       title: 'Cool Photo App Camera Permission',
+    //       message:
+    //         'O2Fit needs access to your camera ' +
+    //         'so you can take awesome pictures.',
+    //       buttonNeutral: 'Ask Me Later',
+    //       buttonNegative: 'Cancel',
+    //       buttonPositive: 'OK',
+    //     },
+    //   );
+    //   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //     setIndex(index);
+    //     pressUpload();
+    //   } else {
+    //     // console.log('Camera permission denied');
+    //   }
+    // } catch (err) {
+    //   console.warn(err);
+    // }
   };
 
 
@@ -217,7 +217,6 @@ const InformationProductScreen = ({ navigation, route }) => {
         console.log({ params });
         const RC = new RestController();
         RC.post(url, params, header, ReportFoodSuccess, reportFoodFailure);
-
       } else {
         Toast.show({
           type: 'error',
@@ -245,13 +244,12 @@ const InformationProductScreen = ({ navigation, route }) => {
   };
 
   const reportFoodFailure = response => {
-    console.log('response failureeeee',response);
-    setLoading(false);
     Toast.show({
       type: 'error',
       props: { text2: response.data.message, style: { fontFamily: lang.font } },
       visibilityTime: 800,
     });
+    setLoading(false);
   };
   const onChangeText = (text) => {
     setTextInputText(text)

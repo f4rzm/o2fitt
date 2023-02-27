@@ -107,9 +107,10 @@ function BodyAnalyzeScreen(props) {
                 <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.whatIsBodyAdes}</Text>
                 <Text style={[styles.text, { fontFamily: lang.titleFont,marginBottom:0 }]}>{lang.bodyASample}</Text>
                 <Image
-                    source={require('../../../res/img/BodyA.jpg')}
+                    source={lang.langName == "persian"?require('../../../res/img/BodyA.jpg'):lang.langName == "english"?require('../../../res/img/en/BodyAen.jpg'):require('../../../res/img/ar/BodyAar.jpg')}
                     style={{ width: dimensions.WINDOW_WIDTH, resizeMode: "contain" ,top:moderateScale(-10)}}
                 />
+                <View style={{height:moderateScale(40)}}/>
             </ScrollView>
 
             <LinearGradient

@@ -89,40 +89,85 @@ const LoginScreen = (props) => {
     }
   };
 
-  const loginPressed = () => {
-    if (userName != '') {
-      if (pass != '') {
-        if (
-          /^[a-z0-9\.\@\_\!\$\?\*\%\&\#\s\-]+$/i.test(userName) &&
-          /^[a-z0-9\.\@\_\!\$\?\*\%\&\#\s\-]+$/i.test(pass)
-        ) {
-          if (app.networkConnectivity) {
-            setIsLoading(true);
-            const url = urls.identityBaseUrl + urls.user + urls.login;
-            const params = {
-              userName: latinNumbers(userName),
-              password: latinNumbers(pass),
-            };
-            const header = {};
-            console.log('url => ', url);
-            const RC = new RestController();
-            RC.post(url, params, header, onLoginSuccess, onLoginFailure);
+  const loginPressed = async () => {
+    const profileUsername = await AsyncStorage.getItem("deletedAccount")
+    if (profileUsername) {
+
+      if (profileUsername.toLowerCase() !== userName.toLowerCase()) {
+
+        if (userName != '') {
+          if (pass != '') {
+            if (
+              /^[a-z0-9\.\@\_\!\$\?\*\%\&\#\s\-]+$/i.test(userName) &&
+              /^[a-z0-9\.\@\_\!\$\?\*\%\&\#\s\-]+$/i.test(pass)
+            ) {
+              if (app.networkConnectivity) {
+                setIsLoading(true);
+                const url = urls.identityBaseUrl + urls.user + urls.login;
+                const params = {
+                  userName: latinNumbers(userName),
+                  password: latinNumbers(pass),
+                };
+                const header = {};
+                console.log('url => ', url);
+                const RC = new RestController();
+                RC.post(url, params, header, onLoginSuccess, onLoginFailure);
+              } else {
+                setErrorContext(lang.noInternet);
+                setErrorVisible(true);
+              }
+            } else {
+              setErrorContext(lang.dataEntryEN);
+              setErrorVisible(true);
+            }
           } else {
-            setErrorContext(lang.noInternet);
+            setErrorContext(lang.fillPassword);
             setErrorVisible(true);
           }
         } else {
-          setErrorContext(lang.dataEntryEN);
+          setErrorContext(lang.fillUserName);
           setErrorVisible(true);
         }
       } else {
-        setErrorContext(lang.fillPassword);
+        setErrorContext(lang.doesNotExist);
         setErrorVisible(true);
       }
-    } else {
-      setErrorContext(lang.fillUserName);
-      setErrorVisible(true);
+    }else{
+      if (userName != '') {
+        if (pass != '') {
+          if (
+            /^[a-z0-9\.\@\_\!\$\?\*\%\&\#\s\-]+$/i.test(userName) &&
+            /^[a-z0-9\.\@\_\!\$\?\*\%\&\#\s\-]+$/i.test(pass)
+          ) {
+            if (app.networkConnectivity) {
+              setIsLoading(true);
+              const url = urls.identityBaseUrl + urls.user + urls.login;
+              const params = {
+                userName: latinNumbers(userName),
+                password: latinNumbers(pass),
+              };
+              const header = {};
+              console.log('url => ', url);
+              const RC = new RestController();
+              RC.post(url, params, header, onLoginSuccess, onLoginFailure);
+            } else {
+              setErrorContext(lang.noInternet);
+              setErrorVisible(true);
+            }
+          } else {
+            setErrorContext(lang.dataEntryEN);
+            setErrorVisible(true);
+          }
+        } else {
+          setErrorContext(lang.fillPassword);
+          setErrorVisible(true);
+        }
+      } else {
+        setErrorContext(lang.fillUserName);
+        setErrorVisible(true);
+      }
     }
+
   };
 
   const onLoginSuccess = (response) => {

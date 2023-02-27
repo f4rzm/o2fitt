@@ -16,9 +16,9 @@ import { BlurComponent } from '../components';
 
 
 const TestScreen = props => {
-
-  console.log("file://" + RNFS.ExternalStorageDirectoryPath + "/s.mp4")
-
+  
+  console.log("file://"+RNFS.ExternalStorageDirectoryPath+"/s.mp4")
+  
 
   // React.useEffect(()=>{
   //   PushNotification.localNotificationSchedule({
@@ -29,19 +29,19 @@ const TestScreen = props => {
   //     priority:"max",
   //     repeatType:"minute"
   //   })
-
+    
   //   PushNotification.getScheduledLocalNotifications((res)=>console.log("sssssss",res));
   //   // PushNotification.cancelLocalNotifications({id: "-782429613"});
   //   // PushNotification.cancelLocalNotifications({id: "-1864078575"});
   // })
-
+ 
 
   return (
     <>
-      <Text>
-        sadsadas
-      </Text>
-      {/* <BlurComponent /> */}
+    <Text>
+sadsadas
+    </Text>
+    <BlurComponent/>
 
     </>
   );
@@ -49,8 +49,8 @@ const TestScreen = props => {
 
 const styles = StyleSheet.create({
   backgroundVideo: {
-    width: 300,
-    height: 300
+    width:300,
+    height:300
   },
 });
 

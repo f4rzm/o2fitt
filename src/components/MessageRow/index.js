@@ -13,6 +13,7 @@ import { Month } from '../../utils/month';
 // import SvgUri from 'react-native-fast-svg';
 import NoAvatar from '../../../res/img/no_avatar.svg';
 import { moderateScale, scale } from 'react-native-size-matters';
+import { defaultTheme } from '../../constants/theme';
 const MessageRow = ({ items, lang, profile, goToDetails, askForDelete }) => {
   const { item, index } = items;
   // console.log({item});
@@ -21,10 +22,10 @@ const MessageRow = ({ items, lang, profile, goToDetails, askForDelete }) => {
   const [activeDelete, setActiveDelete] = useState(false);
   const user = useSelector(state => state.user);
   const s = item.insertDate.split('T')[0]
-  const a = user.countryId===128?shamsi.gregorianToJalali(parseInt(s.split('-')[0]), parseInt(s.split('-')[1]), parseInt(s.split('-')[2])):s
+  const a = user.countryId === 128 ? shamsi.gregorianToJalali(parseInt(s.split('-')[0]), parseInt(s.split('-')[1]), parseInt(s.split('-')[2])) : s
   // const day = a[2].toString()
   // const month = Month[a[1]]
-  const translateX = useRef(new Animated.Value(lang.langName=="persian"?72:-72)).current;
+  const translateX = useRef(new Animated.Value(lang.langName == "persian" ? 72 : -72)).current;
   const transform = { transform: [{ translateX }] };
   let counter = 0;
 
@@ -64,7 +65,7 @@ const MessageRow = ({ items, lang, profile, goToDetails, askForDelete }) => {
 
   const onClose = () => {
     Animated.timing(translateX, {
-      toValue: lang.langName=="persian"?72:-72,
+      toValue: lang.langName == "persian" ? 72 : -72,
       duration: 250,
       useNativeDriver: true,
     }).start();
@@ -97,13 +98,13 @@ const MessageRow = ({ items, lang, profile, goToDetails, askForDelete }) => {
                 )}
               </View>
               <View>
-                <View style={{ flexDirection: I18nManager ? "row" : "row-reverse",marginBottom:Platform.OS=='ios'? moderateScale(10):2 }}>
+                <View style={{ flexDirection: I18nManager ? "row" : "row-reverse", marginBottom: Platform.OS == 'ios' ? moderateScale(10) : 2, alignItems: "center" }}>
                   <CommonText
                     text={category[item.classification - 1]}
                     styleText={[styles.title, { fontFamily: lang.titleFont }]}
                   />
                   {badge > 0 && (
-                    <View style={{ paddingHorizontal: 5 }}>
+                    <View style={{ backgroundColor: defaultTheme.error, borderRadius: moderateScale(20), marginHorizontal: moderateScale(10) }}>
                       <CommonText text={`${badge}`} styleText={styles.textUnread} />
                     </View>
                   )}
@@ -135,7 +136,7 @@ const MessageRow = ({ items, lang, profile, goToDetails, askForDelete }) => {
           <View style={[styles.moreButton, styles.row]}>
 
             <View>
-              <View style={[styles.arrowBack,{transform:[{rotate:lang.langName=="persian"?"0deg":"180deg"}]}]}>
+              <View style={[styles.arrowBack, { transform: [{ rotate: lang.langName == "persian" ? "0deg" : "180deg" }] }]}>
                 <ArrowBack width={14} />
               </View>
               {/* <CommonText text={lang.more} styleText={styles.textMoreView} /> */}

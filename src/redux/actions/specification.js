@@ -1,7 +1,7 @@
 import types from "../../constants/actionTypes"
 import {RestController} from "../../classess/RestController"
 import { urls } from "../../utils/urls"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import PouchDB from '../../../pouchdb'
 import pouchdbSearch from 'pouchdb-find'
 import { SpecificationDBController } from '../../classess/SpecificationDBController';

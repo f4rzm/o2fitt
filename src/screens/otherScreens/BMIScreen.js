@@ -8,8 +8,7 @@ import { moderateScale } from 'react-native-size-matters';
 import Bmi from '../../../res/img/bmi.svg';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
-// import Orientation from 'react-native-orientation-locker';
-// import RNSpeedometer from 'react-native-speedometer'
+import RNSpeedometer from 'react-native-speedometer'
 
 
 const BMIScreen = props => {
@@ -128,7 +127,7 @@ const BMIScreen = props => {
           loop={false}
           speed={0.7}
         /> */}
-        {/* <RNSpeedometer
+        <RNSpeedometer
           value={BMI}
           minValue={16}
           maxValue={40}
@@ -159,7 +158,7 @@ const BMIScreen = props => {
           imageStyle={{tintColor:defaultTheme.darkText}}
           labelStyle={{color:"white"}}
           innerCircleStyle={{backgroundColor:"white",top:moderateScale(1)}}
-        /> */}
+        />
         <View style={styles.content}>
           <View style={styles.informationContainer}>
             <Text

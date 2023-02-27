@@ -27,7 +27,6 @@ import { SyncPedoDB } from "../../classess/SyncPedoDB"
 import Lunch from '../../../res/img/lunch.svg'
 import Breakfast from '../../../res/img/breakfast.svg'
 import Dinner from '../../../res/img/dinner.svg'
-// import Orientation from 'react-native-orientation-locker'
 import Toast from 'react-native-toast-message'
 import { BlurView } from '@react-native-community/blur';
 import { setIsBuy, clearDiet } from '../../redux/actions/diet'
@@ -45,10 +44,9 @@ const activityDB = new PouchDB('activity', { adapter: 'react-native-sqlite' })
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' })
 
 const DailyScreen = props => {
-  const dispatch = useDispatch()
 
   // Orientation.lockToPortrait();
-
+  const dispatch=useDispatch()
   const [targetCarbo, setTargetCarbo] = useState(0);
   const [targetProtein, setTargetProtein] = useState(0);
   const [targetFat, setTargetFat] = useState(0);
@@ -56,14 +54,11 @@ const DailyScreen = props => {
   const auth = useSelector(state => state.auth)
   const user = useSelector(state => state.user)
   const app = useSelector(state => state.app)
-
-  const syncedDate = useSelector((state) => state.syncedDate)
-
   const specification = useSelector(state => state.specification)
   const profile = useSelector(state => state.profile)
   const diet = useSelector(state => state.diet)
   const starRating = useSelector(state => state.starRating)
-
+  const syncedDate = useSelector((state) => state.syncedDate)
   const [targetCalorie, setTargetCalorie] = React.useState(2000)
   const [showDatePicker, setShowPicker] = React.useState(false)
   const [selectedDate, setDate] = React.useState(moment().format('YYYY-MM-DD'))
@@ -312,9 +307,11 @@ const DailyScreen = props => {
     setPedos([])
     setMeals([])
     // getPedofromDB(selectedDate)
+
     getMealFromDB(selectedDate, false)
+
     if (app.networkConnectivity) {
-      //   syncMeal(selectedDate)
+      // syncMeal(selectedDate)
       getPedoFromServer(selectedDate)
       syncActivities(selectedDate)
     }
@@ -506,7 +503,7 @@ const DailyScreen = props => {
   }
 
   const removeMeal = (item) => {
-    // console.error('item._id', item._id);
+    console.error('item._id', item._id);
     // if (app.networkConnectivity) {
     //   //console.log(item)
     // const url = urls.foodBaseUrl2 + urls.userTrackFood + `?_id=${item._id}`
@@ -678,7 +675,7 @@ const DailyScreen = props => {
   }
 
   const getMealsFailure = () => {
-
+    getMealFromDB(selectedDate, true)
   }
 
   const getPedoFromServer = (date) => {
@@ -881,7 +878,7 @@ const DailyScreen = props => {
         calendarPressed={showCalendar}
         selectedDate={selectedDate}
         user={user}
-      // disabled={calDisabledBtn}
+        disabled={calDisabledBtn}
       />
 
       <ScrollView

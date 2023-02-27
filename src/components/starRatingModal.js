@@ -102,8 +102,7 @@ function StarRatingModal(props) {
                         imageStyle={{ tintColor: defaultTheme.white }}
                         onPress={() => {
                             if (stars >= 4) {
-                                // Linking.openURL(Platform.OS == "ios" ? "https://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170" : "https://cafebazaar.ir/app/com.o2fitt").then(() => {
-                                Linking.openURL(Platform.OS == "ios" ? "https://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170" : "https://play.google.com/store/apps/details?id=com.o2fitt").then(() => {
+                                Linking.openURL(Platform.OS == "ios" ? "https://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170" : "https://cafebazaar.ir/app/com.o2fitt").then(() => {
                                     analytics().logEvent("Star_Rating_Set", { userId: props.user.id, star: stars })
                                     dispatch(isSetRating(true))
                                 }).catch(() => {

@@ -157,7 +157,7 @@ const SignUpScreen = props => {
           else {
             setErrorContext(lang.confirmRules)
             setErrorVisible(true)
-            
+
           }
         }
         else {
@@ -411,7 +411,7 @@ const SignUpScreen = props => {
               }
             </View>
             <ConfirmButton
-              title={user.countryId == 128 ?lang.setPhoneNumber:lang.continuation}
+              title={user.countryId == 128 ? lang.setPhoneNumber : lang.continuation}
               lang={lang}
               style={{
                 backgroundColor: defaultTheme.primaryColor,
@@ -478,7 +478,7 @@ const SignUpScreen = props => {
 
       </TouchableOpacity>
 
-      {/* {
+      {
         referralcodeCheck &&
         <ReferralcodeModal
           lang={lang}
@@ -493,7 +493,7 @@ const SignUpScreen = props => {
           }}
           referralInviter={referreralInviter}
         />
-      } */}
+      }
 
 
     </>

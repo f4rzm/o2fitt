@@ -1,16 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   StyleSheet,
   View,
   ScrollView,
   Text,
   I18nManager,
+  NativeModules,
   NativeEventEmitter,
   TouchableWithoutFeedback,
+  Button,
   Image,
   Animated,
   TouchableOpacity,
+  Keyboard,
+  AppState,
+  BackHandler,
   Platform,
+  KeyboardAvoidingView
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
@@ -26,9 +32,9 @@ import {
   RadioButton,
 
 } from '../../components';
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale, scale } from 'react-native-size-matters';
 import { Switch, TextInput } from 'react-native-gesture-handler';
-// import { AnimatedGaugeProgress, GaugeProgress } from 'react-native-simple-gauge';
+import { AnimatedGaugeProgress, GaugeProgress } from 'react-native-simple-gauge';
 import { RestController } from '../../classess/RestController';
 import { urls } from '../../utils/urls';
 import PouchDB from '../../../pouchdb';
@@ -39,19 +45,20 @@ import analytics from '@react-native-firebase/analytics';
 import { BlurView } from '@react-native-community/blur';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- import RNWalkCounter from 'react-native-walk-counter';
-import { increase, setAutoCounterZero, setPedometerDate, setActiveCounter, updateTarget, setPedometerCounter } from '../../redux/actions/index'
+// import RNWalkCounter from 'react-native-walk-counter';
+import { increase, setAutoCounterZero, setPedometerDate, setActiveCounter, isEdit, setId, updateTargetStep, updateTarget } from '../../redux/actions/index'
 import Shoe from '../../../res/img/shoe.svg'
 import { Modal } from 'react-native-paper';
 import BurnedCalorie from '../../../res/img/burned-calorie.svg'
 import LottieView from 'lottie-react-native'
 import { useNavigation } from '@react-navigation/native';
-import BackgroundService from 'react-native-background-actions'
-import { PERMISSIONS } from 'react-native-permissions'
-import IMGTXTmodal from '../../components/IMGTXTmodal';
-import { requestIgnoreBatteryOptimizations } from 'react-native-send-intent'
-
- const WalkEvent = new NativeEventEmitter(RNWalkCounter);
+import AutoStepCounterModal from '../../components/AutoStepCounterModal';
+import AppleHealthKit, {
+  HealthValue,
+  HealthKitPermissions,
+} from 'react-native-health'
+import Distance from '../../../res/img/distance.svg'
+// const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
 
 PouchDB.plugin(pouchdbSearch);
@@ -59,15 +66,14 @@ const pedoDB = new PouchDB('pedo', { adapter: 'react-native-sqlite' });
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
 const PedometerScreen = (props) => {
-
   const sleep = (time) =>
     new Promise((resolve) => setTimeout(() => {
       resolve()
+
     }, time));
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
-
 
   const lang = useSelector((state) => state.lang);
   const user = useSelector((state) => state.user);
@@ -76,8 +82,8 @@ const PedometerScreen = (props) => {
   const profile = useSelector((state) => state.profile);
   const specification = useSelector((state) => state.specification);
   const pedometer = useSelector((state) => state.pedometer);
-
-  let oldWholeSteps = React.useRef(0).current;
+  const [autoStepModal, setAutoStepModal] = React.useState(false)
+  const [walkDistance, setWalkDistance] = React.useState(0)
   const [autoCounter, setAutoCounter] = React.useState(false);
   const [fill, setFill] = React.useState(0);
   const [step, setStep] = React.useState(0);
@@ -96,23 +102,81 @@ const PedometerScreen = (props) => {
   const [autoStep, setAutoStep] = React.useState(0);
   const [counter, setCounter] = React.useState(0);
   const [pedometerActivation, setPedometerActivation] = React.useState("")
-  const [manualSteps, setManualSteps] = useState()
-  const [batteryOptimizeModal, setBatteryOptimizeModal] = useState(false)
   const editId = React.useRef(
     props.route.params ? props.route.params.item._id : null,
   ).current;
   const rev = React.useRef(
     props.route.params ? props.route.params.item._rev : null,
   ).current;
+
   const translateY = useRef(new Animated.Value(100)).current
 
-  async function getstep1() {
-    console.error("user", await AsyncStorage.getItem("pedometerObj"));
+  const showAppleHealthKit = async () => {
+    const date = await AsyncStorage.getItem("homeDate")
+
+    const permissions = {
+      permissions: {
+        read: [AppleHealthKit.Constants.Permissions.Steps, AppleHealthKit.Constants.Permissions.DistanceWalkingRunning],
+      },
+    }
+    AppleHealthKit.initHealthKit(permissions, (error) => {
+      /* Called after we receive a response from the system */
+
+      if (error) {
+        console.log('[ERROR] Cannot grant permissions!')
+      } else {
+        AsyncStorage.setItem("healthKitPermission", "granted")
+        setAutoStepModal(false)
+
+      }
+      const options = {
+        unit: 'meter', // optional; default 'meter'
+        date: (new Date(date)).toISOString(), // optional; default now
+
+      }
+      AppleHealthKit.getDistanceWalkingRunning(
+        (options),
+        (err, results) => {
+          if (err) {
+            console.error(err);
+          }
+          setWalkDistance(results.value)
+        },
+      )
+
+      /* Can now read or write to HealthKit */
+
+    })
   }
+  const askPermission = async () => {
+    const date = await AsyncStorage.getItem("homeDate")
+
+    const isShown = await AsyncStorage.getItem("healthKitPermission")
+    if (isShown == null) {
+      setAutoStepModal(true)
+    } else {
+      let options = {
+        unit: 'meter', // optional; default 'meter'
+        date: (new Date(date)).toISOString(), // optional; default now
+
+      }
+      AppleHealthKit.getDistanceWalkingRunning(
+        (options),
+        (err, results) => {
+          if (err) {
+            console.error(err);
+          }
+          setWalkDistance(results.value)
+        },
+      )
+    }
+  }
+
   React.useEffect(() => {
-    getstep1()
+    askPermission()
     getStep();
   }, []);
+  
   //========================auto walk counter ===========================\\
   const options = {
     taskName: lang.stepCounter,
@@ -125,149 +189,131 @@ const PedometerScreen = (props) => {
     color: "#7f868c",
     linkingURI: 'o2fitt://PedometerScreen',
     parameters: {
-      delay: 300000,
-      // delay: 900000,
+      delay: 10000,
+      // delay: 3600000,
     },
   };
 
 
-  const veryIntensiveTask = async (taskDataArguments) => {
+  // const veryIntensiveTask = async (taskDataArguments) => {
 
-    let step = await AsyncStorage.getItem('Steps');
-    let stepDate = await AsyncStorage.getItem('autoStepCounterDate');
-    let wholeSteps = 0
+  //   let step = await AsyncStorage.getItem('Steps');
+  //   let stepDate = await AsyncStorage.getItem('autoStepCounterDate');
 
+  //   dispatch(setAutoCounterZero())
+  //   setCounter((step == null ? 0 : parseInt(step)) + parseInt(wholeSteps));
+  //   if (step === null) {
+  //     AsyncStorage.setItem("Steps", "0")
+  //   }
 
-    // setCounter((step == null ? 0 : parseInt(step)) + parseInt(wholeSteps));
-    if (step === null) {
-      AsyncStorage.setItem("Steps", "1")
-    }
+  //   if (moment().format("YYYY-MM-DD") !== stepDate || stepDate === null || stepDate === undefined) {
+  //     await AsyncStorage.setItem("Steps", "0")
+  //     AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD"))
+  //   }
 
-    if (moment().format("YYYY-MM-DD") !== stepDate || stepDate === null || stepDate === undefined) {
-      await AsyncStorage.setItem("Steps", "1")
-      AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD"))
-    }
+  //   RNWalkCounter.RNWalkCounter.startCounter();
+  //   WalkEvent.addListener('onStepRunning', async (event) => {
+  //     // if (moment().format("YYYY-MM-DD") !== await AsyncStorage.getItem('autoStepCounterDate')) {
+  //     //   onConfirm(await AsyncStorage.getItem('autoStepCounterDate')).then(async () => {
+  //     //     AsyncStorage.setItem("Steps", "0")
+  //     //     AsyncStorage.setItem("StepID", "0")
+  //     //     dispatch(setAutoCounterZero())
+  //     //     step = await AsyncStorage.getItem("Steps")
+  //     //     await AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD"))
+  //     //     await RNWalkCounter.RNWalkCounter.stopCounter()
+  //     //     RNWalkCounter.RNWalkCounter.startCounter();
+  //     //   })
 
-    RNWalkCounter.RNWalkCounter.startCounter();
-    WalkEvent.addListener('onStepRunning', async (event) => {
-      wholeSteps = (parseInt(event.steps) + (step == null ? 0 : parseInt(step)))
+  //     //   // dispatch(setPedometerDate(moment().format("YYYY-MM-DD")))
+  //     //   // dispatch(isEdit(false))
+  //     // }
 
-      if (moment().format("YYYY-MM-DD") !== moment(stepDate).format("YYYY-MM-DD")) {
-        onConfirm().then(async () => {
-          AsyncStorage.setItem("Steps", "0")
-          step = await AsyncStorage.getItem("Steps")
-          dispatch(setAutoCounterZero())
-          AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD")).then(async () => {
-            stepDate = await AsyncStorage.getItem("autoStepCounterDate")
-          })
-          RNWalkCounter.RNWalkCounter.stopCounter();
-          RNWalkCounter.RNWalkCounter.startCounter();
-        })
-      }
-      //live pedometer Counter
+  //     dispatch(increase())
+  //     // console.error(pedometer)
+  //     // setCounter(parseInt(event.steps) + (step == null ? 0 : parseInt(step)))
+  //     // setWholeStep(parseInt(event.steps) + parseInt(wholeSteps));
+  //     AsyncStorage.setItem('Steps', `${parseInt(event.steps) + (step == null ? 0 : parseInt(step))}`);
+  //     BackgroundService.updateNotification({
+  //       taskDesc: `${lang.o2fitisCountingStepsNum + (parseInt(event.steps) + (step == null ? 0 : parseInt(step)))}`,
+  //     });
 
-      dispatch(setPedometerCounter(wholeSteps))
-      AsyncStorage.setItem('Steps', `${parseInt(event.steps) + (step == null ? 0 : parseInt(step))}`);
+  //   });
 
-      BackgroundService.updateNotification({
-        taskDesc: `${lang.o2fitisCountingStepsNum + wholeSteps}`,
-      });
+  //   //infinite loop task
+  //   const { delay } = taskDataArguments;
+  //   await new Promise(async (resolve) => {
 
-    });
+  //     for (let i = 0; BackgroundService.isRunning(); i++) {
+  //       if (i !== 0) {
+  //         if (moment().format("YYYY-MM-DD") !== await AsyncStorage.getItem('autoStepCounterDate')) {
+  //           onConfirm(await AsyncStorage.getItem('autoStepCounterDate')).then(async () => {
+  //             console.warn("ok")
+  //             AsyncStorage.setItem("Steps", "0")
+  //             AsyncStorage.setItem("StepID", "0")
+  //             dispatch(setAutoCounterZero())
+  //             step = await AsyncStorage.getItem("Steps")
+  //             await AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD"))
+  //             await RNWalkCounter.RNWalkCounter.stopCounter()
+  //             RNWalkCounter.RNWalkCounter.startCounter();
+  //           })
 
-    //infinite loop task
-    const { delay } = taskDataArguments;
-    await new Promise(async (resolve) => {
+  //         } else {
+  //           let wholeSteps = await AsyncStorage.getItem("Steps")
+  //           let stepID = await AsyncStorage.getItem("StepID")
+  //           let todaySteps = await AsyncStorage.getItem('autoStepCounterDate');
 
-      for (let i = 0; BackgroundService.isRunning(); i++) {
-        if (i !== 0) {
+  //           console.log('oldSteps', oldSteps);
 
-          if (moment().format("YYYY-MM-DD") !== moment(stepDate).format("YYYY-MM-DD")) {
-            onConfirm().then(async () => {
-              AsyncStorage.setItem("Steps", "1")
-              step = await AsyncStorage.getItem("Steps")
-              dispatch(setAutoCounterZero())
-              AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD")).then(async () => {
-                stepDate = await AsyncStorage.getItem("autoStepCounterDate")
-              })
-              RNWalkCounter.RNWalkCounter.stopCounter();
-              RNWalkCounter.RNWalkCounter.startCounter();
-            })
-          } else {
-            onConfirm()
-          }
+  //           let data = {
+  //             id: stepID == "0" || stepID == null || stepID == undefined ? 0 : parseInt(stepID),
+  //             _id: todaySteps,
+  //             userId: user.id,
+  //             insertDate: todaySteps,
+  //             stepsCount: wholeSteps == "0" ? 1 : parseInt(wholeSteps),
+  //             duration: `${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min
+  //               }:${sec < 10 ? '0' + sec : sec}`,
+  //             userWeight: specification[0].weightSize,
+  //             burnedCalories: stepBurnedCalorie(
+  //               parseInt(wholeSteps),
+  //               specification[0].weightSize,
+  //             ),
+  //           };
+  //           saveServer(data);
+  //         }
+  //       }
+  //       await sleep(delay);
+  //     }
+  //   });
+  // };
 
+  // const onAutoSelected = async () => {
+  //   setAutoCounter(true);
+  //   dispatch(setActiveCounter(true))
+  //   await AsyncStorage.setItem('AutoStepSelected', 'true');
+  //   await AsyncStorage.setItem('autoStepCounterDate', moment().format("YYYY-MM-DD"));
+  //   await BackgroundService.start(veryIntensiveTask, options);
+  // };
 
-        }
-        await sleep(delay);
-      }
-    });
-  };
+  // const onSwitchPressed = async () => {
+  //   // !autoCounter && onAutoSelected()
+  //   // setAutoCounter(!autoCounter)
 
-  const onAutoSelected = async () => {
-    setAutoCounter(true);
-    dispatch(setActiveCounter(true))
-    await AsyncStorage.setItem('AutoStepSelected', 'true');
-    await AsyncStorage.setItem('autoStepCounterDate', moment().format("YYYY-MM-DD"));
-    await BackgroundService.start(veryIntensiveTask, options);
+  //   if (autoCounter == true) {
 
-  };
+  //     await BackgroundService.stop();
+  //     WalkEvent.removeAllListeners("onStepRunning")
+  //     AsyncStorage.setItem('AutoStepSelected', 'false');
+  //     dispatch(setActiveCounter(false))
+  //     dispatch(setPedometerDate(moment().format("YYYY-MM-DD")))
+  //     setPedometerActivation(lang.off)
+  //     onConfirm(moment().format("YYYY-MM-DD"))
+  //     setAutoCounter(false);
+  //   } else {
+  //     onAutoSelected();
+  //     setPedometerActivation(lang.on)
 
-  const onManualSelected = async () => {
-
-    const autoCounter = await AsyncStorage.getItem('AutoStepSelected');
-
-    if (autoCounter == "true") {
-      onConfirm().then(async () => {
-        BackgroundService.stop();
-        WalkEvent.removeAllListeners("onStepRunning")
-        dispatch(setActiveCounter(false))
-        AsyncStorage.setItem('AutoStepSelected', 'false');
-        // dispatch(setPedometerDate(moment().format("YYYY-MM-DD")))
-        setPedometerActivation(lang.off)
-        setAutoCounter(false);
-        AsyncStorage.removeItem("lastPedoID")
-      })
-    }
-    else {
-      dispatch(setActiveCounter(false))
-      AsyncStorage.setItem('AutoStepSelected', 'false');
-      setAutoCounter(false);
-    }
-  }
-
-  const onSwitchPressed = async () => {
-    const autoDate = await AsyncStorage.getItem('autoStepCounterDate')
-    const batteryOptimization = await AsyncStorage.getItem('batteryOptimize')
-    // !autoCounter && onAutoSelected()
-    // setAutoCounter(!autoCounter)
-    if (batteryOptimization && batteryOptimization == "true") {
-      if (autoCounter == true) {
-        console.error("stop tracking");
-        onConfirm().then(async () => {
-          BackgroundService.stop();
-          WalkEvent.removeAllListeners("onStepRunning")
-          AsyncStorage.setItem('AutoStepSelected', 'false');
-          dispatch(setActiveCounter(false))
-          // dispatch(setPedometerDate(moment().format("YYYY-MM-DD")))
-          setPedometerActivation(lang.off)
-          setAutoCounter(false);
-          AsyncStorage.removeItem("lastPedoID")
-        })
-
-      } else {
-        if (moment().format("YYYY-MM-DD") !== autoDate) {
-          await AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD"))
-          await AsyncStorage.setItem("Steps", "1")
-        }
-        onAutoSelected();
-        setPedometerActivation(lang.on)
-
-      }
-    } else {
-      setBatteryOptimizeModal(true)
-    }
-  };
+  //   }
+  // };
 
 
   const isAutoSelected = async () => {
@@ -290,8 +336,6 @@ const PedometerScreen = (props) => {
       setWholeStep(oldSteps);
     }
   }, []);
-
-  //==================================End===================================\\
 
 
   React.useEffect(() => {
@@ -394,14 +438,14 @@ const PedometerScreen = (props) => {
         selector: { insertDate: { $regex: reg } },
       })
       .then((records) => {
-
         console.error(records.docs);
         if (records.docs.length <= 0 && pedometer.isCounterActive == false) {
-          AsyncStorage.setItem("StepsID", moment().format("YYYYMMDD"))
+          console.warn("underZero")
+          AsyncStorage.setItem("StepID", "0")
           AsyncStorage.setItem("Steps", "0")
-
         } else {
           AsyncStorage.setItem("StepID", `${records.docs[0].id}`)
+
         }
 
 
@@ -410,7 +454,6 @@ const PedometerScreen = (props) => {
         console.log('oldstep', oldstep);
         console.log('parseInt(textStep)', parseInt(textStep));
         let oldstep = 0;
-
         records.docs.map((item) =>
           editId != item._id
             ? (oldstep += parseInt(item.stepsCount))
@@ -433,16 +476,15 @@ const PedometerScreen = (props) => {
   //   RNWalkCounter.RNWalkCounter.stopCounter();
   //   await BackgroundService.stop();
   // };
-  //console.warn(moment('2022-10-30').format("YYYYMMDD"));
 
-  const saveDB = async (data) => {
-    const autoStepCounterDate = await AsyncStorage.getItem("autoStepCounterDate")
+
+  const saveDB = (data) => {
     pedoDB
       .find({
         selector: { _id: data._id },
       })
       .then((rec) => {
-        // console.log('rec', rec);
+        console.log('rec', rec);
         if (rec.docs.length > 0) {
           pedoDB
             .put({ ...rec.docs[0], ...data })
@@ -450,96 +492,52 @@ const PedometerScreen = (props) => {
         } else {
           pedoDB.put({ ...data }).catch((error) => console.log(error));
         }
-
+        Toast.show({
+          type: "success",
+          props: { text2: lang.successful, style: { fontFamily: lang.font } },
+          onShow: navigation.goBack(),
+          visibilityTime: 800
+        })
+        setLoading(false);
 
       })
       .catch((error) => console.log(error));
     analytics().logEvent('setSteps');
+    // //console.error("FFFFFFFFFF");
 
-    if (parseInt(moment(autoStepCounterDate).format("YYYYMMDD")) !== parseInt(moment().format("YYYYMMDD"))) {
-      AsyncStorage.setItem("autoStepCounterDate", moment().format("YYYY-MM-DD"));
-      dispatch(setAutoCounterZero())
-    }
 
   };
 
-  const saveServer = async (data) => {
-    // //console.warn("s data", data);
-    // console.error(data);
-
-    // const lastPedoID = await AsyncStorage.getItem("lastPedoID")
-    // const newPedoID = await AsyncStorage.getItem("StepsID")
+  const saveServer = (data) => {
     const url = urls.workoutBaseUrl + urls.userTrackSteps
-    //console.warn(url);
-
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
-
     const params = { ...data }
-    //console.warn(params);
     const RC = new RestController()
-    if (data.stepsCount !== 0) {
-      // if (parseInt(lastPedoID) == parseInt(data.id)) {
-      if (params.id !== 0) {
-        //console.warn("edit", params);
-        RC.checkPrerequisites("put", url + "/id", params, header, (res) => onSuccess(res, params), (err) => onFailure(err, params), auth, onRefreshTokenSuccess, onRefreshTokenFailure)
-      }
-      // }
-      else {
-        //console.warn('New', params);
-        RC.checkPrerequisites("post", url, params, header, (res) => onSuccess(res, params), (err) => onFailure(err, params), auth, onRefreshTokenSuccess, onRefreshTokenFailure)
-      }
+    if (props.route.params) {
+      RC.checkPrerequisites("put", url + "/id", params, header, (res) => onSuccess(res, params), onFailure, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
     }
-
+    else {
+      RC.checkPrerequisites("post", url, params, header, (res) => onSuccess(res, params), onFailure, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
+    }
   }
 
-
-  const onSuccess = async (response, data) => {
-    // console.warn('success');
+  const onSuccess = (response, data) => {
+    console.warn("dddd", response.data.data)
     if (response.data.data) {
-      saveLocal({
+      saveDB({
         ...response.data.data
       })
     }
     else {
-      saveLocal({
+      saveDB({
         ...data
       })
     }
   }
-  const saveLocal = async (data) => {
-    console.warn('saveLocal', data);
-    pedoDB
-      .find({
-        selector: { _id: data._id },
-      })
-      .then((rec) => {
-        // console.log('rec', rec);
-        if (rec.docs.length > 0) {
-          //console.warn(0);
-          pedoDB
-            .put({ ...rec.docs[0], ...data })
-            .catch((error) => console.log(error));
-        } else {
-          pedoDB.put({ ...data }).catch((error) => console.log(error));
-        }
-        setLoading(false);
-
-
-      }).catch((error) => console.log(error));
-      
-    Toast.show({
-      type: "success",
-      props: { text2: lang.successful, style: { fontFamily: lang.font } },
-      visibilityTime: 1000,
-      onShow: navigation.goBack(),
-    })
-    analytics().logEvent('setSteps');
-
-  };
 
   const onFailure = (data) => {
-    console.error('failed', data);
-
+    // console.error(data);
+    console.warn("this2")
     if (data.id > 0) {
       offlineDB
         .post({
@@ -556,7 +554,7 @@ const PedometerScreen = (props) => {
         })
         .then((res) => {
           console.error(res);
-          saveLocal(data);
+          saveDB(data);
         });
     } else {
       offlineDB
@@ -574,7 +572,7 @@ const PedometerScreen = (props) => {
         })
         .then((res) => {
           console.error(res);
-          saveLocal(data);
+          saveDB(data);
         });
     }
 
@@ -614,33 +612,50 @@ const PedometerScreen = (props) => {
 
 
   const onConfirm = async () => {
-
-    const autoDate = await AsyncStorage.getItem('autoStepCounterDate')
-    const autoSteps = await AsyncStorage.getItem("Steps")
-    // const date = await AsyncStorage.getItem("homeDate")
-    // let data = JSON.parse(await AsyncStorage.getItem("pedometerObj"))
-
-    const data = {
-      id: parseInt(moment(autoDate).format("YYYYMMDD")),
-      _id: moment(autoDate).format("YYYYMMDD").toString(),
-      "userId": user.id,
-      "insertDate": moment(autoDate).format("YYYY-MM-DD"),
-      "stepsCount": autoSteps ? parseInt(autoSteps) : 1,
-      "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
-      "userWeight": specification[0].weightSize,
-      "burnedCalories": stepBurnedCalorie(autoSteps ? parseInt(autoSteps) : 1, specification[0].weightSize),
-      isManual: false
-    }
-
+    const date = await AsyncStorage.getItem("homeDate")
+    console.log("wholeSteps", wholeSteps)
+    console.log("oldSteps", oldSteps)
     const ws = !isNaN(parseInt(wholeSteps)) ? parseInt(wholeSteps) : 0
     const os = !isNaN(parseInt(oldSteps)) ? parseInt(oldSteps) : 0
-    if (parseInt(data.stepsCount) > 0) {
+    if (textStep !== 0 && textStep !== "0" && textStep !== "") {
+      setLoading(true)
 
-      saveDB(data)
+      const data = {
+        id: props.route.params ? props.route.params.item.id : 0,
+        _id: props.route.params ? props.route.params.item._id : Date.now().toString(),
+        "userId": user.id,
+        "insertDate": date,
+        "stepsCount": ws - os,
+        "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
+        "userWeight": specification[0].weightSize,
+        "burnedCalories": stepBurnedCalorie((ws - os), specification[0].weightSize),
+        isManual:true
+      }
 
-      return true
-
-
+      if (app.networkConnectivity) {
+        saveServer(data)
+      }
+      else {
+        offlineDB.post({
+          method: "post",
+          type: "pedo",
+          url: urls.workoutBaseUrl + urls.userTrackSteps,
+          header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
+          params: data
+        }).then(res => {
+          console.log(res)
+          saveDB(data)
+        })
+      }
+    }
+    else {
+      // setErrorContext(lang.fillAllFild)
+      // setErrorVisible(true)
+      Toast.show({
+        type: "error",
+        props: { text2: lang.fillSteps, style: { fontFamily: lang.font } },
+        visibilityTime: 800
+      })
     }
   }
 
@@ -691,42 +706,22 @@ const PedometerScreen = (props) => {
   const [elevationC, setElevationC] = React.useState(5)
   const textInput = useRef(null)
 
-  const onConfirmManualSteps = async() => {
-    const date = await AsyncStorage.getItem("homeDate")
-    if (textStep !== 0 && textStep !== "0" && textStep !== "") {
-      setLoading(true)
-      const data = {
-        id: props.route.params ? props.route.params.item.id : 0,
-        _id: props.route.params ? props.route.params.item._id : Date.now().toString(),
-        "userId": user.id,
-        "insertDate":  date,
-        "stepsCount": textStep,
-        "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
-        "userWeight": specification[0].weightSize,
-        "burnedCalories": stepBurnedCalorie(textStep, specification[0].weightSize),
-        "IsManual": true
-      }
-
-      saveServer(data)
-    } else {
-      Toast.show({
-        type: "error",
-        props: { text2: lang.fillSteps, style: { fontFamily: lang.font } },
-        visibilityTime: 800
-      })
+  const onConfirmManualSteps = () => {
+    setLoading(true)
+    const data = {
+      id: props.route.params ? props.route.params.item.id : 0,
+      _id: props.route.params ? props.route.params.item._id : Date.now().toString(),
+      "userId": user.id,
+      "insertDate": props.route.params ? props.route.params.item.insertDate : moment().format("YYYY-MM-DD"),
+      "stepsCount": textStep,
+      "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
+      "userWeight": specification[0].weightSize,
+      "burnedCalories": stepBurnedCalorie(textStep, specification[0].weightSize),
+      "IsManual": true
     }
 
-  }
-  const batteryPermissionRequest = () => {
-    setBatteryOptimizeModal(false)
-    requestIgnoreBatteryOptimizations().then((res) => {
-      AsyncStorage.setItem('batteryOptimize', "true").then(() => {
-        onSwitchPressed()
-        analytics().logEvent('battery_optimization_turned_on')
-      })
-    }).catch(err => {
-      console.error(err);
-    })
+    saveServer(data)
+
   }
 
   return (
@@ -764,69 +759,31 @@ const PedometerScreen = (props) => {
             {lang.pedTitle}
           </Text>
         </RowStart> */}
-        <View style={styles.container}>
-          {
-            !props.route.params &&
-            <RowSpaceBetween style={{ padding: moderateScale(10), width: dimensions.WINDOW_WIDTH * 0.93, justifyContent: "space-between" }}>
-              <Text style={{ fontSize: moderateScale(16), fontFamily: lang.font, marginHorizontal: moderateScale(8), color: defaultTheme.darkText }}>
-                {lang.stepsDes + " : " + pedometerActivation}
-              </Text>
-              <View style={{}}>
-                <Switch value={autoCounter} onValueChange={onSwitchPressed} />
-              </View>
-            </RowSpaceBetween>
-          }
-          {/* <Text
+        {/* <View style={styles.container}>
+          <RowSpaceBetween style={{ }}>
+            <RadioButton
+              lang={lang}
+              title={lang.pedometering}
+              style={{ borderColor: defaultTheme.gray }}
+              textStyle={{ fontSize: moderateScale(17) }}
+              isSelected={autoCounter}
+              onPress={()=>{
+                  setAutoStepModal(true)
+              }}
+            />
+          </RowSpaceBetween>
+          <Text
             style={[
               styles.text,
-              { fontFamily: lang.font, marginLeft: moderateScale(16),marginBottom:moderateScale(15) },
+              { fontFamily: lang.font, marginLeft: moderateScale(16),textAlign:"left",fontSize:moderateScale(15),paddingBottom:moderateScale(12) },
             ]}>
             {lang.ifYouStartPedometer}
-          </Text> */}
-        </View>
-        <RowSpaceBetween style={{ backgroundColor: defaultTheme.white, width: "93%", borderRadius: moderateScale(13), elevation: 5, paddingVertical: moderateScale(10), marginVertical: moderateScale(20), flexDirection: "column" }}>
-          <View style={{ width: "100%", alignItems: "baseline", paddingHorizontal: moderateScale(15) }}>
-            <Text style={{ fontSize: moderateScale(15), fontFamily: lang.titleFont, color: defaultTheme.darkText }}>{lang.manualStep}</Text>
-            {/* <RadioButton
-            lang={lang}
-            title={lang.numberOfSteps}
-            style={{ borderColor: defaultTheme.gray }}
-            textStyle={{ fontSize: moderateScale(15) }}
-            isSelected={!autoCounter}
-            onPress={onManualSelected}
-          /> */}
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text
-              style={[
-                styles.text,
-                {
-                  fontFamily: lang.font,
-                  width: dimensions.WINDOW_WIDTH - moderateScale(170),
-                },
-              ]}>
-              {lang.setYourStepsdesc}
-            </Text>
-            <CustomInput
-              autoFocus={props.route.params ? true : false}
-              lang={lang}
-              style={styles.number}
-              textStyle={{
-                fontSize: moderateScale(18),
-                color: defaultTheme.blue,
-                textAlign: 'center',
-              }}
-              maxLength={6}
-              keyboardType="decimal-pad"
-              onChangeText={onChangeText}
-              value={textStep.toString()}
-            />
-          </View>
-        </RowSpaceBetween>
+          </Text>
+        </View> */}
         {/* <TouchableOpacity activeOpacity={1} onPress={() => textInput.current.focus()}>
           <RowSpaceBetween style={[styles.targetComponent, { marginBottom: moderateScale(0) }]}>
 
-            <Text style={[styles.text, { fontFamily: lang.font, marginLeft: moderateScale(16), width: dimensions.WINDOW_WIDTH - moderateScale(170) }]}>
+            <Text style={[styles.text, { fontFamily: lang.font, marginLeft: moderateScale(16), width: dimensions.WINDOW_WIDTH - moderateScale(170),textAlign:"left" }]}>
               {lang.setYourStepsdesc}
             </Text>
             <TextInput
@@ -861,12 +818,14 @@ const PedometerScreen = (props) => {
 
                 />
               </TouchableOpacity>
+
               {/* <TextInput
                 style={{ width: moderateScale(80), borderWidth: 1, borderRadius: 15, fontSize: lang.langName == 'persian' ? moderateScale(23) : moderateScale(19), color: defaultTheme.blue, textAlign: "center", fontFamily: lang.font, borderColor: defaultTheme.border, height: Platform.OS == "ios" ? moderateScale(45) : "auto", alignItems: "center", justifyContent: "center" }}
                 keyboardType={"numeric"}
                 placeholder={`${profile.targetStep}`}
                 placeholderTextColor={defaultTheme.blue}
                 editable={false}
+                
               /> */}
               <View style={{ borderRadius: 15, borderWidth: 1, width: moderateScale(90), alignItems: "center", justifyContent: "center", height: moderateScale(45), borderColor: defaultTheme.border }}>
                 <Text style={{ fontSize: lang.langName == 'persian' ? moderateScale(23) : moderateScale(18), fontFamily: lang.font, color: defaultTheme.blue }}>{profile.targetStep}</Text>
@@ -875,17 +834,91 @@ const PedometerScreen = (props) => {
             </View>
           </TouchableOpacity>
         }
-
-
+        <RowSpaceBetween style={{...styles.shadow ,backgroundColor: defaultTheme.white, width: "93%", borderRadius: moderateScale(13), elevation: 5, paddingVertical: moderateScale(10), marginTop: moderateScale(20), flexDirection: "column" }}>
+          <View style={{ width: "100%", alignItems: "baseline",paddingHorizontal:moderateScale(15) }}>
+            <Text style={{fontSize:moderateScale(15),fontFamily:lang.titleFont,color:defaultTheme.darkText}}>{lang.manualStep}</Text>
+            {/* <RadioButton
+            lang={lang}
+            title={lang.numberOfSteps}
+            style={{ borderColor: defaultTheme.gray }}
+            textStyle={{ fontSize: moderateScale(15) }}
+            isSelected={!autoCounter}
+            onPress={onManualSelected}
+          /> */}
+          </View>
+          <View style={{ flexDirection: "row",alignItems:"center" }}>
+            <Text
+              style={[
+                styles.text,
+                {
+                  fontFamily: lang.font,
+                  width: dimensions.WINDOW_WIDTH - moderateScale(170),
+                },
+              ]}>
+              {lang.setYourStepsdesc}
+            </Text>
+            <CustomInput
+              autoFocus={props.route.params ? true : false}
+              lang={lang}
+              style={styles.number}
+              textStyle={{
+                fontSize: moderateScale(18),
+                color: defaultTheme.blue,
+                textAlign: 'center',
+              }}
+              maxLength={6}
+              keyboardType="decimal-pad"
+              onChangeText={onChangeText}
+              value={textStep.toString()}
+            />
+          </View>
+        </RowSpaceBetween>
+        <View style={[styles.container, { flexDirection: "row", alignItems: "center", paddingHorizontal: moderateScale(15) }]}>
+          <Distance width={moderateScale(35)} height={moderateScale(35)} />
+          <Text style={{ textAlign: "left", padding: moderateScale(15), fontFamily: lang.font, fontSize: moderateScale(17) }}>{lang.distance} : {(parseFloat(walkDistance)/1000).toFixed(2)} {lang.km}</Text>
+        </View>
         <View style={[styles.container2]}>
-          <RowStart>
-
+          {/* <RowStart>
+            <RadioButton
+              lang={lang}
+              title={lang.numberOfSteps}
+              style={{borderColor: defaultTheme.gray}}
+              textStyle={{fontSize: moderateScale(15)}}
+              isSelected={!autoCounter}
+              onPress={onManualSelected}
+            />
           </RowStart>
+          <RowSpaceBetween>
+            <Text
+              style={[
+                styles.text,
+                {
+                  fontFamily: lang.font,
+                  marginLeft: moderateScale(16),
+                  width: dimensions.WINDOW_WIDTH - moderateScale(170),
+                },
+              ]}>
+              {lang.setYourStepsdesc}
+            </Text>
+            <CustomInput
+              lang={lang}
+              style={styles.number}
+              textStyle={{
+                fontSize: moderateScale(18),
+                color: defaultTheme.blue,
+                textAlign: 'center',
+              }}
+              maxLength={6}
+              keyboardType="decimal-pad"
+              onChangeText={onChangeText}
+              value={textStep.toString()}
+            />
+          </RowSpaceBetween> */}
 
           <RowCenter
             style={{
               flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-              paddingTop: moderateScale(30),
+              paddingTop: moderateScale(60),
             }}>
             <Text
               style={[
@@ -894,7 +927,7 @@ const PedometerScreen = (props) => {
               ]}>
               0
             </Text>
-            {/* <AnimatedGaugeProgress
+            <AnimatedGaugeProgress
               size={size}
               width={gaugeWidth}
               fill={fill}
@@ -903,7 +936,8 @@ const PedometerScreen = (props) => {
               backgroundColor={defaultTheme.border}
               style={{ marginHorizontal: 20 }}
               // prefill={oldWhole}
-              onAnimationComplete={updateOldWhoe}>
+              onAnimationComplete={updateOldWhoe}
+            >
               <View
                 style={{
                   position: 'absolute',
@@ -972,7 +1006,7 @@ const PedometerScreen = (props) => {
                   {parseInt(profile.targetStep * 0.5)}
                 </Text>
               </View>
-            </AnimatedGaugeProgress> */}
+            </AnimatedGaugeProgress>
             <Text
               style={[
                 styles.text,
@@ -991,9 +1025,17 @@ const PedometerScreen = (props) => {
         style={styles.button}
         title={lang.saved}
         leftImage={require('../../../res/img/done.png')}
-        onPress={onConfirmManualSteps}
+        onPress={onConfirm}
         isLoading={isLoading}
       />
+       {/* <ConfirmButton
+        lang={lang}
+        style={styles.button}
+        title={lang.saved}
+        leftImage={require('../../../res/img/done.png')}
+        onPress={onConfirmManualSteps}
+        isLoading={isLoading}
+      /> */}
       <Modal
         visible={autoFocuse}
         contentContainerStyle={{ position: Platform.OS == "ios" ? "relative" : "absolute", zIndex: 50, bottom: 0 }}
@@ -1090,26 +1132,17 @@ const PedometerScreen = (props) => {
           </View>
         </Animated.View>
       </Modal>
-      {batteryOptimizeModal &&
-        <IMGTXTmodal
+      {
+        autoStepModal &&
+        <AutoStepCounterModal
           lang={lang}
-          text={lang.backgroundProcessText}
-          onAccept={batteryPermissionRequest}
-          onReject={() => setBatteryOptimizeModal(false)}
-          rightBtnText={lang.accept}
-          leftBtnText={lang.disagree}
-          image={
-            <Shoe
-              width={moderateScale(100)}
-              height={moderateScale(150)}
-            />
-          }
-          acceptStyle={{ width: dimensions.WINDOW_WIDTH * 0.36, backgroundColor: defaultTheme.green, elevation: 2 }}
-          acceptTextStyle={{ color: defaultTheme.white }}
-          rejectStyle={{ width: dimensions.WINDOW_WIDTH * 0.36, borderColor: defaultTheme.error, backgroundColor: defaultTheme.white, borderWidth: 1, elevation: 2 }}
-          rejectTextStyle={{ color: defaultTheme.error }}
+          onAccept={() => {
+            showAppleHealthKit()
+          }}
+          onDismiss={() => { setAutoStepModal(false) }}
         />
       }
+
 
       <Information
         visible={errorVisible}
@@ -1145,7 +1178,7 @@ const styles = StyleSheet.create({
     width: dimensions.WINDOW_WIDTH * 0.93,
     marginTop: moderateScale(25),
     borderRadius: moderateScale(15),
-    elevation: 6,
+    elevation: 4,
     backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
@@ -1171,8 +1204,9 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(17),
     color: defaultTheme.darkText,
+    textAlign:"left"
 
   },
   text2: {
@@ -1225,7 +1259,7 @@ const styles = StyleSheet.create({
   },
   targetComponent: {
     width: dimensions.WINDOW_WIDTH * 0.93,
-    // marginTop: moderateScale(10),
+    marginTop: moderateScale(25),
     elevation: 5,
     flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
     alignItems: "center",
@@ -1283,6 +1317,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: defaultTheme.border,
     marginTop: moderateScale(10)
+  },
+  shadow:{
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
   }
 });
 

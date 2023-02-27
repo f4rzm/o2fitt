@@ -24,7 +24,7 @@ const Calendar = props => {
                     right: moderateScale(10)
                 }}
                 onPress={props.onBack}
-            disabled={props.disabled}
+                disabled={props.disabled}
             >
                 <Image
                     source={require("../../res/img/back.png")}
@@ -37,7 +37,7 @@ const Calendar = props => {
                     top: moderateScale(10),
                     bottom: moderateScale(10),
                 }}
-                style={{ flexDirection: "row" ,alignItems:"center"}}
+                style={{ flexDirection: "row", alignItems: "center" }}
                 onPress={props.calendarPressed}
             >
                 <Image
@@ -61,7 +61,7 @@ const Calendar = props => {
                     right: moderateScale(10)
                 }}
                 onPress={nextIsEnabled ? props.onNext : () => false}
-            disabled={props.disabled}
+                disabled={props.disabled}
 
             >
                 <Image

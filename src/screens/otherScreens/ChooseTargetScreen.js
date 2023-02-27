@@ -17,7 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import moment from "moment"
 import LottieView from 'lottie-react-native';
 import Toast from 'react-native-toast-message';
-// import Orientation from 'react-native-orientation-locker';
+// 
 
 const ChooseTargetScreen = props => {
     // Orientation.lockToPortrait()

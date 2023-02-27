@@ -103,10 +103,9 @@ export default StyleSheet.create({
   // },
   textUnread: {
     color: 'white',
-    padding:moderateScale(1),
-    backgroundColor:"red",
-    borderRadius:32,
-    paddingHorizontal:moderateScale(8),
-    fontSize:moderateScale(14)
+    padding:moderateScale(4),
+    paddingHorizontal:moderateScale(10),
+    fontSize:moderateScale(14),
+
   }
 });

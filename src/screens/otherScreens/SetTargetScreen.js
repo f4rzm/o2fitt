@@ -31,7 +31,6 @@ import analytics from '@react-native-firebase/analytics';
 import PickerGoalWeight from '../../components/PickerGoalWeight';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SliderWeight from '../../components/SliderWeight';
-// import Orientation from 'react-native-orientation-locker';
 import { CommonActions } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { BlurView } from '@react-native-community/blur';

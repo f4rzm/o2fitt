@@ -108,12 +108,12 @@ const AuthCodeScreen = props => {
   }
 
   const onSendAuthSuccess = async (response) => {
-
-    if (response.data.data.userSelectViewModel) {
+    if (response.data.statusCode === 0) {
+      console.warn(response.data.data.userSelectViewModel);
       const url = urls.userBaseUrl + urls.userProfiles + urls.AddDeviceInfo
       const params = {
         userId: response.data.data.userSelectViewModel.id,
-        os: 0,
+        os: 1,
         brand: getBrand(),
         phoneModel: getModel(),
         brightness: null,
@@ -125,10 +125,7 @@ const AuthCodeScreen = props => {
         isTablet: isTablet(),
         isEmulator: `${await isEmulator()}`,
         appVersion: `${getVersion()}`,
-        // market:"googlePlay",
-        // market:"cafe bazar",
-        market:"web",
-        
+        market:"app store"
       }
       console.error(params);
       const header = {}
@@ -202,10 +199,6 @@ const AuthCodeScreen = props => {
           () => getSpecificationFromDB(token),
         );
       }
-    }else {
-      setErrorContext(lang.serverError)
-      setErrorVisible(true)
-      setIsLoading(false)
     }
   };
   const getSpecificationFromDB = async (token) => {
@@ -223,9 +216,8 @@ const AuthCodeScreen = props => {
     console.error("finishing get Speciication");
   };
   const onGetProfileFailure = (error) => {
-    setErrorContext(lang.serverError)
-    setErrorVisible(true)
-    setIsLoading(false)
+    // setErrorContext(lang.serverError)
+    // setErrorVisible(true)
   };
 
 

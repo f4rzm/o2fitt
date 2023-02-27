@@ -520,6 +520,7 @@ const ActivityDetailsScreen = props => {
             <VideoPlayer
               url={model.video}
               poster={model.imageUri}
+              
             /> :
             <Image
               source={(model.imageUri && model.imageUri != undefined && !showDefautImage) ? { uri: model.imageUri } : require("../../../res/img/exercise.png")}

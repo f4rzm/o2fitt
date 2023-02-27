@@ -43,6 +43,8 @@ import { SyncMealDB } from '../../classess/SyncMealDB';
 import { SyncActivityDB } from '../../classess/SyncActivityDB';
 import { SyncBulkData } from '../../classess/SyncBulkData';
 import {
+  increase,
+  setAutoCounterZero,
   setStarRatingTimer,
   setUnreadMessageNumber,
   updateUnitMeasurement,
@@ -50,13 +52,25 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNExitApp from 'react-native-exit-app';
 import messaging from '@react-native-firebase/messaging';
-// import RNWalkCounter from 'react-native-walk-counter';
+import { updateDate, updateTarget } from '../../redux/actions/profile';
 
+import { BlurView } from '@react-native-community/blur';
+// import RNWalkCounter from 'react-native-walk-counter';
+import Toast from 'react-native-toast-message'
+import { defaultTheme } from '../../constants/theme';
+import { setIsBuy, clearDiet } from '../../redux/actions/diet'
+import { isForceUpdate } from '../../redux/actions/app';
+import axios from 'axios';
+import BlogCard from '../../components/blogCard';
 import PushNotification from 'react-native-push-notification';
 import { isSetRating, setVipTimer } from '../../redux/actions/starRating';
-import { Button } from 'react-native-paper';
-import { openSettings } from 'react-native-send-intent';
+import AppleHealthKit, {
+  HealthValue,
+  HealthPermission,
+} from 'react-native-health'
 import { addDate } from '../../redux/actions/syncedDate';
+
+
 // const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
 PouchDB.plugin(pouchdbSearch);
@@ -68,7 +82,8 @@ const activityDB = new PouchDB('activity', { adapter: 'react-native-sqlite' });
 // const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const adDB = new PouchDB('ad', { adapter: 'react-native-sqlite' });
 // const reminderDB = new PouchDB('reminder', { adapter: 'react-native-sqlite' });
-// const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
+const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
+
 
 const HomeScreen = (props) => {
 
@@ -80,14 +95,12 @@ const HomeScreen = (props) => {
   const pedometer = useSelector((state) => state.pedometer);
   const diet = useSelector((state) => state.diet)
   const starRating = useSelector((state) => state.starRating)
-  const syncedDate = useSelector((state) => state.syncedDate)
-
   const specification = useSelector((state) => state.specification);
+  const syncedDate = useSelector((state) => state.syncedDate)
 
   const pkExpireDate = moment(profile.pkExpireDate, 'YYYY-MM-DDTHH:mm:ss');
   const today = moment();
   const hasCredit = pkExpireDate.diff(today, 'seconds') > 0 ? true : false;
-
   const dispatch = useDispatch();
   const [showDatePicker, setShowPicker] = React.useState(false);
   const [selectedDate, setDate] = React.useState(
@@ -96,7 +109,7 @@ const HomeScreen = (props) => {
   const [errorVisible, setErrorVisible] = useState(false)
   const [errorContext, setErrorContext] = useState('')
   const [userWater, setUserWater] = React.useState(0);
-  const [userStep, setUserStep] = React.useState([]);
+  const [userStep, setUserStep] = React.useState(null);
   const [meals, setMeals] = React.useState([]);
   const [activities, setActivities] = React.useState([]);
   const [blogs, setBlogs] = React.useState([]);
@@ -141,95 +154,17 @@ const HomeScreen = (props) => {
     console.log("AppState", appState.current);
   };
 
-
-  // console.error(user.id);
-  const getStepFromDB = async (date, serverResponse) => {
-
-    const url = urls.workoutBaseUrl + urls.userTrackSteps
-    const RC = new RestController()
-
-    const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
-
-    let data;
-    if (!stepBulkSync) {
-      const reg = RegExp('^' + date, 'i');
-      pedoDB
-        .find({
-          selector: { insertDate: { $regex: reg } },
-        })
-        .then((records) => {
-          setUserStep(records.docs);
-          let ServerPedoCounter = [];
-          let DbPedometer = [];
-          for (let i = 0; i < serverResponse.length; i++) {
-            const element = serverResponse[i];
-            if (element.isManual == false) {
-
-              ServerPedoCounter.push(element)
-            }
-          }
-          for (let i = 0; i < records.docs.length; i++) {
-            const element1 = records.docs[i];
-            if (element1.isManual == false) {
-              DbPedometer.push(element1)
-            }
-          }
-
-          if (app.networkConnectivity) {
-
-            if (DbPedometer.length > 0) {
-              if (serverResponse) {
-                //EDIT
-                if (ServerPedoCounter.length > 0) {
-
-                  if (parseInt(DbPedometer[0].stepsCount) > parseInt(ServerPedoCounter[ServerPedoCounter.length - 1].stepsCount)) {
-                    data = { ...ServerPedoCounter[0], stepsCount: DbPedometer[0].stepsCount, burnedCalories: DbPedometer[0].burnedCalories }
-                    RC.checkPrerequisites("put", url + "/id", data, header, (res) => onSuccessStep(res, params), onFailureStep, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
-                  }
-
-                }
-                else {
-                  //console.warn("NEw");
-                  data = {
-                    id: 0,
-                    _id: DbPedometer[0]._id,
-                    "userId": parseInt(user.id),
-                    "insertDate": DbPedometer[0].insertDate,
-                    "stepsCount": parseInt(DbPedometer[0].stepsCount),
-                    "duration": DbPedometer[0].duration,
-                    "userWeight": parseInt(DbPedometer[0].userWeight),
-                    "burnedCalories": parseInt(DbPedometer[0].burnedCalories),
-                  }
-                  RC.checkPrerequisites("post", url, data, header, (res) => onSuccessStep(res, params), onFailureStep, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
-
-                }
-              }
-            }
-          }
-        });
-    }
-  }
-  const onSuccessStep = () => {
-    console.error("Success");
-  }
-  const onFailureStep = (err) => {
-    // console.error(err);
-  }
-
   React.useEffect(() => {
-    //console.warn(starRating.starRatingTimer)
     if (starRating.starRatingTimer == undefined) {
       dispatch(setStarRatingTimer(moment().add(7, "days").format("YYYY-MM-DDTHH:mm:ss")))
       dispatch(isSetRating(false))
     }
     if (starRating.vipTimer == undefined) {
-
       dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
     }
 
-    // getAdvertises();
-    // getUnit();
-
+    getAdvertises();
+    getUnit();
 
     AsyncStorage.setItem('homeDate', selectedDate);
     // waterDB
@@ -249,72 +184,64 @@ const HomeScreen = (props) => {
     //   .on('change', activityChangeDetected);
   }, []);
 
-  const getWholeData = (date) => {
-    let time = date ? date : selectedDate
-    //  console.warn(selectedDate);
-    // getStepFromDB(selectedDate);
-    // console.error(diet.weekDinner[0].id)
-    // console.error(diet.weekSnack[1])
-    // console.error(diet.weekLunch[0].id)
-    // console.error(diet.weekBreafkast[0].id)
+  React.useEffect(() => {
+
     // setMeals([])
     // setUserWater(0)
     // setUserStep([])
     // setActivities([])
-    syncSteps(time);
-    getMealFromDB(time, false);
+    getMealFromDB(selectedDate);
     if (app.networkConnectivity) {
 
-    //syncedDays.indexOf(selectedDate) === -1
-    // syncedDays.push(selectedDate)
-    // syncMeal(time);
-    syncWater(time);
-    // // syncSteps(selectedDate);
-    syncSleep(time);
-    syncActivities(time);
+      //syncedDays.indexOf(selectedDate) === -1
+      // syncedDays.push(selectedDate)
+      // syncMeal(selectedDate);
+      syncWater(selectedDate);
+      syncSteps(selectedDate);
+      syncSleep(selectedDate);
+      syncActivities(selectedDate);
 
     } else {
-    getWaterFromDB(time);
-    getSleepFromDB(time);
-    getActivityFromDB(time);
-    }
-  }
+      getWaterFromDB(selectedDate);
+      getStepFromDB(selectedDate);
+      getSleepFromDB(selectedDate);
 
-  React.useEffect(() => {
-    getWholeData()
+      getActivityFromDB(selectedDate);
+    }
   }, [selectedDate, app.networkConnectivity]);
 
-  const changeDate = async () => {
+  // useEffect(() => {
+  //   getSteps()
+  // }, [userStep])
+
+
+  const getLatestData = async () => {
     const date = await AsyncStorage.getItem("homeDate")
-    setDate(date)
-    getWholeData(date)
-    const stepDate = await AsyncStorage.getItem("autoStepCounterDate")
-    const step = await AsyncStorage.getItem("Steps")
-    if (moment().format("YYYY-MM-DD") == stepDate) {
-      ////console.warn("stepDate changed");
+    getMealFromDB(date);
+
+    if (app.networkConnectivity) {
+
+      //syncedDays.indexOf(selectedDate) === -1
+      // syncedDays.push(selectedDate)
+      // syncMeal(date);
+      syncWater(date);
+      // syncSteps(date);
+      syncSleep(date);
+      syncActivities(date);
+
+    } else {
+      getWaterFromDB(date);
+      // getStepFromDB(date);
+      getSleepFromDB(date);
+      getActivityFromDB(date);
     }
   }
+
   React.useEffect(() => {
     const focusUnsubscribe = props.navigation.addListener('focus', () => {
-      //   getAdvertises();
-      //   getDates();
-      //   if (app.networkConnectivity) {
-
-      //     //syncedDays.indexOf(selectedDate) === -1
-      //     // syncedDays.push(selectedDate)
-      //     syncMeal(selectedDate);
-      //     syncWater(selectedDate);
-      //     // syncSteps(selectedDate);
-      //     syncSleep(selectedDate);
-      //     syncActivities(selectedDate);
-
-      //   } else {
-      //     getWaterFromDB(selectedDate);
-      //     getSleepFromDB(selectedDate);
-      //     getMealFromDB(selectedDate);
-      //     getActivityFromDB(selectedDate);
-      //   }
-      changeDate()
+      getAdvertises();
+      getDates();
+      getLatestData()
 
     });
 
@@ -322,6 +249,8 @@ const HomeScreen = (props) => {
       focusUnsubscribe();
     };
   }, [props.navigation]);
+
+
 
   React.useEffect(() => {
     if (app.networkConnectivity) {
@@ -341,26 +270,29 @@ const HomeScreen = (props) => {
     requestUserPermission();
   }, []);
 
-  // React.useEffect(() => {
-  //   ////console.warn(app.unreadMessages)
-  //   let backHandler = null;
-  //   const focusUnsubscribe = props.navigation.addListener('focus', () => {
-  //     backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-  //       setCloseDialogVisible(true);
-  //       return true;
-  //     });
-  //   });
 
-  //   const blurUnsubscribe = props.navigation.addListener('blur', () => {
-  //     backHandler && backHandler.remove();
-  //   });
+  React.useEffect(() => {
+    // console.warn(app.unreadMessages)
+    let backHandler = null;
+    const focusUnsubscribe = props.navigation.addListener('focus', () => {
+      backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+        setCloseDialogVisible(true);
+        return true;
+      });
+    });
 
-  //   return () => {
-  //     backHandler && backHandler.remove();
-  //     focusUnsubscribe();
-  //     blurUnsubscribe();
-  //   };
-  // }, []);
+    const blurUnsubscribe = props.navigation.addListener('blur', () => {
+      backHandler && backHandler.remove();
+    });
+
+    return () => {
+      backHandler && backHandler.remove();
+      focusUnsubscribe();
+      blurUnsubscribe();
+    };
+  }, []);
+
+
 
   // const pD = async () => {
   //   console.log("workeFine");
@@ -377,16 +309,243 @@ const HomeScreen = (props) => {
 
   // }, [props.navigation])
 
+
+  //===============================Step Conter================================\\
+
+  const getStepFromDB = async () => {
+    const date = await AsyncStorage.getItem("homeDate")
+    if (!stepBulkSync) {
+      const reg = RegExp('^' + date, 'i');
+      await pedoDB
+        .find({
+          selector: { insertDate: { $regex: reg } },
+        })
+        .then((records) => {
+          //console.error(records.docs);
+          if (records.docs.length !== 0) {
+            setUserStep(records.docs);
+          } else {
+            setUserStep([])
+          }
+          getSteps(records.docs, date)
+        });
+    }
+  }
+  const getSteps = async (stepDbData, date) => {
+
+    let DbPedometer = [];
+    for (let i = 0; i < stepDbData.length; i++) {
+
+      const element = stepDbData[i];
+
+      if (element.isManual == false) {
+        DbPedometer.push(element)
+      }
+    }
+
+    const permission = await AsyncStorage.getItem("healthKitPermission")
+    const healthPermissions = {
+      permissions: {
+        read: [AppleHealthKit.Constants.Permissions.Steps],
+      },
+    }
+
+
+    if (permission == "granted") {
+      AppleHealthKit.initHealthKit(healthPermissions, (error) => {
+        /* Called after we receive a response from the system */
+
+        if (error) {
+          console.log('[ERROR] Cannot grant permissions!')
+        }
+
+        /* Can now read or write to HealthKit */
+        let options = {
+          date: new Date(date).toISOString(), // optional; default now
+          includeManuallyAdded: false
+        };
+        AppleHealthKit.getStepCount(
+          (options),
+          (err, results) => {
+            if (results) {
+              if (results.value !== 0) {
+                sendAppleHealthKitStepsToDatabase(results.value, DbPedometer, date)
+              }
+            }
+          }
+        )
+      })
+    }
+  }
+
+  const sendAppleHealthKitStepsToDatabase = (steps, stepDbData, date) => {
+    const hour = 0
+    const min = 0
+    const sec = 0
+    //alert(stepDbData.length)
+    if (stepDbData.length == 0) {
+      //alert("first if")
+      const data = {
+        id: stepDbData.length !== 0 ? stepDbData[0].id : 0,
+        _id: stepDbData.length !== 0 ? stepDbData[0]._id : Date.now().toString(),
+        "userId": user.id,
+        "insertDate": stepDbData.length !== 0 ? stepDbData[0].insertDate : date,
+        "stepsCount": parseInt(steps),
+        "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
+        "userWeight": specification[0].weightSize,
+        "burnedCalories": stepBurnedCalorie((parseInt(steps)), specification[0].weightSize),
+        isManual: false
+      }
+      if (app.networkConnectivity) {
+
+        saveStepToSever(data, stepDbData)
+      }
+      else {
+        offlineDB.post({
+          method: "post",
+          type: "pedo",
+          url: urls.workoutBaseUrl + urls.userTrackSteps,
+          header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
+          params: data
+        }).then(res => {
+          console.log(res)
+          saveStepToDB(data)
+        })
+      }
+    } else if (parseInt(stepDbData[0].stepsCount) < parseInt(steps)) {
+      const data = {
+        id: stepDbData.length !== 0 ? stepDbData[0].id : 0,
+        _id: stepDbData.length !== 0 ? stepDbData[0]._id : Date.now().toString(),
+        "userId": user.id,
+        "insertDate": stepDbData.length !== 0 ? stepDbData[0].insertDate : date,
+        "stepsCount": parseInt(steps),
+        "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
+        "userWeight": specification[0].weightSize,
+        "burnedCalories": stepBurnedCalorie((parseInt(steps)), specification[0].weightSize),
+        isManual: false
+      }
+      if (app.networkConnectivity) {
+        saveStepToSever(data, stepDbData)
+      }
+      else {
+        offlineDB.post({
+          method: "post",
+          type: "pedo",
+          url: urls.workoutBaseUrl + urls.userTrackSteps,
+          header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
+          params: data
+        }).then(res => {
+          console.log(res)
+          saveStepToDB(data)
+        })
+      }
+    }
+  }
+
+
+  const saveStepToSever = (data, stepDbData) => {
+    const url = urls.workoutBaseUrl + urls.userTrackSteps
+    const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
+    const params = { ...data }
+    const RC = new RestController()
+    if (params.id > 0) {
+      RC.checkPrerequisites("put", url + "/id", params, header, (res) => onStepSuccess(res, params), onStepFailure, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
+    }
+    else {
+      RC.checkPrerequisites("post", url, params, header, (res) => onStepSuccess(res, params), onStepFailure, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
+    }
+
+  }
+
+  const onStepSuccess = (response, data) => {
+    if (response.data.data) {
+      saveStepToDB({
+        ...response.data.data
+      })
+    }
+    else {
+      saveStepToDB({
+        ...data
+      })
+    }
+  }
+
+  const onStepFailure = (data) => {
+    // if (data.id > 0) {
+    //   offlineDB
+    //     .post({
+    //       method: 'put',
+    //       type: 'pedo',
+    //       url: urls.workoutBaseUrl + urls.userTrackSteps + '/id',
+    //       header: {
+    //         headers: {
+    //           Authorization: 'Bearer ' + auth.access_token,
+    //           Language: lang.capitalName,
+    //         },
+    //       },
+    //       params: data,
+    //     })
+    //     .then((res) => {
+    //       console.error(res);
+    saveStepToDB(data);
+    //     });
+    // } else {
+    //   offlineDB
+    //     .post({
+    //       method: 'post',
+    //       type: 'pedo',
+    //       url: urls.workoutBaseUrl + urls.userTrackSteps,
+    //       header: {
+    //         headers: {
+    //           Authorization: 'Bearer ' + auth.access_token,
+    //           Language: lang.capitalName,
+    //         },
+    //       },
+    //       params: data,
+    //     })
+    //     .then((res) => {
+    //       console.error(res);
+    //       saveStepToDB(data);
+    //     });
+    // }
+
+  };
+  const saveStepToDB = (data) => {
+    // console.error(data);
+    pedoDB
+      .find({
+        selector: { _id: data._id },
+      })
+      .then((rec) => {
+        console.log('rec', rec);
+        if (rec.docs.length > 0) {
+          pedoDB
+            .put({ ...rec.docs[0], ...data })
+            .catch((error) => console.log(error));
+        } else {
+          pedoDB.put({ ...data }).catch((error) => console.log(error));
+        }
+      })
+      .catch((error) => console.log(error));
+    // analytics().logEvent('AutoStepSet');
+  }
+
+  //==========================end Pedometer=======================\\
+
+
+
+
   //================notification service======================\\
+
   const setNotificationService = async () => {
     const notificationServic = await AsyncStorage.getItem('notifDisable');
-    ////console.warn('this is notificatin', notificationServic);
+    // console.warn('this is notificatin', notificationServic);
     if (!notificationServic) {
-      ////console.warn(notificationServic, 'works ');
+      // console.warn(notificationServic, 'works ');
       PushNotification.cancelAllLocalNotifications()
       AsyncStorage.setItem('notifDisable', 'disabled');
     } else {
-      ////console.warn('notif is set');
+      // console.warn('notif is set');
     }
   };
   useEffect(() => {
@@ -405,13 +564,14 @@ const HomeScreen = (props) => {
   }
 
   const checkUrl = (url) => {
-    console.error("this is url", url);
 
-    ////console.warn(url);
+    // console.warn(url);
     if (url && url.includes('https://bank.o2fitt.com/Home/BackApp?orderid')) {
       const id = url.split('https://bank.o2fitt.com/Home/BackApp?orderid=')[1];
       console.log('url', url);
       console.log('id', id);
+
+
 
       props.navigation.navigate('PaymentResultScreen', { orderid: id });
     } else if (url && url.includes("tatoken")) {
@@ -421,26 +581,15 @@ const HomeScreen = (props) => {
       while (match = regex.exec(url)) {
         params[match[1]] = match[2];
       }
-      console.error("this is url", url);
-      console.error("this is params", params)
-      props.navigation.navigate('PackagesScreen',
-        {
-          utm_medium: params.utm_medium,
-          utm_campaign: params.utm_campaign,
-          utm_content: params.utm_content,
-          utm_source: params.utm_source,
-          tatoken: params.tatoken
-        });
+
+      props.navigation.navigate('PackagesScreen', { utm_medium: params.utm_medium, utm_campaign: params.utm_campaign, utm_content: params.utm_content, utm_source: params.utm_source, tatoken: params.tatoken });
 
     }
   };
 
   const getMessageFromServer = () => {
     const url =
-      urls.socialBaseUrl +
-      urls.contactUs +
-      `GetByUserId?userId=${user.id}`
-      ;
+      urls.socialBaseUrl + urls.contactUs + `GetByUserId?userId=${user.id}`;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -468,11 +617,11 @@ const HomeScreen = (props) => {
   };
 
   const getMessagesSuccess = (response) => {
-    ////console.warn('ssssssss', response.data.data);
+    // console.warn('ssssssss', response.data.data);
     AsyncStorage.setItem('messages', JSON.stringify(response.data.data));
     let ur = 0;
     response.data.data.map((item) => {
-      ////console.warn(item.isReadAdmin);
+      // console.warn(item.isReadAdmin);
       if (!item.toAdmin) {
         if (!item.isRead) {
           ur++;
@@ -526,26 +675,6 @@ const HomeScreen = (props) => {
         setUserSleepDuration(totalDuration);
       });
   };
-
-  // useEffect(() => {
-  //   PushNotification.localNotificationSchedule({
-  //     //... You can use all the options from localNotifications
-  //     message: "My Notification Message", // (required)
-  //     date: new Date(Date.now() + 6 * 1000), // in 60 secs
-  //     allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
-  //     channelId: 'Reminder',
-  //     priority: 'max',
-  //     soundName: 'remind',
-  //     playSound:true,
-  //     /* Android Only Properties */
-  //     repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-  //   });
-  //   console.warn("notif set");
-  //   PushNotification.getScheduledLocalNotifications((res) =>
-  //   console.log('sssssss', res),
-  // );
-  // }, [])
-
 
   const getMealFromDB = async (date, isSynced) => {
     const syncedDates = await AsyncStorage.getItem("syncedDates")
@@ -744,16 +873,17 @@ const HomeScreen = (props) => {
     );
   };
 
+
+
   const getStepsSuccess = (response, selectedDate) => {
     const SP = new SyncPedoDB();
-    getStepFromDB(selectedDate, response.data.data)
-    // SP.syncStepsByLocal(
-    //   pedoDB,
-    //   response.data.data,
-    //   selectedDate,
-    //   stepBulkSync,
-    //   getStepFromDB,
-    // );
+    SP.syncStepsByLocal(
+      pedoDB,
+      response.data.data,
+      selectedDate,
+      stepBulkSync,
+      getStepFromDB,
+    );
   };
 
   const getStepsFailure = () => {
@@ -798,7 +928,6 @@ const HomeScreen = (props) => {
   };
 
   const syncMeal = (date) => {
-    // alert("asd")
     const url =
       urls.foodBaseUrl +
       urls.userTrackFood +
@@ -887,141 +1016,141 @@ const HomeScreen = (props) => {
 
 
 
-  // const getAdvertises = () => {
-  //   const url =
-  //     urls.adBaseUrl + urls.advertise + `?countryId=${user.countryId}`;
-  //   const header = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + auth.access_token,
-  //       Language: lang.capitalName,
-  //     },
-  //   };
-  //   const params = {};
+  const getAdvertises = () => {
+    const url =
+      urls.adBaseUrl + urls.advertise + `?countryId=${user.countryId}`;
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
+    const params = {};
 
-  //   const RC = new RestController();
-  //   RC.checkPrerequisites(
-  //     'get',
-  //     url,
-  //     params,
-  //     header,
-  //     getAdvertisesSuccess,
-  //     getAdvertisesFailure,
-  //     auth,
-  //     onRefreshTokenSuccess,
-  //     onRefreshTokenFailure,
-  //   );
-  // };
+    const RC = new RestController();
+    RC.checkPrerequisites(
+      'get',
+      url,
+      params,
+      header,
+      getAdvertisesSuccess,
+      getAdvertisesFailure,
+      auth,
+      onRefreshTokenSuccess,
+      onRefreshTokenFailure,
+    );
+  };
 
-  // const getAdvertisesSuccess = (response) => {
-  //   if (response.data.data) {
-  //     const ads = response.data.data;
-  //     setAdvertises([ads]);
-  //     new Array(1).fill(ads).map((ad) => {
-  //       adDB
-  //         .get(ad.id.toString())
-  //         .then((res) => {
-  //           setAdHint(ad.id);
-  //         })
-  //         .catch((err) => {
-  //           adDB.put({ _id: ad.id.toString(), ...ad });
-  //           setAdSeen(ad.id);
-  //         });
-  //     });
-  //   }
-  // };
+  const getAdvertisesSuccess = (response) => {
+    if (response.data.data) {
+      const ads = response.data.data;
+      setAdvertises([ads]);
+      new Array(1).fill(ads).map((ad) => {
+        adDB
+          .get(ad.id.toString())
+          .then((res) => {
+            setAdHint(ad.id);
+          })
+          .catch((err) => {
+            adDB.put({ _id: ad.id.toString(), ...ad });
+            setAdSeen(ad.id);
+          });
+      });
+    }
+  };
 
-  // const getAdvertisesFailure = () => { };
+  const getAdvertisesFailure = () => { };
 
-  // const setAdSeen = (id) => {
-  //   const url = urls.adBaseUrl + urls.advertise + urls.adState;
-  //   const header = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + auth.access_token,
-  //       Language: lang.capitalName,
-  //     },
-  //   };
-  //   const params = {
-  //     id: id,
-  //     click: false,
-  //     view: true,
-  //     hint: false,
-  //   };
+  const setAdSeen = (id) => {
+    const url = urls.adBaseUrl + urls.advertise + urls.adState;
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
+    const params = {
+      id: id,
+      click: false,
+      view: true,
+      hint: false,
+    };
 
-  //   const RC = new RestController();
-  //   RC.checkPrerequisites(
-  //     'post',
-  //     url,
-  //     params,
-  //     header,
-  //     () => true,
-  //     () => false,
-  //     auth,
-  //     onRefreshTokenSuccess,
-  //     onRefreshTokenFailure,
-  //   );
-  // };
+    const RC = new RestController();
+    RC.checkPrerequisites(
+      'post',
+      url,
+      params,
+      header,
+      () => true,
+      () => false,
+      auth,
+      onRefreshTokenSuccess,
+      onRefreshTokenFailure,
+    );
+  };
 
-  // const setAdHint = (id) => {
-  //   const url = urls.adBaseUrl + urls.advertise + urls.adState;
-  //   const header = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + auth.access_token,
-  //       Language: lang.capitalName,
-  //     },
-  //   };
-  //   const params = {
-  //     id: id,
-  //     click: false,
-  //     view: false,
-  //     hint: true,
-  //   };
+  const setAdHint = (id) => {
+    const url = urls.adBaseUrl + urls.advertise + urls.adState;
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
+    const params = {
+      id: id,
+      click: false,
+      view: false,
+      hint: true,
+    };
 
-  //   const RC = new RestController();
-  //   RC.checkPrerequisites(
-  //     'post',
-  //     url,
-  //     params,
-  //     header,
-  //     () => true,
-  //     () => false,
-  //     auth,
-  //     onRefreshTokenSuccess,
-  //     onRefreshTokenFailure,
-  //   );
-  // };
+    const RC = new RestController();
+    RC.checkPrerequisites(
+      'post',
+      url,
+      params,
+      header,
+      () => true,
+      () => false,
+      auth,
+      onRefreshTokenSuccess,
+      onRefreshTokenFailure,
+    );
+  };
 
-  // const setAdClick = (item) => {
-  //   const url = urls.adBaseUrl + urls.advertise + urls.adState;
-  //   const header = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + auth.access_token,
-  //       Language: lang.capitalName,
-  //     },
-  //   };
-  //   const params = {
-  //     id: item.id,
-  //     click: true,
-  //     view: false,
-  //     hint: false,
-  //   };
+  const setAdClick = (item) => {
+    const url = urls.adBaseUrl + urls.advertise + urls.adState;
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
+    const params = {
+      id: item.id,
+      click: true,
+      view: false,
+      hint: false,
+    };
 
-  //   const RC = new RestController();
-  //   RC.checkPrerequisites(
-  //     'post',
-  //     url,
-  //     params,
-  //     header,
-  //     () => true,
-  //     () => false,
-  //     auth,
-  //     onRefreshTokenSuccess,
-  //     onRefreshTokenFailure,
-  //   );
+    const RC = new RestController();
+    RC.checkPrerequisites(
+      'post',
+      url,
+      params,
+      header,
+      () => true,
+      () => false,
+      auth,
+      onRefreshTokenSuccess,
+      onRefreshTokenFailure,
+    );
 
-  //   Linking.canOpenURL(item.url).then(() => {
-  //     Linking.openURL(item.url);
-  //   });
-  // };
+    Linking.canOpenURL(item.url).then(() => {
+      Linking.openURL(item.url);
+    });
+  };
 
   const onRefreshTokenSuccess = () => { };
 
@@ -1087,70 +1216,70 @@ const HomeScreen = (props) => {
 
 
   //====================HASANI=======================\\
-  // const getUnit = () => {
-  //   const url = `${urls.foodBaseUrl + urls.personalFood}GetPesonalMeasureUnits`;
-  //   const header = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + auth.access_token,
-  //       Language: lang.capitalName,
-  //     },
-  //   };
-  //   const RC = new RestController();
-  //   RC.get(url, header, onSuccessGetMeasureUnits, onFailureGetMeasureUnits);
-  // };
-  // const onSuccessGetMeasureUnits = async (response) => {
-  //   ////console.warn({ response: response.data.data });
-  //   // setMeasureUnitsPersonal(response.data.data);
-  //   // dispatch(setUnit(response.data.data))
-  //   AsyncStorage.setItem('unit', JSON.stringify(response.data.data));
-  // };
-  // const onFailureGetMeasureUnits = () => {
-  //   ////console.warn('failed to get units');
-  // };
+  const getUnit = () => {
+    const url = `${urls.foodBaseUrl + urls.personalFood}GetPesonalMeasureUnits`;
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
+    const RC = new RestController();
+    RC.get(url, header, onSuccessGetMeasureUnits, onFailureGetMeasureUnits);
+  };
+  const onSuccessGetMeasureUnits = async (response) => {
+    // console.warn({ response: response.data.data });
+    // setMeasureUnitsPersonal(response.data.data);
+    // dispatch(setUnit(response.data.data))
+    AsyncStorage.setItem('unit', JSON.stringify(response.data.data));
+  };
+  const onFailureGetMeasureUnits = () => {
+    // console.warn('failed to get units');
+  };
 
-  // const onSuccessUnit = (response) => {
-  //   if (app.measureUnit.version == -0.01) {
-  //     dispatch(updateUnitMeasurement(response.data.data));
-  //     AsyncStorage.setItem('MeasureUnits', JSON.stringify(response.data.data));
-  //   } else {
-  //     AddNewMeasureUnits(response.data.data);
-  //   }
-  // };
-  // const AddNewMeasureUnits = (data) => {
-  //   let arrayUnits = app.measureUnit.measureUnits;
+  const onSuccessUnit = (response) => {
+    if (app.measureUnit.version == -0.01) {
+      dispatch(updateUnitMeasurement(response.data.data));
+      AsyncStorage.setItem('MeasureUnits', JSON.stringify(response.data.data));
+    } else {
+      AddNewMeasureUnits(response.data.data);
+    }
+  };
+  const AddNewMeasureUnits = (data) => {
+    let arrayUnits = app.measureUnit.measureUnits;
 
-  //   data.measureUnits.forEach((element) => {
-  //     const index = arrayUnits.findIndex((item) => item.id === element.id);
-  //     if (index !== -1) {
-  //       arrayUnits.splice(index, 1, element);
-  //     } else {
-  //       arrayUnits.push(element);
-  //     }
-  //   });
+    data.measureUnits.forEach((element) => {
+      const index = arrayUnits.findIndex((item) => item.id === element.id);
+      if (index !== -1) {
+        arrayUnits.splice(index, 1, element);
+      } else {
+        arrayUnits.push(element);
+      }
+    });
 
-  //   const array = {
-  //     version: data.version,
-  //     measureUnits: arrayUnits,
-  //   };
-  //   dispatch(updateUnitMeasurement(array));
-  //   AsyncStorage.setItem('MeasureUnits', JSON.stringify(array));
-  //   ////console.warn('this is array', array);
-  //   console.log('measurent units', array);
-  // };
+    const array = {
+      version: data.version,
+      measureUnits: arrayUnits,
+    };
+    dispatch(updateUnitMeasurement(array));
+    AsyncStorage.setItem('MeasureUnits', JSON.stringify(array));
+    // console.warn('this is array', array);
+    console.log('measurent units', array);
+  };
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   let url = `${urls.foodBaseUrl}MeasureUnit/GetByVersion?versionNum=${app.measureUnit.version}`;
-  //   let header = {
-  //     headers: {
-  //       Authorization: 'Bearer ' + auth.access_token,
-  //       'Content-Type': 'application/json',
-  //     },
-  //   };
-  //   const RC = new RestController();
-  //   RC.get(url, header, onSuccessUnit, onFailureUnit);
+    let url = `${urls.foodBaseUrl}MeasureUnit/GetByVersion?versionNum=${app.measureUnit.version}`;
+    let header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        'Content-Type': 'application/json',
+      },
+    };
+    const RC = new RestController();
+    RC.get(url, header, onSuccessUnit, onFailureUnit);
 
-  // }, []);
+  }, []);
 
   const onFailureUnit = () => {
     console.log('failure');
@@ -1174,17 +1303,29 @@ const HomeScreen = (props) => {
     props.navigation.navigate("RecipeCatScreen")
   }
 
+  React.useEffect(() => {
+    // dispatch(clearDiet())
+    for (let i = 0; i < diet.weekSnack.length - 1; i++) {
+      if (diet.weekSnack[i].id == undefined || diet.weekSnack[i].id == null) {
+        console.error(diet.weekSnack[i])
+      }
+    }
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
+    axios.get("https://identity.o2fitt.com/api/v1/Users/DayOfWeeks", header).then(() => {
 
+    }).catch((err) => {
+      setErrorVisible(true)
+      setErrorContext(lang.noInternet)
+    })
+  }, [])
   const openBlogPressed = () => {
     props.navigation.navigate("BlogCatScreen")
   }
-  async function timezone() {
-    var time = new Date()
-
-  }
-  useEffect(() => {
-    timezone()
-  }, [])
 
 
   return (
@@ -1192,17 +1333,29 @@ const HomeScreen = (props) => {
       <MainToolbar
         onMessagePressed={() => props.navigation.navigate('MessagesScreen')}
         unreadNum={app.unreadMessages}
-        // showRecipe={user.countryId == 128 ? true : false}
+        showRecipe={user.countryId == 128 ? true : false}
         onRecipePresse={onRecipePresse}
       />
-
-      {/* {closeDialogVisible || optionalDialogVisible ? (
+      {/* {errorVisible ? (
+        <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
+          <View style={styles.wrapper}>
+            <BlurView style={styles.absolute} blurType="dark" blurAmount={2} />
+            <Information
+              visible={errorVisible}
+              context={errorContext}
+              onRequestClose={() => setErrorVisible(false)}
+              lang={lang}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      ) : null} */}
+      {closeDialogVisible || optionalDialogVisible ? (
         <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
           <View style={styles.wrapper}>
             <BlurView style={styles.absolute} blurType="light" blurAmount={6} />
           </View>
         </TouchableWithoutFeedback>
-      ) : null} */}
+      ) : null}
 
       <Calendar
         lang={lang}
@@ -1216,7 +1369,7 @@ const HomeScreen = (props) => {
       <ScrollView
         contentContainerStyle={{
           alignItems: 'center',
-          paddingBottom: moderateScale(15),
+          paddingBottom: moderateScale(60),
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -1243,7 +1396,7 @@ const HomeScreen = (props) => {
           autoSteps={pedometer.AutoStepsCounter}
         />
         {
-          user.countryId !== 128 ? null :
+          user.countryId !== 128 || lang.langName !== "persian" ? null :
             <DietCard
               lang={lang}
               profile={profile}
@@ -1252,7 +1405,6 @@ const HomeScreen = (props) => {
               onCardPressed={onDietPressed}
             />
         }
-
 
         {/* <View style={{ backgroundColor: "black" }}>
           <Text style={{ color: defaultTheme.white }}>dietPK:{profile.dietPkExpireDate}</Text>
@@ -1279,7 +1431,6 @@ const HomeScreen = (props) => {
           lang={lang}
           profile={profile}
           user={user}
-          selectedDate={selectedDate}
           onPress={() =>
             props.navigation.navigate('PedometerTabScreen', {
               date: selectedDate,
@@ -1295,7 +1446,6 @@ const HomeScreen = (props) => {
           steps={userStep}
           autoSteps={pedometer.AutoStepsCounter}
         />
-
         <WaterCard
           lang={lang}
           profile={profile}
@@ -1332,7 +1482,6 @@ const HomeScreen = (props) => {
           duration={userSleepDuration}
           calorie={userSleepCalories}
         />
-
         {/* {
           lang.langName !== "persian" ? null :
             <BlogCard
@@ -1341,15 +1490,14 @@ const HomeScreen = (props) => {
             />
         } */}
 
-        {/* {advertises.map((item) => (
+        {advertises.map((item) => (
           <AdvertiseRow
             lang={lang}
             item={item}
             key={item.id.toString()}
             onPress={setAdClick}
           />
-        ))} */}
-        <View style={{ height: moderateScale(50) }} />
+        ))}
 
         <TwoOptionModal
           lang={lang}
@@ -1361,8 +1509,7 @@ const HomeScreen = (props) => {
           button1Pressed={goToPackages}
           button2Pressed={() => setOptionalDialogVisible(false)}
         />
-
-        {/* <TwoOptionModal
+        <TwoOptionModal
           lang={lang}
           visible={closeDialogVisible}
           onRequestClose={() => setCloseDialogVisible(false)}
@@ -1371,8 +1518,7 @@ const HomeScreen = (props) => {
           button2={lang.no}
           button1Pressed={() => RNExitApp.exitApp()}
           button2Pressed={() => setCloseDialogVisible(false)}
-        /> */}
-
+        />
         <DatePicker
           lang={lang}
           user={user}
@@ -1390,7 +1536,6 @@ const HomeScreen = (props) => {
             onPress={setAdClick}
           />
         ))} */}
-
         {/* {blogs.map((item) => (
           <BlogRow
             lang={lang}
@@ -1402,9 +1547,7 @@ const HomeScreen = (props) => {
           />
           
         ))} */}
-
       </ScrollView>
-
       <Uploader app={app} auth={auth} />
     </>
   );
@@ -1417,8 +1560,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'gold',
   },
-
-
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  wrapper: {
+    position: 'absolute',
+    zIndex: 10,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default HomeScreen;

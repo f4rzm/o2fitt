@@ -13,6 +13,7 @@ import { defaultTheme } from '../../constants/theme';
 import { useSelector, useDispatch } from 'react-redux'
 import { moderateScale, s } from 'react-native-size-matters';
 import { dimensions } from '../../constants/Dimensions';
+import Toast from 'react-native-toast-message'
 
 const cookType = [
     {
@@ -151,11 +152,17 @@ const EditFoodIngredients = props => {
     }
 
     const valueChanged = (value, index) => {
-        if ((/^[0-9\.]+$/i.test(value) || value == "" || text == ".")) {
+        if ((/^[0-9\.]+$/i.test(value) || value == "" || value == ".")) {
             let v = { ...ingredients[index], value: value }
             let newIngredients = [...ingredients]
             newIngredients[index] = v
             setIngredients(newIngredients)
+        }else{
+            Toast.show({
+                type:"error",
+                props:{text2:lang.typeEN},
+                visibilityTime:1800
+              })
         }
     }
 
@@ -204,7 +211,7 @@ const EditFoodIngredients = props => {
             />
             <View>
 
-                <ScrollView style={{ maxHeight: dimensions.WINDOW_HEIGTH * 0.78 }}>
+                <ScrollView style={{ maxHeight: dimensions.WINDOW_HEIGTH * 0.75 }}>
                     <RowSpaceBetween
                         style={{
                             marginVertical: 0,

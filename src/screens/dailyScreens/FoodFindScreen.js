@@ -165,11 +165,11 @@ const FoodFindScreen = props => {
     const url = urls.foodBaseUrl + urls.food + urls.search + `?Page=${pageNumber}&PageSize=20&Name=${encodeURI(text)}&FoodType=${foodType}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const RC = new RestController()
-    RC.checkPrerequisites("get", url, {}, header, onSuccess, (err)=>onFailure(err,text), auth, onRefreshTokenSuccess, onRefreshTokenFailure)
+    RC.checkPrerequisites("get", url, {}, header, onSuccess, onFailure, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
   }
 
   const onSuccess = (response) => {
-    console.warn(response.data.data)
+    console.log(response.data.data)
     setIsSearch(false)
     setIsSearchOnline(false)
     if (pageNumber > 1) {
@@ -183,11 +183,9 @@ const FoodFindScreen = props => {
     }
   }
 
-  const onFailure = (err,text) => {
-    console.warn(err);
+  const onFailure = () => {
     setIsSearch(false)
     setIsSearchOnline(false)
-    searchOffline(text)
   }
 
   // const getFavorite = () => {
@@ -200,17 +198,17 @@ const FoodFindScreen = props => {
   //   }
   // }
 
-  const syncFavoriteSuccess = (res) => {
-    console.log(res)
-    if (res.data.data.items.length >= 0) {
-      const SF = new SyncFavoriteFood()
-      SF.syncFavoriteFoodsByLocal(favoriteFoodDB, res.data.data.items)
-    }
-  }
+  // const syncFavoriteSuccess = (res) => {
+  //   console.log(res)
+  //   if (res.data.data.items.length >= 0) {
+  //     const SF = new SyncFavoriteFood()
+  //     SF.syncFavoriteFoodsByLocal(favoriteFoodDB, res.data.data.items)
+  //   }
+  // }
 
-  const syncFavoriteFailed = (error) => {
+  // const syncFavoriteFailed = (error) => {
 
-  }
+  // }
 
   const getPersonalFood = () => {
     if (app.networkConnectivity) {

@@ -102,6 +102,7 @@ function ChangePackageModal(props) {
         }
         analytics().logEvent('dietPack_Changed')
     }
+    console.warn(dimensions.WINDOW_HEIGTH);
     return (
         <SafeAreaView>
             <Animated.View style={[{ transform: [{ translateY: props.translateY }] }, styles.AnimatedModal]}>
@@ -172,7 +173,7 @@ function ChangePackageModal(props) {
                                         selectedPackageData.dietPackFoods.map((item, index) => {
                                             return (
                                                 <View style={{ padding: moderateScale(5), alignItems: "center", borderBottomWidth: selectedPackageData.dietPackFoods.length - 1 !== index ? 1 : 0, borderBottomColor: defaultTheme.border, flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15, width: dimensions.WINDOW_WIDTH * 0.8, paddingVertical: moderateScale(8) }}>
-                                                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.35,textAlign:"left" }}>{item.foodName}</Text>
+                                                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.35, textAlign: "left" }}>{item.foodName}</Text>
                                                     <View style={{ flexDirection: "row" }}>
                                                         {/* <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(5), color: defaultTheme.mainText }}></Text> */}
                                                         <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, width: dimensions.WINDOW_WIDTH * 0.3, textAlign: "right" }}>{item.value} {item.measureUnitName}</Text>
@@ -184,7 +185,7 @@ function ChangePackageModal(props) {
                                 </View>
                         }
 
-                        <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+                        <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0, paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0 }}>
                             <ConfirmButton
                                 lang={props.lang}
                                 title={"انتخاب"}
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
         alignItems: "center",
-        paddingBottom: moderateScale(15),
+        paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
         height: dimensions.WINDOW_HEIGTH * 0.9
     },
     confirmButton: {

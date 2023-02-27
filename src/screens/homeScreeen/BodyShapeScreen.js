@@ -202,50 +202,67 @@ const BodyShapeScreen = props => {
     }, []);
 
     React.useEffect(() => {
-
-        if (
-            (bust - hip <= 1 * 2.54 &&
+        if (!profile.gender === 1) {
+            if (bust - hip >= 3.6 * 2.54 && bust - waist < 9 * 2.54) {
+                setBodyShape({ ...bodyShapes.invertedTrinagle });
+            } else if (hip - bust >= 3.6 * 2.54 && hip - waist < 9 * 2.54) {
+                setBodyShape({ ...bodyShapes.trinagle });
+            } else if (
                 hip - bust < 3.6 * 2.54 &&
-                bust - waist >= 9 * 2.54) ||
-            hip - waist >= 10 * 2.54
-        ) {
-            setBodyShape({ ...bodyShapes.hourGlass });
-        } else if (
-            hip - bust >= 3.6 * 2.54 &&
-            hip - bust < 10 * 2.54 &&
-            hip - waist >= 9 * 2.54 &&
-            highHip / waist < 1.193
-        ) {
-            setBodyShape({ ...bodyShapes.apple });
-        } else if (
-            bust - hip > 1 * 2.54 &&
-            bust - hip < 10 * 2.54 &&
-            bust - waist >= 9 * 2.54
-        ) {
-            setBodyShape({ ...bodyShapes.topHourGlass });
-        } else if (
-            hip - bust > 2 * 2.54 &&
-            hip - waist >= 7 * 2.54 &&
-            highHip / waist >= 1.193
-        ) {
-            setBodyShape({ ...bodyShapes.pear });
-        } else if (hip - bust >= 3.6 * 2.54 && hip - waist < 9 * 2.54) {
-            setBodyShape({ ...bodyShapes.trinagle });
-        } else if (bust - hip >= 3.6 * 2.54 && bust - waist < 9 * 2.54) {
-            setBodyShape({ ...bodyShapes.invertedTrinagle });
-        } else if (
-            hip - bust < 3.6 * 2.54 &&
-            bust - hip < 3.6 * 2.54 &&
-            bust - waist < 9 * 2.54 &&
-            hip - waist < 10 * 2.54
-        ) {
-            setBodyShape({ ...bodyShapes.rectangle });
+                bust - hip < 3.6 * 2.54 &&
+                bust - waist < 9 * 2.54 &&
+                hip - waist < 10 * 2.54
+            ) {
+                setBodyShape({ ...bodyShapes.rectangle });
+            } else {
+                setBodyShape({ ...bodyShapes.unknown });
+                setErrorContext(lang.invalidBodyData);
+                setErrorVisible(true);
+            }
         } else {
-            setBodyShape({ ...bodyShapes.unknown });
-            setErrorContext(lang.invalidBodyData);
-            setErrorVisible(true);
+            if (
+                (bust - hip <= 1 * 2.54 &&
+                    hip - bust < 3.6 * 2.54 &&
+                    bust - waist >= 9 * 2.54) ||
+                hip - waist >= 10 * 2.54
+            ) {
+                setBodyShape({ ...bodyShapes.hourGlass });
+            } else if (
+                hip - bust >= 3.6 * 2.54 &&
+                hip - bust < 10 * 2.54 &&
+                hip - waist >= 9 * 2.54 &&
+                highHip / waist < 1.193
+            ) {
+                setBodyShape({ ...bodyShapes.apple });
+            } else if (
+                bust - hip > 1 * 2.54 &&
+                bust - hip < 10 * 2.54 &&
+                bust - waist >= 9 * 2.54
+            ) {
+                setBodyShape({ ...bodyShapes.topHourGlass });
+            } else if (
+                hip - bust > 2 * 2.54 &&
+                hip - waist >= 7 * 2.54 &&
+                highHip / waist >= 1.193
+            ) {
+                setBodyShape({ ...bodyShapes.pear });
+            } else if (hip - bust >= 3.6 * 2.54 && hip - waist < 9 * 2.54) {
+                setBodyShape({ ...bodyShapes.trinagle });
+            } else if (bust - hip >= 3.6 * 2.54 && bust - waist < 9 * 2.54) {
+                setBodyShape({ ...bodyShapes.invertedTrinagle });
+            } else if (
+                hip - bust < 3.6 * 2.54 &&
+                bust - hip < 3.6 * 2.54 &&
+                bust - waist < 9 * 2.54 &&
+                hip - waist < 10 * 2.54
+            ) {
+                setBodyShape({ ...bodyShapes.rectangle });
+            } else {
+                setBodyShape({ ...bodyShapes.unknown });
+                setErrorContext(lang.invalidBodyData);
+                setErrorVisible(true);
+            }
         }
-
     }, []);
 
     React.useEffect(() => {
@@ -625,14 +642,14 @@ const BodyShapeScreen = props => {
                         </View>
                     </View>
                 </View>
-                <View style={{ height: moderateScale(45) }} />
+                <View style={{height:moderateScale(45)}}/>
             </ScrollView>
             <View style={{ bottom: 5, position: "absolute", alignItems: "center", width: dimensions.WINDOW_WIDTH }}>
                 <ConfirmButton
                     lang={lang}
                     style={{ backgroundColor: defaultTheme.green }}
                     title={lang.editBodyShape}
-                    onPress={() => {
+                    onPress={()=>{
                         props.navigation.navigate("EditBodyScreen")
                     }}
                 />

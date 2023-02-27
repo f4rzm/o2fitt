@@ -7,9 +7,8 @@ import { moderateScale } from 'react-native-size-matters';
 import { defaultTheme } from '../../constants/theme';
 import { allMeasureUnits } from '../../utils/measureUnits';
 
-
 function dietDaily(props) {
-    const foodValue = parseFloat(props.item.item.value)
+    const foodValue=parseFloat(props.item.item.value)
     const [food, setFood] = useState({
         nutrientValue: [10],
     })
@@ -45,8 +44,8 @@ function dietDaily(props) {
         <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, justifyContent: 'center', borderBottomWidth: 1, borderColor: defaultTheme.border, paddingVertical: moderateScale(5) }}>
             <View style={{ justifyContent: "space-between", width: "100%", flexDirection: "row", marginHorizontal: moderateScale(15), alignItems: "center" }}>
                 <View style={{}}>
-                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.5, textAlign: "left" }}>{props.item.item.foodName}</Text>
-                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(12), color: defaultTheme.mainText, textAlign: "left", paddingTop: Platform.OS == "ios" ? moderateScale(10) : 0 }}>{foodValue == 0.25 ? "یک چهارم" : foodValue == 0.5 ? "نصف" : foodValue == 0.75 ? "سه چهارم" : foodValue} {props.item.item.measureUnitName}</Text>
+                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.5,textAlign:"left" }}>{props.item.item.foodName}</Text>
+                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(12), color: defaultTheme.mainText,textAlign:"left",paddingTop: Platform.OS=="ios"? moderateScale(10):0 }}>{foodValue==0.25?"یک چهارم":foodValue==0.5?"نصف":foodValue==0.75?"سه چهارم":foodValue} {props.item.item.measureUnitName}</Text>
                 </View>
                 <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16), paddingHorizontal: moderateScale(25), color: defaultTheme.mainText }}>{food.nutrientValue.length>10?((food.nutrientValue[23] * props.value * measureunit[0].value) / 100).toFixed(0):"درحال دریافت"}</Text>
             </View>

@@ -210,7 +210,7 @@ const EditGoalNutritionScreen = props => {
 
   const keyboardDidShow = (e) => {
     console.log(e)
-    if(Platform.OS=='android'){
+    if (Platform.OS == 'android') {
       setTimeout(() => {
         setBottomPadding(moderateScale(75))
       }, 50);
@@ -218,15 +218,23 @@ const EditGoalNutritionScreen = props => {
   }
 
   const keyboardDidHide = (e) => {
-    if(Platform.OS=='android'){
+    if (Platform.OS == 'android') {
       setBottomPadding(moderateScale(0))
     }
   }
 
   const onChange = (text, index) => {
     const f = [...nutritionsValue]
-    f[index] = text
-    setNutritonValue(f)
+    if (/^[0-9\.]+$/i.test(text)) {
+      f[index] = text
+      setNutritonValue(f)
+    } else {
+      Toast.show({
+        type: "error",
+        props: { text2: lang.typeEN },
+        visibilityTime: 1800
+      })
+    }
   }
 
   const onConfirm = () => {
@@ -264,7 +272,7 @@ const EditGoalNutritionScreen = props => {
 
   return (
     <View style={[styles.mainContainer]}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS=='ios'?"padding":"none"} keyboardVerticalOffset={Platform.OS=='ios'&&dimensions.WINDOW_HEIGTH<800?20:Platform.OS=='ios'&&dimensions.WINDOW_HEIGTH>800?45:0}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS == 'ios' ? "padding" : "none"} keyboardVerticalOffset={Platform.OS == 'ios' && dimensions.WINDOW_HEIGTH < 800 ? 20 : Platform.OS == 'ios' && dimensions.WINDOW_HEIGTH > 800 ? 45 : 0}>
         <Toolbar
           lang={lang}
           title={lang.changeTargetNutritionTitle}

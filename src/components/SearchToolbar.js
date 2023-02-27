@@ -127,7 +127,7 @@ const SearchToolbar = props => {
                         selectTextOnFocus={true}
                         value={props.value}
                         autoFocus={props.autoFocusDisable ? false : true}
-
+                        placeholderTextColor={defaultTheme.subText}
                     />
 
                     {

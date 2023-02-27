@@ -115,7 +115,19 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetBust && p.targetBust.toString()}
-                onChangeText={text => setProfile({ ...p, targetBust: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetBust: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetBust: '' })
+                  }
+                  
+                }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -135,7 +147,18 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetArm && p.targetArm.toString()}
-                onChangeText={text => setProfile({ ...p, targetArm: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetArm: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetArm: '' })
+                  }
+                }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -155,7 +178,18 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetWaist && p.targetWaist.toString()}
-                onChangeText={text => setProfile({ ...p, targetWaist: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetWaist: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetWaist: '' })
+                  }
+                }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -175,7 +209,19 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetHighHip && p.targetHighHip.toString()}
-                onChangeText={text => setProfile({ ...p, targetHighHip: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetHighHip: text })
+
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetHighHip: '' })
+                  }
+                }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -195,7 +241,18 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetHip && p.targetHip.toString()}
-                onChangeText={text => setProfile({ ...p, targetHip: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetHip: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetHip: '' })
+                  }
+                }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -215,7 +272,18 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetShoulder && p.targetShoulder.toString()}
-                onChangeText={text => setProfile({ ...p, targetShoulder: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetShoulder: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                     setProfile({ ...p, targetShoulder: '' })
+                  }
+              }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -235,7 +303,18 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetThighSize && p.targetThighSize.toString()}
-                onChangeText={text => setProfile({ ...p, targetThighSize: text })}
+                onChangeText={text =>{
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetThighSize: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetThighSize: '' })
+                  }
+                  }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -255,7 +334,18 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetNeckSize && p.targetNeckSize.toString()}
-                onChangeText={text => setProfile({ ...p, targetNeckSize: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetNeckSize: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                    setProfile({ ...p, targetNeckSize: '' })
+                  }
+                  }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
@@ -275,7 +365,19 @@ const EditGoalBodyScreen = props => {
                 maxLength={6}
                 placeholder="0"
                 value={p.targetWrist && p.targetWrist.toString()}
-                onChangeText={text => setProfile({ ...p, targetWrist: text })}
+                onChangeText={text => {
+                  if (/^[0-9\.]+$/i.test(text)) {
+                    setProfile({ ...p, targetWrist: text })
+                  } else {
+                    Toast.show({
+                      type: "error",
+                      props: { text2: lang.typeEN },
+                      visibilityTime: 1800
+                    })
+                     setProfile({ ...p, targetWrist: '' })
+                  }
+                  
+                }}
                 keyboardType="decimal-pad"
               />
               <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>

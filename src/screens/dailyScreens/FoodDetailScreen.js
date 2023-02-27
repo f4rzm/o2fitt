@@ -68,7 +68,6 @@ const barcodeNationalDB = new PouchDB('barcodeNational', {
 
 const FoodDetailScreen = (props) => {
   const f = props.route.params;
-  console.log('f=>', f);
   const lang = useSelector((state) => state.lang);
   const auth = useSelector((state) => state.auth);
   const user = useSelector((state) => state.user);
@@ -115,7 +114,7 @@ const FoodDetailScreen = (props) => {
     foodNutrientValue: new Array(34).fill(0),
     _id: null,
   }).current;
-
+  
   const foodModel = React.useRef({
     foodId: 0,
     foodName: '',
@@ -302,11 +301,11 @@ const FoodDetailScreen = (props) => {
                 ? props.route.params.meal.measureUnitId
                 : retrivedFood.measureUnits[0].id,
             foodNutrientValue: nutrientValue,
-            measureUnitName: props.route.params &&
-              props.route.params.meal &&
-              props.route.params.meal.measureUnitName
-              ? props.route.params.meal.measureUnitName
-              : measureUnits[0].name,
+            measureUnitName:props.route.params &&
+            props.route.params.meal &&
+            props.route.params.meal.measureUnitName
+            ? props.route.params.meal.measureUnitName
+            : measureUnits[0].name,
           });
         } else {
           console.warn("log")
@@ -413,7 +412,6 @@ const FoodDetailScreen = (props) => {
             } else {
               updateSelectedMeasureUnit(retrivedFood.measureUnits[0]);
             }
-            console.log('retri', retrivedFood);
             setMeal({
               ...meal,
               measureUnitId:
@@ -423,11 +421,11 @@ const FoodDetailScreen = (props) => {
                   ? props.route.params.meal.measureUnitId
                   : retrivedFood.measureUnits[0],
               foodNutrientValue: nutrientValue,
-              measureUnitName: props.route.params &&
-                props.route.params.meal &&
-                props.route.params.meal.measureUnitName
-                ? props.route.params.meal.measureUnitName
-                : measureUnits[0].name,
+              measureUnitName:props.route.params &&
+              props.route.params.meal &&
+              props.route.params.meal.measureUnitName
+              ? props.route.params.meal.measureUnitName
+              : measureUnits[0].name,
             });
           } else {
             console.warn("log")
@@ -435,6 +433,7 @@ const FoodDetailScreen = (props) => {
           }
         })
         .catch((error) => {
+          // console.log('getFromDB error', error);
           // getFromServer();
           console.warn("log")
         });
@@ -445,11 +444,11 @@ const FoodDetailScreen = (props) => {
     let url = null;
 
     if (!isNaN(parseInt(food.personalFoodId))) {
-
+      console.error("personal");
       url =
         urls.foodBaseUrl + urls.personalFood + `?foodId=${food.personalFoodId}`;
     } else {
-
+      console.error("dd");
 
       url = urls.foodBaseUrl + urls.food + `?foodId=${food.foodId}`;
     }
@@ -459,7 +458,6 @@ const FoodDetailScreen = (props) => {
         Language: lang.capitalName,
       },
     };
-    console.warn('header', header);
     const params = {};
 
     const RC = new RestController();
@@ -477,6 +475,7 @@ const FoodDetailScreen = (props) => {
   };
 
   const getSuccess = (response) => {
+    // console.warn("this is food data", response.data);
 
     if (response.data.data.measureUnits.length > 0) {
       if (!isNaN(parseInt(food.personalFoodId))) {
@@ -514,30 +513,16 @@ const FoodDetailScreen = (props) => {
         allMeasureUnits.find((unit) => item === unit.id) !== undefined &&
         measureUnits.push(allMeasureUnits.find((unit) => item === unit.id)),
     );
-    if (food.personalFoodId > 0) {
-      setFood({
-        ...food,
-        ...response.data.data,
-        foodName: response.data.data.foodName,
-        measureUnits: measureUnits.map((unit) => ({
-          id: unit.id,
-          name: unit[lang.langName],
-          value: unit.value,
-        })),
-      });
-    }
-    else {
-      setFood({
-        ...food,
-        ...response.data.data,
-        foodName: response.data.data.name[lang.langName],
-        measureUnits: measureUnits.map((unit) => ({
-          id: unit.id,
-          name: unit[lang.langName],
-          value: unit.value,
-        })),
-      });
-    }
+    setFood({
+      ...food,
+      ...response.data.data,
+      foodName: response.data.data.name[lang.langName],
+      measureUnits: measureUnits.map((unit) => ({
+        id: unit.id,
+        name: unit[lang.langName],
+        value: unit.value,
+      })),
+    });
     setOriginalFood(response.data.data);
     if (
       props.route.params &&
@@ -548,32 +533,28 @@ const FoodDetailScreen = (props) => {
     } else {
       updateSelectedMeasureUnit(response.data.data.measureUnits[0]);
     }
-
     setMeal({
       ...meal,
       measureUnitId: meal.measureUnitId
         ? meal.measureUnitId
         : response.data.data.measureUnits[0],
       foodNutrientValue: response.data.data.nutrientValue,
-      measureUnitName: meal.measureUnitName
-        ? meal.measureUnitName
-        : response.data.data.measureUnitName[0],
+      measureUnitName:meal.measureUnitName
+      ? meal.measureUnitName
+      : response.data.data.measureUnitName[0],
     });
   };
 
-  const getFailure = (err) => {
-
+  const getFailure = () => {
     getFromDB()
   };
 
   const setSelectedMeasureUnit = (item) => {
-    console.warn('measureUnit', item);
     updateSelectedMeasureUnit(item.id);
-    setMeal({ ...meal, measureUnitId: item.id, measureUnitName: item.name });
+    setMeal({ ...meal, measureUnitId: item.id,measureUnitName:item.name });
   };
 
   const valueCahanged = (text) => {
-
     (/^[0-9\.]+$/i.test(text) || text == '' || text == '.') ?
       setMeal({
         ...meal,
@@ -583,11 +564,12 @@ const FoodDetailScreen = (props) => {
           : food.nutrientValue.map((item) =>
             ((item * parseFloat(text)) / 100).toFixed(1),
           ),
+          
       })
-      : Toast.show({
-        type: "error",
-        props: { text2: lang.typeEN },
-        visibilityTime: 1800
+      :Toast.show({
+        type:"error",
+        props:{text2:lang.typeEN},
+        visibilityTime:1800
       })
   };
 
@@ -763,7 +745,7 @@ const FoodDetailScreen = (props) => {
           type: 'success',
           props: { text2: lang.successful, style: { fontFamily: lang.font } },
           onShow: props.navigation.goBack(),
-          visibilityTime: 800
+          visibilityTime:800
         });
       });
     analytics().logEvent('setMeal', {
@@ -779,14 +761,12 @@ const FoodDetailScreen = (props) => {
         Language: lang.capitalName,
       },
     };
-
     const params = { ...meal };
-    console.warn(params);
 
     console.error('params', params);
     console.log('url', params.foodNutrientValue.toString());
     if (app.networkConnectivity) {
-      const method = props.route.params.meal.insertDate ? 'put' : 'post';
+      const method = meal.id ? 'put' : 'post';
       const RC = new RestController();
       RC.checkPrerequisites(
         method,
@@ -806,13 +786,12 @@ const FoodDetailScreen = (props) => {
       Toast.show({
         type: 'error',
         props: { text2: lang.noInternet, style: { fontFamily: lang.font } },
-        visibilityTime: 800
+        visibilityTime:800
       });
     }
   };
 
   const onSuccess = (response) => {
-    console.warn('success', response);
     saveToDB({
       ...response.data.data,
       foodNutrientValue:
@@ -827,48 +806,16 @@ const FoodDetailScreen = (props) => {
     Toast.show({
       type: 'success',
       props: { text2: lang.successful, style: { fontFamily: lang.font } },
-      visibilityTime: 800
+      visibilityTime:800
 
       // onShow: props.navigation.goBack()
     });
   };
 
   const onFailure = () => {
-    const nValue = food.nutrientValue.map(
-      (item) => (item * meal.value * unit.value) / 100,
-    );
-    const m = meal._id
-      ? { ...meal, foodNutrientValue: nValue }
-      : { ...meal, foodNutrientValue: nValue, _id: Date.now().toString() };
-    console.warn(m);
-    offlineDB
-      .post({
-        method: f.meal.insertDate ? 'put' : 'post',
-        type: 'meal',
-        url: urls.foodBaseUrl + urls.userTrackFood,
-        header: {
-          headers: {
-            Authorization: 'Bearer ' + auth.access_token,
-            Language: lang.capitalName,
-          },
-        },
-        params: {
-          ...m,
-          foodId:
-            parseInt(food.personalFoodId) > 0 ? null : food.foodId,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        saveToDB({
-          ...m,
-          foodId:
-            parseInt(food.personalFoodId) > 0 ? null : food.foodId,
-        });
-      });
-    // setSaving(false);
-    // setErrorContext(lang.serverError);
-    // setErrorVisible(true);
+    setSaving(false);
+    setErrorContext(lang.serverError);
+    setErrorVisible(true);
   };
 
   const onRefreshTokenSuccess = () => { };
@@ -1043,7 +990,7 @@ const FoodDetailScreen = (props) => {
         personalFoodId: response.data.data.personalFoodId,
         foodName: response.data.data.name,
         foodNutrientValue: response.data.data.nutrientValue,
-        _id: `${user.id}${Date.now().toString()}`,
+        _id: Date.now().toString(),
       });
     } else {
       setSaving(false);
@@ -1084,7 +1031,7 @@ const FoodDetailScreen = (props) => {
               } else {
                 savePersonalFoodServer();
               }
-            }
+            } 
             else {
               setSaving(false);
               setButton1(null);
@@ -1097,7 +1044,7 @@ const FoodDetailScreen = (props) => {
                 visibilityTime: 800
               });
             }
-          }
+          } 
           else {
             // if (app.networkConnectivity) {
             //   if (
@@ -1113,35 +1060,35 @@ const FoodDetailScreen = (props) => {
             //     saveServer({ ...model });
             //   }
             // } else {
-            console.log('meal data', m);
-            offlineDB.allDocs({ include_docs: false }).then((records) => {
-              console.log('records', records.total_rows);
-              offlineDB.post({
-                method: props.route.params.meal.insertDate ? 'put' : 'post',
-                type: 'meal',
-                url: props.route.params.meal.insertDate ? urls.foodBaseUrl2 + urls.userTrackFood : urls.foodBaseUrl + urls.userTrackFood,
-                header: {
-                  headers: {
-                    Authorization: 'Bearer ' + auth.access_token,
-                    Language: lang.capitalName,
+              console.log('meal data', m);
+              offlineDB.allDocs({ include_docs: false }).then((records) => {
+                console.log('records', records.total_rows);
+                offlineDB.post({
+                  method: props.route.params.meal.insertDate ? 'put' : 'post',
+                  type: 'meal',
+                  url:props.route.params.meal.insertDate ? urls.foodBaseUrl2 + urls.userTrackFood: urls.foodBaseUrl + urls.userTrackFood,
+                  header: {
+                    headers: {
+                      Authorization: 'Bearer ' + auth.access_token,
+                      Language: lang.capitalName,
+                    },
                   },
-                },
-                params: {
-                  ...m,
-                  foodId:
-                    parseInt(food.personalFoodId) > 0 ? null : food.foodId,
-                },
-                index: records.total_rows
-              })
-                .then((res) => {
-                  console.log(res);
-                  saveToDB({
+                  params: {
                     ...m,
                     foodId:
                       parseInt(food.personalFoodId) > 0 ? null : food.foodId,
+                  },
+                  index: records.total_rows
+                })
+                  .then((res) => {
+                    console.log(res);
+                    saveToDB({
+                      ...m,
+                      foodId:
+                        parseInt(food.personalFoodId) > 0 ? null : food.foodId,
+                    });
                   });
-                });
-            })
+              })
             // }
           }
 
@@ -1177,7 +1124,7 @@ const FoodDetailScreen = (props) => {
   console.error(dimensions.WINDOW_HEIGTH);
   return (
     <KeyboardAvoidingView keyboardVerticalOffset={dimensions.WINDOW_HEIGTH < 800 ? 30 : 60} style={{ flex: 1 }} behavior={Platform.OS == "ios" ? "padding" : "none"}>
-      <View style={{ flex: 1 }}>
+      <View style={{flex:1}}>
         <FoodToolbar
           lang={lang}
           title={lang.addAteFoodTitle}
@@ -1302,7 +1249,7 @@ const FoodDetailScreen = (props) => {
                 onChangeText={valueCahanged}
                 keyboardType="decimal-pad"
                 placeholder="0"
-                editable={food.measureUnits && food.measureUnits.length > 1 ? true : false}
+                editable={food.measureUnits &&food.measureUnits.length > 1?true:false}
               />
               {food.measureUnits &&
                 food.measureUnits.length > 1 &&
@@ -1742,7 +1689,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(14),
     marginHorizontal: moderateScale(8),
     lineHeight: moderateScale(24),
-    textAlign: "left"
+    textAlign:"left"
   },
   buttonGradient: {
     position: "absolute",

@@ -32,7 +32,7 @@ import CustomDropDown from '../../components/CustomDropDown';
 import BlurItemList from '../../components/BlurItemList';
 import {useRef} from 'react';
 import Toast from 'react-native-toast-message';
-// import Orientation from 'react-native-orientation-locker';
+// 
 import {WheelPicker} from 'react-native-wheel-picker-android';
 
 const days = Array.from({length: 31}, (x, i) => (i + 1).toString());

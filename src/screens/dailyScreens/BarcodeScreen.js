@@ -30,12 +30,13 @@ const BarcodeScreen = props => {
   const [errorContext, setErrorContext] = React.useState('');
   const [showPopupWrapper, setShowPopupWrapper] = useState(false);
   const [barcode, setBarcode] = useState();
+  
   const onBarcodeRead = e => {
     // console.log(e);
-    setBarcode(e)
+    setBarcode(e.data)
     if (!isFetching) {
       isFetching = true;
-      getBarcodeGs1(e);
+      getBarcodeGs1(e.data);
     }
   };
 
@@ -169,7 +170,6 @@ const BarcodeScreen = props => {
   const onRefreshTokenFailure = () => { };
 
   const onClosePopup = () => {
-    props.navigation.goBack()
     setShowPopupWrapper(false)
   }
 
@@ -188,7 +188,7 @@ const BarcodeScreen = props => {
       <Information
         visible={errorVisible}
         context={errorContext}
-        onRequestClose={() => { setErrorVisible(false); isFetching = false; }}
+        onRequestClose={() => { setErrorVisible(false); isFetching = false }}
         lang={lang}
       />
 

@@ -31,7 +31,7 @@ const SplashScreen = props => {
   // const redux = useSelector(state => state)
   let userId = React.useRef(0).current
   let SDBC = React.useRef(new SpecificationDBController()).current
- 
+  const [showNoInternetModal, setShowNoInternetModal] = React.useState(false)
   let opacity = React.useRef(new Animated.Value(1)).current
   const dispatch = useDispatch()
   const [errorContext, setErrorContext] = React.useState("")
@@ -96,10 +96,11 @@ const SplashScreen = props => {
     pkExpireDate.diff(today, "seconds") > 0 ? dispatch(setIsBuy(true)) : dispatch(setIsBuy(false))
     pkExpireDate.diff(today, "seconds") > 0 ? dispatch(vipShown(false)) : dispatch(vipShown(true))
 
-    console.warn(response.data.data.forceUpdateVersions)
+    console.error(response.data.data)
     let appVersions = response.data.data.forceUpdateVersions.split(",")
     let index = appVersions.indexOf(DeviceInfo.getVersion())
     if (index !== -1) {
+  
       dispatch(isForceUpdate(true))
     } else {
       dispatch(isForceUpdate(false))
@@ -157,6 +158,18 @@ const SplashScreen = props => {
     dispatch(tokenLoadingFinished())
   }
 
+  const NoInternetCallback = () => {
+    setShowNoInternetModal(false)
+    setTimeout(() => {
+      NativeSplashScreen.hide()
+      loadDataFinished()
+    }, 500)
+  }
+
+  const closeInternetModal = () => {
+
+  }
+
   return (
     <Animated.View style={[styles.mainContainer, { opacity: 0 }]}>
       <View style={[styles.container]}>
@@ -169,26 +182,32 @@ const SplashScreen = props => {
       <Byo2
         width={dimensions.WINDOW_WIDTH * 0.27}
       />
-      {errorVisible && (
+      {/* {errorVisible && (
         <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
           <View style={styles.wrapper}>
             <BlurView style={styles.absolute} blurType="light" blurAmount={6} />
           </View>
         </TouchableWithoutFeedback>
-      )}
+      )} */}
 
       <View style={{ marginBottom: 12, marginTop: 15 }}>
         <Text style={styles.text}>
           everyone's needs it
         </Text>
       </View>
-      
-      {/* <Information
+      <NoInternetModal
+        visible={showNoInternetModal}
+        onRequestClose={closeInternetModal}
+        callBack={NoInternetCallback}
+        networkConnectivity={app.networkConnectivity}
+        lang={lang}
+      />
+      <Information
         visible={errorVisible}
         context={errorContext}
         onRequestClose={() => setErrorVisible(false)}
         lang={lang}
-      /> */}
+      />
     </Animated.View>
   );
 };

@@ -1,10 +1,14 @@
 import { View, Text, Linking } from 'react-native'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
 import { useNavigation } from '@react-navigation/native'
 import ProfileRow from '../ProfileRow'
 import moment from 'moment'
+import { Modal } from 'react-native-paper'
+import { dimensions } from '../../constants/Dimensions'
+import ConfirmButton from '../ConfirmButton'
+
 
 const DrawerItems = (props) => {
     const user = props.user
@@ -14,6 +18,7 @@ const DrawerItems = (props) => {
     const pkExpireDate = moment(profile.pkExpireDate, "YYYY-MM-DDTHH:mm:ss")
     const today = moment()
     const hasCredit = pkExpireDate.diff(today, "seconds") > 0 ? true : false
+
 
     const goToPackages = () => {
 
@@ -105,12 +110,20 @@ const DrawerItems = (props) => {
             img: require("../../../res/img/amaze.png"),
             onPress: () => Linking.openURL("https://o2fitt.com/?culture=" + lang.langLocaleAbout)
         },
+        // {
+        //     text: lang.deletation,
+        //     img: require("../../../res/img/cross.png"),
+        //     onPress: () =>props.setDelete()
+        // },
         {
             text: lang.references,
             img: require("../../../res/img/amaze.png"),
             onPress: () => navigation.navigate("ReferencesScreen")
         },
+
+
     ]).current
+
     return (
         <View>
             {

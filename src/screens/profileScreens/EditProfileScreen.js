@@ -332,7 +332,17 @@ const EditProfileScreen = props => {
                   style={styles.input}
                   textStyle={{ textAlign: "center", fontSize: moderateScale(17), color: defaultTheme.lightGray2 }}
                   value={profile.heightSize.toString()}
-                  onChangeText={text => setProfile({ ...profile, heightSize: text })}
+                  onChangeText={text => {
+                    (/^[0-9\.]+$/i.test(text)) ?
+                    setProfile({ ...profile, heightSize: text })
+                
+                      :Toast.show({
+                        type:"error",
+                        props:{text2:lang.typeEN},
+                        visibilityTime:1800
+                      })
+                    
+                  }}
                   keyboardType="number-pad"
                   maxLength={3}
                 />

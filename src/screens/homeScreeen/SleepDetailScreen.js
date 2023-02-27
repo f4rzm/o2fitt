@@ -5,8 +5,7 @@ import {
   ScrollView,
   Text,
   Image,
-  TouchableOpacity,
-  
+  TouchableOpacity
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import PouchDB from '../../../pouchdb'
@@ -18,6 +17,7 @@ import {urls} from "../../utils/urls"
 import {RestController} from "../../classess/RestController"
 import {SyncSleepDB} from "../../classess/SyncSleepDB"
 import moment from "moment"
+
 
 PouchDB.plugin(pouchdbSearch)
 

@@ -205,12 +205,11 @@ import {
 import { setMarketMessageId } from './src/redux/actions/user';
 // import {BlurContainer} from './src/components';
 // import {HomeScreen} from './src/screens';
-// import Orientation from 'react-native-orientation-locker';
 // import {app} from './src/redux/reducers/app/app';
 import linking from './src/linking';
 import 'react-native-gesture-handler'
 import { moderateScale } from 'react-native-size-matters';
-// import Orientation from 'react-native-orientation-locker';
+// 
 import { persistReducer, persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';

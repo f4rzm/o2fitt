@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-toast-message'
 
 
 const EditGoalScreen = props => {
@@ -300,7 +301,17 @@ const EditGoalScreen = props => {
                                 textStyle={styles.textInput}
                                 lang={lang}
                                 value={goal.targetWeight.toString()}
-                                onChangeText={text => setGoal({ ...goal, targetWeight: text })}
+                                onChangeText={text => {
+                                    (/^[0-9\.]+$/i.test(text)) ?
+                                    setGoal({ ...goal, targetWeight: text })
+                                
+                                      :Toast.show({
+                                        type:"error",
+                                        props:{text2:lang.typeEN},
+                                        visibilityTime:1800
+                                      })
+                                    
+                                }}
                                 keyboardType="decimal-pad"
                                 autoFocus={true}
                                 maxLength={3}
@@ -359,8 +370,16 @@ const EditGoalScreen = props => {
                                 textStyle={styles.textInput}
                                 lang={lang}
                                 value={goal.targetStep.toString()}
-                                onChangeText={text => setGoal({ ...goal, targetStep: text })}
-                                keyboardType="decimal-pad"
+                                onChangeText={text => {
+                                    (/^[0-9]+$/i.test(text)) ?
+                                    setGoal({ ...goal, targetStep: text })
+                                      :Toast.show({
+                                        type:"error",
+                                        props:{text2:lang.typeEN},
+                                        visibilityTime:1800
+                                      })
+                                    }}
+                                keyboardType="numeric"
                             />
                         </RowWrapper>
                     </RowSpaceBetween>

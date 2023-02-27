@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { AppState, View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, ActivityIndicator, Linking, TextInput, TouchableWithoutFeedback, Easing } from 'react-native'
 import { ConfirmButton, Information, Toolbar, DietCaloriePayment, DiscountsList } from '../../components'
 import { useSelector } from 'react-redux'
@@ -23,22 +23,9 @@ import { updateProfileLocaly } from '../../redux/actions'
 import { setIsBuy } from '../../redux/actions/diet'
 // import { useBazaar } from '@cafebazaar/react-native-poolakey'
 import { setPackageSale } from '../../redux/actions/user'
-import BottomSheet from '@gorhom/bottom-sheet';
 
 
 function PackagesScreen(props) {
-
-    // ref
-    const bottomSheetRef = useRef < BottomSheet > (null);
-
-    // variables
-    const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-    // callbacks
-    const handleSheetChanges = useCallback((number) => {
-        console.log('handleSheetChanges', index);
-    }, []);
-
     const dispatch = useDispatch()
     // console.warn("this is packages props",props.route.params);
     const lang = useSelector(state => state.lang)
@@ -265,64 +252,82 @@ function PackagesScreen(props) {
 
     }
     //-----------------CoffeBazar------------------\\
-    const payPressed = (item) => {
-        console.error(item)
-        var date = new Date()
-        const payload = 'm' + date.getTime()
-        bazaar.connect()
-            .then((res) => {
-                if (`${res}`.includes("Error")) {
-                    onPayPressed(item)
-                } else {
-                    bazaar.purchaseProduct(`${item.id}`, payload)
-                        // bazaar.purchaseProduct(`38`, payload, 1)
-                        .then(async (details) => {
-                            var result = details
-                            console.warn(result);
-                            console.warn({ result });
+    // const payPressed = (item) => {
+    //     console.error(item)
+    //     var date = new Date()
+    //     const payload = 'm' + date.getTime()
+    //     bazaar.connect()
+    //         .then((res) => {
+    //             if (`${res}` === "Error: Bazaar is not installed") {
+    //                 setSelectedPackage({
+    //                     userId: user.id,
+    //                     packageId: item.id,
+    //                     packageName: item.name,
+    //                     packagePrice: item.price,
+    //                     isDiscountActive: false,
+    //                     discountId: 0,
+    //                     discountAmount: 0,
+    //                     amount: item.price - ((item.price * item.discountPercent) / 100),
+    //                     currency: item.currency,
+    //                     description: item.description,
+    //                     customerType: 1,
+    //                     customerData: JSON.stringify({
+    //                         utm_medium: props.route.params.utm_medium,
+    //                         utm_campaign: props.route.params.utm_campaign,
+    //                         utm_content: props.route.params.utm_content,
+    //                         utm_source: props.route.params.utm_source,
+    //                         tatoken: props.route.params.tatoken
+    //                     })
+    //                 })
+    //                 addOrder()
+    //             } else {
+    //                 bazaar.purchaseProduct(`${item.id}`, payload, 1)
+    //                     // bazaar.purchaseProduct(`38`, payload, 1)
+    //                     .then(async (details) => {
+    //                         var result = details
+    //                         console.warn(result);
+    //                         console.warn({ result });
 
-                            const url = urls.baseUrl + 'api/v1/Order/AddOrderCafeBazar';
-                            const params = {
-                                userId: profile.userId,
-                                price:
-                                    item.price -
-                                    (item.price * item.discountPercent) / 100,
-                                packageId: item.id,
-                                isSuccess: true,
-                                bank: 4,
-                                saleReferenceId: result.developerPayload,
-                                language: lang.capitalName,
-                            };
+    //                         const url = urls.baseUrl + 'api/v1/Order/AddOrderCafeBazar';
+    //                         const params = {
+    //                             userId: profile.userId,
+    //                             price:
+    //                                 item.price -
+    //                                 (item.price * item.discountPercent) / 100,
+    //                             packageId: item.id,
+    //                             isSuccess: true,
+    //                             bank: 4,
+    //                             saleReferenceId: result.developerPayload,
+    //                             language: lang.capitalName,
+    //                         };
 
-                            const header = {
-                                headers: {
-                                    Authorization: 'Bearer ' + auth.access_token,
-                                    'Content-Type': 'application/json',
-                                    Language: lang.capitalName,
-                                },
-                            };
+    //                         const header = {
+    //                             headers: {
+    //                                 Authorization: 'Bearer ' + auth.access_token,
+    //                                 'Content-Type': 'application/json',
+    //                                 Language: lang.capitalName,
+    //                             },
+    //                         };
 
-                            // console.warn({ params });
+    //                         // console.warn({ params });
 
-                            if (
-                                user.salePackages.findIndex(item => item === result.developerPayload) === -1
-                            ) {
-                                AsyncStorage.setItem(
-                                    'salePackages',
-                                    JSON.stringify([...user.salePackages, result.developerPayload]),
-                                );
-                                dispatch(setPackageSale([...user.salePackages, result.developerPayload]));
-                                const RC = new RestController();
-                                console.log('user', user);
+    //                         if (
+    //                             user.salePackages.findIndex(item => item === result.developerPayload) === -1
+    //                         ) {
+    //                             AsyncStorage.setItem(
+    //                                 'salePackages',
+    //                                 JSON.stringify([...user.salePackages, result.developerPayload]),
+    //                             );
+    //                             dispatch(setPackageSale([...user.salePackages, result.developerPayload]));
+    //                             const RC = new RestController();
+    //                             console.log('user', user);
 
-                                RC.post(url, params, header, onPaymentSuccess, onPaymentFailure);
-                            }
-                        })
-                }
-            }).catch(err => {
-                console.error(err);
-            })
-    }
+    //                             RC.post(url, params, header, onPaymentSuccess, onPaymentFailure);
+    //                         }
+    //                     })
+    //             }
+    //         })
+    // }
 
     const onPaymentSuccess = (response) => {
         console.error(response.data.data);
@@ -673,17 +678,17 @@ function PackagesScreen(props) {
             />
             <Modal
                 visible={showModal}
-                contentContainerStyle={{ position: 'absolute', bottom: 0, alignSelf: 'center' }}
+                contentContainerStyle={{ position: 'absolute', bottom: 0, alignSelf: 'center'}}
                 onDismiss={() => {
                     Animated.timing(translateY, {
                         toValue: dimensions.WINDOW_HEIGTH,
                         useNativeDriver: true,
-                        duration: 1200,
-                        easing: Easing.out(Easing.exp)
+                        duration:1200,
+                        easing:Easing.out(Easing.exp)
 
                     }).start()
                     // setTimeout(() => {
-                    setShowModal(false)
+                        setShowModal(false)
                     // }, 100);
 
                 }}
@@ -820,16 +825,6 @@ function PackagesScreen(props) {
                     trackingCode={trackingCode}
                 />
             }
-            {/* <BottomSheet
-                ref={bottomSheetRef}
-                index={1}
-                snapPoints={snapPoints}
-                onChange={handleSheetChanges}
-            >
-                <View style={styles.contentContainer}>
-                    <Text>Awesome 🎉</Text>
-                </View>
-            </BottomSheet> */}
         </SafeAreaView>
     )
 }

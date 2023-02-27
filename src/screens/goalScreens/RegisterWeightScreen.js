@@ -166,7 +166,7 @@ const RegisterWeightScreen = props => {
                 indicatorWidth={1}
                 indicatorColor='gray'
                 selectedItemTextColor={"black"}
-                style={{ width: moderateScale(100),height:dimensions.WINDOW_HEIGTH*0.2  }}
+                style={{ width: moderateScale(100)  }}
               />
             </View>
             <View style={{ justifyContent: "center", alignItems: "center", width: 150 }}>
@@ -182,14 +182,14 @@ const RegisterWeightScreen = props => {
                 indicatorWidth={1}
                 indicatorColor='gray'
                 selectedItemTextColor={"black"}
-                style={{ width: moderateScale(100),height:dimensions.WINDOW_HEIGTH*0.2}}
+                style={{ width: moderateScale(100)}}
               />
             </View>
 
 
           </View>
         </View>
-        <RowCenter style={{ marginTop: moderateScale(24), borderTopWidth: 1 }}>
+        <RowCenter style={{ marginTop: moderateScale(24)}}>
           <ColumnCenter>
             <Text style={[styles.title2, { fontFamily: lang.font }]} allowFontScaling={false}>
               <Text style={[styles.title, { fontFamily: lang.fontTitle }]} allowFontScaling={false}>
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     alignItems: "center",
     marginTop: moderateScale(15),
-    backgroundColor: defaultTheme.border,
+    // backgroundColor: defaultTheme.lightGrayBackground,
     paddingBottom: moderateScale(30)
   },
   row: {

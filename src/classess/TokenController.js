@@ -1,6 +1,6 @@
 import {urls} from "../utils/urls"
 import Axios from "axios"
-// import qs from "qs"
+import qs from "qs"
 import actions from "../constants/actionTypes"
 
 const TIME_OUT = 10000

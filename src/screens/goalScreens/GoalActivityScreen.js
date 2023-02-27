@@ -80,7 +80,7 @@ const GoalActivityScreen = props => {
   React.useEffect(() => {
     let backHandler = null
     const focusUnsubscribe = props.navigation.addListener('focus', () => {
-      backHandler = BackHandler.addEventListener('hardwareBackPress', () => { props.navigation.goBack(); return true })
+      backHandler = BackHandler.addEventListener('hardwareBackPress', () => { props.navigation.navigate("GoalWeightScreen"); return true })
     })
 
     const blurUnsubscribe = props.navigation.addListener('blur', () => {
