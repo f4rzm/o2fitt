@@ -15,11 +15,12 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
     fontSize: moderateScale(15),
+    textAlign:"center"
   },
   holderGoalWeight: {
-    width: '45%',
+    width: '50%',
     overflow: 'hidden',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   spacer: {
     width: 4,

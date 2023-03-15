@@ -7,7 +7,8 @@ import {
   Text,
   Image,
   I18nManager,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
@@ -15,7 +16,6 @@ import { useSelector } from 'react-redux'
 import { Toolbar, Information, ConfirmButton, RowCenter, DatePicker, CustomInput, DoubleText, CalendarDropDown, RowWrapper } from '../../components';
 import { moderateScale } from 'react-native-size-matters';
 import Water from "../../../res/img/glass.svg"
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import PouchDB from '../../../pouchdb'
 import pouchdbSearch from 'pouchdb-find'
 import moment from "moment"

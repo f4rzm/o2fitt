@@ -50,6 +50,8 @@ const GoalWeightScreen = props => {
     const specification = useSelector(state => state.specification)
     const diet = useSelector(state => state.diet)
     const auth = useSelector(state => state.auth)
+    const fastingDiet = useSelector(state => state.fastingDiet)
+
     const [optionalDialogVisible, setOptionalDialogVisible] = React.useState(false)
     const [showCaution, setCautionVisible] = React.useState(false)
 
@@ -263,8 +265,15 @@ const GoalWeightScreen = props => {
     const onDietPressed = () => {
 
         if (diet.isActive == true && diet.isBuy == true) {
-            props.navigation.navigate("DietPlanScreen")
-        } else if (diet.isActive == false && diet.isBuy == true) {
+            if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
+              &&
+              (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)) {
+      
+                props.navigation.navigate("FastingDietplan")
+            }else{
+              props.navigation.navigate("DietPlanScreen")
+            }
+          } else if (diet.isActive == false && diet.isBuy == true) {
             props.navigation.navigate("DietStartScreen")
         } else if (diet.isActive == true && diet.isBuy == false) {
             props.navigation.navigate("PackagesScreen")

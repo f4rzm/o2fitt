@@ -58,6 +58,7 @@ import AppleHealthKit, {
   HealthKitPermissions,
 } from 'react-native-health'
 import Distance from '../../../res/img/distance.svg'
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 // const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
 
@@ -166,6 +167,7 @@ const PedometerScreen = (props) => {
           if (err) {
             console.error(err);
           }
+          // console.warn(results);
           setWalkDistance(results.value)
         },
       )
@@ -927,7 +929,81 @@ const PedometerScreen = (props) => {
               ]}>
               0
             </Text>
-            <AnimatedGaugeProgress
+            <AnimatedCircularProgress
+              size={dimensions.WINDOW_WIDTH * 0.6}
+              width={17}  
+              fill={fill}
+              tintColor={defaultTheme.green2}
+              backgroundColor={'rgba(0,0,0,0.2)'}
+              lineCap='round'
+              arcSweepAngle={280}
+              rotation={-140}
+              tintColorSecondary={defaultTheme.green}
+
+              style={{ alignItems: "center", justifyContent: "center" }}
+            >
+              {
+                () => (
+                  <>
+                    <View
+                      style={{
+                       
+                      }}>
+                      <Text
+                        style={[styles.text3, { fontFamily: lang.font }]}
+                        allowFontScaling={false}>
+                        <Text
+                          style={[styles.text2, { fontFamily: lang.titleFont }]}
+                          allowFontScaling={false}>
+                          {wholeSteps + ' '}
+                        </Text>
+                        {lang.step}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                       
+                      }}>
+                      <Text
+                        style={[styles.text3, { fontFamily: lang.font }]}
+                        allowFontScaling={false}>
+                        <Text
+                          style={[styles.text4, { fontFamily: lang.titleFont }]}
+                          allowFontScaling={false}>
+                          {stepBurnedCalorie(
+                            wholeSteps,
+                            specification[0].weightSize,
+                          ) + ' '}
+                        </Text>
+                        {lang.stepBurnedCal}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        position: 'absolute',
+                        flexDirection: 'row',
+                        top: -moderateScale(30),
+                        left: 0,
+                        width: size,
+                        height: textHeight,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={[
+                          styles.text,
+                          { fontFamily: lang.font, fontSize: moderateScale(16) },
+                        ]}
+                        allowFontScaling={false}>
+                        {parseInt(profile.targetStep * 0.5)}
+                      </Text>
+                    </View>
+                  </>
+                )
+              }
+            </AnimatedCircularProgress>
+            {/* <AnimatedGaugeProgress
               size={size}
               width={gaugeWidth}
               fill={fill}
@@ -937,8 +1013,8 @@ const PedometerScreen = (props) => {
               style={{ marginHorizontal: 20 }}
               // prefill={oldWhole}
               onAnimationComplete={updateOldWhoe}
-            >
-              <View
+            > */}
+              {/* <View
                 style={{
                   position: 'absolute',
                   flexDirection: 'row',
@@ -1005,8 +1081,8 @@ const PedometerScreen = (props) => {
                   allowFontScaling={false}>
                   {parseInt(profile.targetStep * 0.5)}
                 </Text>
-              </View>
-            </AnimatedGaugeProgress>
+              </View> */}
+            {/* </AnimatedGaugeProgress> */}
             <Text
               style={[
                 styles.text,

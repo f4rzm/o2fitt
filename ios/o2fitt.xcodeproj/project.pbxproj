@@ -65,6 +65,7 @@
 		76302C15DD774C0ABECBADC0 /* DistributionSummary.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = DistributionSummary.plist; path = "../assets/fonts/O2Fit 2021-03-01 14-52-43/DistributionSummary.plist"; sourceTree = "<group>"; };
 		7ADAD4BA0646423DA5E82198 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = o2fitt/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8A7B2F4329ACDB82009C1BF5 /* o2fitt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = o2fitt.entitlements; path = o2fitt/o2fitt.entitlements; sourceTree = "<group>"; };
 		8A7E768029A60F6700E898C9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8AD1287A29AA0A3C00A37327 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		8B93B9466C0A47C9A894ACB5 /* Almarai-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Almarai-Regular.ttf"; path = "../assets/fonts/Almarai-Regular.ttf"; sourceTree = "<group>"; };
@@ -121,6 +122,7 @@
 		13B07FAE1A68108700A75B9A /* o2fitt */ = {
 			isa = PBXGroup;
 			children = (
+				8A7B2F4329ACDB82009C1BF5 /* o2fitt.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				8A7E768029A60F6700E898C9 /* GoogleService-Info.plist */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -577,6 +579,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = o2fitt/o2fitt.entitlements;
 				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 2BA24DXT72;
 				ENABLE_BITCODE = NO;
@@ -606,6 +609,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = o2fitt/o2fitt.entitlements;
 				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 2BA24DXT72;
 				EXCLUDED_ARCHS = arm64;

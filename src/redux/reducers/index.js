@@ -9,6 +9,7 @@ import { pedometer } from './pedometer/pedometer'
 import { diet } from './regime/diet'
 import { starRating } from "./starRating/StarRating"
 import { syncedDate } from "./syncedDate/syncedDate"
+import { fastingDiet } from "./fasting/fasting"
 
 export default combineReducers({
     app: app,
@@ -20,5 +21,6 @@ export default combineReducers({
     pedometer: pedometer,
     diet: diet,
     starRating:starRating,
-    syncedDate:syncedDate
+    syncedDate:syncedDate,
+    fastingDiet:fastingDiet
 })

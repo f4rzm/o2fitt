@@ -59,6 +59,8 @@ const SetTargetScreen = (props) => {
     { id: 900, name: ' 900 ' + lang.perweek },
     { id: 1000, name: ' 1000 ' + lang.perweek },
   ]).current;
+
+
   const [helperVisible, setShowHelper] = React.useState(false);
   const [targetWeight, setTargetWeight] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -113,11 +115,11 @@ const SetTargetScreen = (props) => {
       //   }
     }
     if (props.route.params.target == 1) {
-      setTargetWeight(specification[0].weightSize - 33);
+      setTargetWeight(specification[0].weightSize - 1);
     } else if (props.route.params.target == 0) {
       setTargetWeight(specification[0].weightSize);
     } else if (props.route.params.target == 2) {
-      setTargetWeight(specification[0].weightSize - 35);
+      setTargetWeight(specification[0].weightSize +1);
     }
   }, []);
 
@@ -129,7 +131,7 @@ const SetTargetScreen = (props) => {
     const height = profile.heightSize;
     const weight = specification[0].weightSize;
     const wrist = specification[0].wristSize;
-    const targetWeight = parseFloat(tw + 34);
+    const targetWeight = parseFloat(tw);
     let bmr = 1;
     let factor = height / wrist;
     let bodyType = 1;
@@ -254,7 +256,7 @@ const SetTargetScreen = (props) => {
       dispatch(
         updateProfileLocaly({
           // targetStep: targetStep,
-          targetWeight: (parseInt(targetWeight) + 34),
+          targetWeight: (parseInt(targetWeight) ),
           weightChangeRate: weightChangeRate.id,
         }),
       );
@@ -355,6 +357,7 @@ const SetTargetScreen = (props) => {
               setWeightChangeRate,
               stableWeight: specification[0].weightSize,
               text1: props.route.params.text,
+
             }}
           />
           <View

@@ -10,12 +10,10 @@ import Power from '../../../res/img/power.svg'
 const Calendar = props => {
     const dietExpiredDate = moment().diff(moment(props.profile.pkExpireDate), "d")
 
-    console.error(Math.abs(parseInt(dietExpiredDate)) )
-
     let nextIsEnabled = false
     let prevIsEnabled = true
     if (moment(props.selectedDate, "YYYY-MM-DD").diff(moment(), "days") < 10) {
-        if (moment(props.selectedDate, "YYYY-MM-DD").diff(moment(), "days") <= Math.abs(parseInt(dietExpiredDate)) ) {
+        if (moment(props.selectedDate, "YYYY-MM-DD").diff(moment(), "days") <= Math.abs(parseInt(dietExpiredDate))) {
             nextIsEnabled = true
         }
     }
@@ -52,7 +50,7 @@ const Calendar = props => {
                     top: moderateScale(10),
                     bottom: moderateScale(10),
                 }}
-                style={{ flexDirection: "row",alignItems:"center" }}
+                style={{ flexDirection: "row", alignItems: "center" }}
                 onPress={props.calendarPressed}
             >
                 <Image
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderBottomWidth: 0,
         borderBottomColor: defaultTheme.border,
-        backgroundColor:defaultTheme.white
+        backgroundColor: defaultTheme.white
     },
     back: {
         width: moderateScale(18),

@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
-import { WheelPicker } from 'react-native-wheel-picker-android';
+import { dimensions } from '../../constants/Dimensions';
+// import { WheelPicker } from 'react-native-wheel-picker-android';
 import CommonText from '../CommonText';
 import styles from './styles';
 
@@ -17,13 +19,23 @@ const PickerGoalWeight = ({
   //==================VARIABLES============================
   const weight = parseInt(targetWeight) - 1;
   // console.log({stableWeight});
-  const [selectItemGoalWeight, setSelectGoalWeight] = useState(0);
+  const [selectItemGoalWeight, setSelectGoalWeight] = useState(targetWeight);
   const [selectAmount, setSelectAmount] = useState(0);
   const [flag, setFlag] = useState(false);
   let arrayGoalWeight = [];
-  for (let index = 0; index < 95; index++) {
-    arrayGoalWeight.push((index + 35).toString());
+
+  if (target == 1) {
+    for (let index = stableWeight + 1; index <= 150; index++) {
+      arrayGoalWeight.push((index).toString());
+    }
+
+  } else {
+    for (let index = stableWeight - 1; index >= 35; index--) {
+      arrayGoalWeight.push((index).toString());
+
+    }
   }
+
 
   const text =
     target === 0 ? lang.stable : target === 1 ? lang.increase : lang.decrease;
@@ -54,24 +66,24 @@ const PickerGoalWeight = ({
     { id: 1000 },
   ];
 
-  useEffect(() => {
-    setTimeout(() => {
+  // useEffect(() => {
+  //   setTimeout(() => {
 
-      if (weight) {
-        setSelectGoalWeight(weight);
-        setFlag(true);
-      }
-    }, 100);
-  }, [weight]);
+  //     if (weight) {
+  //       setSelectGoalWeight(weight);
+  //       setFlag(true);
+  //     }
+  //   }, 100);
+  // }, [weight]);
 
   //==================FUNCTION============================
   const onItemSelected = selectedItem => {
-    setTargetWeight(selectedItem + 1);
+    setTargetWeight(selectedItem);
     setSelectGoalWeight(selectedItem);
   }
 
-  const onItemSelectedAmount = selectedItem => {
-    setWeightChangeRate(idArray[selectedItem]);
+  const onItemSelectedAmount = (selectedItem, index) => {
+    setWeightChangeRate(idArray[index]);
     setSelectAmount(selectedItem);
   };
 
@@ -83,7 +95,8 @@ const PickerGoalWeight = ({
           styleText={styles.title}
         />
 
-        <WheelPicker
+        {/*
+         <WheelPicker
           selectedItem={selectItemGoalWeight}
           data={target !== 0 ? arrayGoalWeight : [stableWeight.toString()]}
           onItemSelected={onItemSelected}
@@ -93,11 +106,34 @@ const PickerGoalWeight = ({
           selectedItemTextSize={moderateScale(19)}
           indicatorWidth={2}
           indicatorColor='gray'
-        />
+        /> 
+        */}
+        <Picker
+          selectedValue={targetWeight}
+          style={{}}
+          onValueChange={(itemValue, itemIndex) => {
+            onItemSelected(itemValue)
+          }}
+          itemStyle={{
+            fontFamily: lang.font,
+            fontSize: moderateScale(18)
+          }}
+        >
+          {
+            target !== 0 ? arrayGoalWeight.map((item) => (
+              <Picker.Item value={parseInt(item)} label={item} />
+            )) : <Picker.Item value={parseInt(stableWeight)} label={stableWeight.toString()} />
+          }
+          {/* {
+            weight.map((item) => (
+              <Picker.Item value={parseInt(item)} label={item} />
+            ))
+          } */}
+        </Picker>
       </View>
       {target == 0 ? null : <View style={styles.holderGoalWeight}>
         <CommonText text={text1} styleText={styles.title} />
-        <WheelPicker
+        {/* <WheelPicker
           selectedItem={selectAmount}
           data={target !== 0 ? arrayAmount : ["0"]}
           onItemSelected={onItemSelectedAmount}
@@ -107,11 +143,33 @@ const PickerGoalWeight = ({
           selectedItemTextSize={moderateScale(19)}
           indicatorWidth={2}
           indicatorColor='gray'
-        />
+        /> */}
+        <Picker
+          selectedValue={selectAmount}
+          style={{}}
+          onValueChange={(itemValue, itemIndex) => {
+            onItemSelectedAmount(itemValue, itemIndex)
+          }}
+          itemStyle={{
+            fontFamily: lang.font,
+            fontSize: moderateScale(16)
+          }}
+        >
+          {
+            target !== 0 ? arrayAmount.map((item) => (
+              <Picker.Item value={parseInt(item)} label={item} />
+            )) : ["0"]
+          }
+          {/* {
+            weight.map((item) => (
+              <Picker.Item value={parseInt(item)} label={item} />
+            ))
+          } */}
+        </Picker>
       </View>}
 
     </View>
   );
 };
 
-export default PickerGoalWeight;
+export default memo(PickerGoalWeight);

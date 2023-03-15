@@ -205,19 +205,22 @@ import {
 import { setMarketMessageId } from './src/redux/actions/user';
 // import {BlurContainer} from './src/components';
 // import {HomeScreen} from './src/screens';
+// import Orientation from 'react-native-orientation-locker';
 // import {app} from './src/redux/reducers/app/app';
 import linking from './src/linking';
 import 'react-native-gesture-handler'
 import { moderateScale } from 'react-native-size-matters';
+// import Orientation from 'react-native-orientation-locker';
 import { persistReducer, persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 enableScreens();
 
+// Orientation.lockToPortrait()
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['pedometer', "diet", "starRating", "syncedDate"],
+  whitelist: ['pedometer', "diet", "starRating", "syncedDate","fastingDiet"],
 
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -421,6 +424,7 @@ const Test = () => {
     colors: {
       ...DefaultTheme.colors,
       background: defaultTheme.lightBackground,
+      primary: 'rgb(255, 45, 85)'
     },
   };
   const MyStatusBar = () => (
@@ -433,16 +437,16 @@ const Test = () => {
 
   return (
     <>
-      <StatusBar
+      {/* <StatusBar
         barStyle={Platform.OS === 'android' ? 'light-content' : 'dark-content'}
         backgroundColor={defaultTheme.primaryColor}
 
-      />
-      {/* <MyStatusBar /> */}
+      /> */}
+      <MyStatusBar />
 
 
       <SafeAreaView style={{ flex: 1 }}>
-        <NavigationContainer linking={linking} theme={MyTheme}>
+        <NavigationContainer  linking={linking} theme={MyTheme}>
 
           <MainRoute />
           <Toast config={toastConfig} />

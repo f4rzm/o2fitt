@@ -6,6 +6,7 @@ import {
     Text,
     I18nManager,
     Platform,
+    BackHandler,
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
@@ -44,6 +45,14 @@ import LottieView from 'lottie-react-native';
 
 
 const BodyShapeScreen = props => {
+    React.useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          ()=>props.navigation.popToTop()
+        );
+        return () => backHandler.remove();
+      }, [])
+
     const lang = useSelector(state => state.lang);
     const user = useSelector(state => state.user);
     const specification = useSelector(state => state.specification);

@@ -55,6 +55,7 @@ const DailyScreen = props => {
   const user = useSelector(state => state.user)
   const app = useSelector(state => state.app)
   const specification = useSelector(state => state.specification)
+  const fastingDiet = useSelector(state => state.fastingDiet)
   const profile = useSelector(state => state.profile)
   const diet = useSelector(state => state.diet)
   const starRating = useSelector(state => state.starRating)
@@ -766,6 +767,7 @@ const DailyScreen = props => {
 
 
   const analyzMealPress = (type) => {
+    console.warn(type);
     if (hasCredit) {
       switch (type) {
         case "breakFast": {
@@ -823,6 +825,58 @@ const DailyScreen = props => {
           })
           break
         }
+        case "sahar": {
+          calculateTarget(parseInt(targetCalorie * 0.25).toFixed(2))
+          props.navigation.navigate("AnalyzMealScreen", {
+            lang: lang,
+            meal: meals.filter(item => item.foodMeal === 9),
+            budget: (targetCalorie * 0.25).toFixed(2),
+            mealName: lang.sahar,
+            targetCarbo: carbo / 4,
+            targetProtein: pro / 4,
+            targetFat: fat / 9,
+          })
+          break
+        }
+        case "eftar": {
+          calculateTarget(parseInt(targetCalorie * 0.30).toFixed(2))
+          props.navigation.navigate("AnalyzMealScreen", {
+            lang: lang,
+            meal: meals.filter(item => item.foodMeal === 6),
+            budget: (targetCalorie * 0.30).toFixed(2),
+            mealName: lang.eftar,
+            targetCarbo: carbo / 4,
+            targetProtein: pro / 4,
+            targetFat: fat / 9,
+          })
+          break
+        }
+        case "Rdinner": {
+          calculateTarget(parseInt(targetCalorie * 0.35).toFixed(2))
+          props.navigation.navigate("AnalyzMealScreen", {
+            lang: lang,
+            meal: meals.filter(item => item.foodMeal === 7),
+            budget: (targetCalorie * 0.35).toFixed(2),
+            mealName: lang.eftar,
+            targetCarbo: carbo / 4,
+            targetProtein: pro / 4,
+            targetFat: fat / 9,
+          })
+          break
+        }
+        case "Rsnack": {
+          calculateTarget(parseInt(targetCalorie * 0.05).toFixed(2))
+          props.navigation.navigate("AnalyzMealScreen", {
+            lang: lang,
+            meal: meals.filter(item => item.foodMeal === 7),
+            budget: (targetCalorie * 0.05).toFixed(2),
+            mealName: lang.snack,
+            targetCarbo: carbo / 4,
+            targetProtein: pro / 4,
+            targetFat: fat / 9,
+          })
+          break
+        }
         default: break
       }
     } else {
@@ -833,8 +887,17 @@ const DailyScreen = props => {
   const onDietPressed = () => {
 
     if (diet.isActive == true && diet.isBuy == true) {
-      props.navigation.navigate("DietPlanScreen")
-    } else if (diet.isActive == false && diet.isBuy == true) {
+
+      if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
+        &&
+        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)) {
+
+          props.navigation.navigate("FastingDietplan")
+      }else{
+        
+        props.navigation.navigate("DietPlanScreen")
+      }
+    }else if (diet.isActive == false && diet.isBuy == true) {
       props.navigation.navigate("DietStartScreen")
     } else if (diet.isActive == true && diet.isBuy == false) {
       props.navigation.navigate("PackagesScreen")
@@ -849,6 +912,64 @@ const DailyScreen = props => {
   const starRatingmodalShown = () => {
     setShowRating(false)
   }
+  const fastingContainerData = [
+    {
+      lang: lang,
+      image: require("../../../res/img/sahari-icon.png"),
+      title: "سحری",
+      addPressed: () => props.navigation.navigate("sahar-icon", { type: "", name: lang.dinner, mealId: 9 }),
+      data: meals.filter(item => item.foodMeal === 9),
+      edit: editMeal,
+      remove: item => { setDeleteAction(item); showDeleteDialog(true) },
+      barcode: () => props.navigation.navigate("BarcodeScreen", { foodMeal: 9 }),
+      budget: (targetCalorie * 0.25).toFixed(2),
+      hasCredit: hasCredit,
+      analyzMealPress: analyzMealPress.bind(null, 'sahar'),
+      diet: diet
+    },
+    {
+      lang: lang,
+      image: require("../../../res/img/eftar-icon.png"),
+      title: "افطار",
+      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.dinner, mealId: 6 }),
+      data: meals.filter(item => item.foodMeal === 6),
+      edit: editMeal,
+      remove: item => { setDeleteAction(item); showDeleteDialog(true) },
+      barcode: () => props.navigation.navigate("BarcodeScreen", { foodMeal: 6 }),
+      budget: (targetCalorie * 0.30).toFixed(2),
+      hasCredit: hasCredit,
+      analyzMealPress: analyzMealPress.bind(null, 'eftar'),
+      diet: diet
+    },
+    {
+      lang: lang,
+      image: require("../../../res/img/dinner-icon.png"),
+      title: "شام",
+      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.dinner, mealId: 3 }),
+      data: meals.filter(item => item.foodMeal === 3),
+      edit: editMeal,
+      remove: item => { setDeleteAction(item); showDeleteDialog(true) },
+      barcode: () => props.navigation.navigate("BarcodeScreen", { foodMeal: 3 }),
+      budget: (targetCalorie * 0.35).toFixed(2),
+      hasCredit: hasCredit,
+      analyzMealPress: analyzMealPress.bind(null, 'Rdinner'),
+      diet: diet
+    },
+    {
+      lang: lang,
+      image: require("../../../res/img/snack-icon.png"),
+      title: "میان وعده",
+      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.dinner, mealId: 7 }),
+      data: meals.filter(item => item.foodMeal === 7),
+      edit: editMeal,
+      remove: item => { setDeleteAction(item); showDeleteDialog(true) },
+      barcode: () => props.navigation.navigate("BarcodeScreen", { foodMeal: 7 }),
+      budget: (targetCalorie * 0.05).toFixed(2),
+      hasCredit: hasCredit,
+      analyzMealPress: analyzMealPress.bind(null, 'Rsnack'),
+      diet: diet
+    },
+  ]
   return (
     <>
       <MainToolbar
@@ -890,7 +1011,7 @@ const DailyScreen = props => {
 
         <View style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(20) }} />
         {
-          user.countryId !== 128 && !diet.isActive ? null :
+          user.countryId !== 128 || !diet.isActive || lang.name == "persian" ? null :
             <DietCard
               lang={lang}
               profile={profile}
@@ -899,66 +1020,93 @@ const DailyScreen = props => {
               onCardPressed={onDietPressed}
             />
         }
+        {
+          parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(selectedDate).format("YYYYMMDD"))
+            &&
+            (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(selectedDate).format("YYYYMMDD")) : true)
+            ?
+            <>
+              {
+                fastingContainerData.map((item) => {
+                  return <DailyFoodContainer
+                    lang={item.lang}
+                    image={item.image}
+                    title={item.title}
+                    addPressed={item.addPressed}
+                    data={item.data}
+                    edit={item.edit}
+                    remove={item.remove}
+                    barcode={item.barcode}
+                    budget={item.budget}
+                    hasCredit={item.hasCredit}
+                    analyzMealPress={item.analyzMealPress}
+                    diet={diet}
+                  />
+                })
+              }
+            </>
+            : <>
+              <DailyFoodContainer
+                lang={lang}
+                image={require("../../../res/img/breakfast.png")}
+                title={lang.breakfast}
+                addPressed={addBreakfast}
+                data={meals.filter(item => item.foodMeal === 0)}
+                edit={editMeal}
+                remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
+                barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 0 })}
+                budget={(targetCalorie * 0.25).toFixed(2)}
+                hasCredit={hasCredit}
+                analyzMealPress={analyzMealPress.bind(null, 'breakFast')}
+                diet={diet}
+              />
 
-        <DailyFoodContainer
-          lang={lang}
-          image={require("../../../res/img/breakfast.png")}
-          title={lang.breakfast}
-          addPressed={addBreakfast}
-          data={meals.filter(item => item.foodMeal === 0)}
-          edit={editMeal}
-          remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
-          barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 0 })}
-          budget={(targetCalorie * 0.25).toFixed(2)}
-          hasCredit={hasCredit}
-          analyzMealPress={analyzMealPress.bind(null, 'breakFast')}
-          diet={diet}
-        />
+              <DailyFoodContainer
+                lang={lang}
+                image={require("../../../res/img/lunch.png")}
+                title={lang.lunch}
+                addPressed={addLunch}
+                data={meals.filter(item => item.foodMeal === 1)}
+                edit={editMeal}
+                remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
+                barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 1 })}
+                budget={(targetCalorie * 0.35).toFixed(2)}
+                hasCredit={hasCredit}
+                analyzMealPress={analyzMealPress.bind(null, 'lunch')}
+                diet={diet}
+              />
 
-        <DailyFoodContainer
-          lang={lang}
-          image={require("../../../res/img/lunch.png")}
-          title={lang.lunch}
-          addPressed={addLunch}
-          data={meals.filter(item => item.foodMeal === 1)}
-          edit={editMeal}
-          remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
-          barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 1 })}
-          budget={(targetCalorie * 0.35).toFixed(2)}
-          hasCredit={hasCredit}
-          analyzMealPress={analyzMealPress.bind(null, 'lunch')}
-          diet={diet}
-        />
+              <DailyFoodContainer
+                lang={lang}
+                image={require("../../../res/img/dinner.png")}
+                title={lang.dinner}
+                addPressed={addDinner}
+                data={meals.filter(item => item.foodMeal === 3)}
+                edit={editMeal}
+                remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
+                barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 3 })}
+                budget={(targetCalorie * 0.25).toFixed(2)}
+                hasCredit={hasCredit}
+                analyzMealPress={analyzMealPress.bind(null, 'dinner')}
+                diet={diet}
+              />
 
-        <DailyFoodContainer
-          lang={lang}
-          image={require("../../../res/img/dinner.png")}
-          title={lang.dinner}
-          addPressed={addDinner}
-          data={meals.filter(item => item.foodMeal === 3)}
-          edit={editMeal}
-          remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
-          barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 3 })}
-          budget={(targetCalorie * 0.25).toFixed(2)}
-          hasCredit={hasCredit}
-          analyzMealPress={analyzMealPress.bind(null, 'dinner')}
-          diet={diet}
-        />
-
-        <DailyFoodContainer
-          lang={lang}
-          image={require("../../../res/img/snack.png")}
-          title={lang.snack}
-          addPressed={addSnack}
-          data={meals.filter(item => item.foodMeal === 2)}
-          edit={editMeal}
-          remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
-          barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 2 })}
-          budget={(targetCalorie * 0.15).toFixed(2)}
-          hasCredit={hasCredit}
-          analyzMealPress={analyzMealPress.bind(null, 'snack')}
-          diet={diet}
-        />
+              <DailyFoodContainer
+                lang={lang}
+                image={require("../../../res/img/snack.png")}
+                title={lang.snack}
+                addPressed={addSnack}
+                data={meals.filter(item => item.foodMeal === 2)}
+                edit={editMeal}
+                remove={item => { setDeleteAction(item); showDeleteDialog(true) }}
+                barcode={() => props.navigation.navigate("BarcodeScreen", { foodMeal: 2 })}
+                budget={(targetCalorie * 0.15).toFixed(2)}
+                hasCredit={hasCredit}
+                analyzMealPress={analyzMealPress.bind(null, 'snack')}
+                diet={diet}
+              />
+            </>
+        }
 
         {/* {
             !hasCredit &&  

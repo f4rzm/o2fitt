@@ -5,7 +5,7 @@ import { TabBarIcon, TabPlusButton } from "../components"
 import { moderateScale } from "react-native-size-matters";
 import Recipe from '../../res/img/reciep.svg'
 
-const TabBar = ({ state, descriptors, navigation, lang, profile }) => {
+const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) => {
 
 
     return (
@@ -35,6 +35,7 @@ const TabBar = ({ state, descriptors, navigation, lang, profile }) => {
                 navigation={navigation}
                 lang={lang}
                 profile={profile}
+                fastingDiet={fastingDiet}
             />
             <TabBarIcon
                 descriptors={descriptors}

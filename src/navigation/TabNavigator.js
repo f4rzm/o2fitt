@@ -9,7 +9,7 @@ import { urls } from "../utils/urls"
 import { RestController } from "../classess/RestController"
 import { TabBar, MarketModal, ConfirmButton, TabPlusButton, VpnErrprModal, NoInternetModal, Information } from "../components";
 import { LocalFoodsHandler } from "../classess/LocalFoodsHandler"
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import NativeSplashScreen from 'react-native-splash-screen'
 import analytics from '@react-native-firebase/analytics';
 import { dimensions } from "../constants/Dimensions";
@@ -40,6 +40,7 @@ const Tabs = (props) => {
   const app = { ...props.route.params.app }
   const user = { ...props.route.params.user }
   const diet = useSelector(state => state.diet)
+  const fastingDiet = useSelector(state => state.fastingDiet)
   const profile = useSelector(state => state.profile)
   const starRating = useSelector(state => state.starRating)
   const [showMmarketDialog, setShowMarketDialog] = React.useState(false)
@@ -113,18 +114,17 @@ const Tabs = (props) => {
   }
 
   const onMarketMessageSuccess = async (res) => {
-    console.error(res.data.data);
     if (res.data.data) {
-      //   let history = await AsyncStorage.getItem("marketHistory")
-      //   history = history ? JSON.parse(history) : []
-      //   if (history.findIndex(item => item == res.data.data.id) === -1) {
-      //     history.push(res.data.data.id)
-      //     await AsyncStorage.setItem("marketHistory", JSON.stringify(history))
-      setTimeout(() => {
-        setMarketMsg(res.data.data)
-        setShowMarketDialog(true)
-      }, 800);
-      // }
+      let history = await AsyncStorage.getItem("marketHistory")
+      history = history ? JSON.parse(history) : []
+      if (history.findIndex(item => item == res.data.data.id) === -1) {
+        history.push(res.data.data.id)
+        await AsyncStorage.setItem("marketHistory", JSON.stringify(history))
+        setTimeout(() => {
+          setMarketMsg(res.data.data)
+          setShowMarketDialog(true)
+        }, 800);
+      }
     }
   }
 
@@ -177,8 +177,7 @@ const Tabs = (props) => {
   }, [profile])
 
   useEffect(() => {
-    const url = `${urls.orderBaseUrl + urls.order}GetOrdersByUserId?UserId=${profile.userId
-      }`;
+    const url = `${urls.orderBaseUrl + urls.order}GetOrdersByUserId?UserId=${profile.userId}`;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -249,6 +248,7 @@ const Tabs = (props) => {
     );
   }, [])
   const onSuccessGetToday = async (res) => {
+    console.warn(parseInt(moment(res.data.data.utcDateTime).format("YYYYMMDD")) > parseInt(moment().format("YYYYMMDD")) + 3);
     console.error(moment(res.data.data.utcDateTime).format("YYYYMMDD"), moment().format("YYYYMMDD"));
     await AsyncStorage.setItem("serverTime", moment(res.data.data.utcDateTime).format("YYYY-MM-DD"))
     setServerTime(moment(res.data.data.utcDateTime).format("YYYYMMDD"))
@@ -282,7 +282,8 @@ const Tabs = (props) => {
               toValue: 0,
               duration: 500,
               easing: Easing.out(Easing.exp), // Easing is an additional import from react-native
-              useNativeDriver: true  // To make use of native driver for performance
+              useNativeDriver: true  // To make use of native driver for import { fastingDiet } from '../redux/reducers/fasting/fasting';
+
             }
           ).start()
         })
@@ -324,14 +325,16 @@ const Tabs = (props) => {
   }, [])
 
 
+
   return (
     <>
 
       <SafeAreaView style={{ flex: 1 }}>
         <Tab.Navigator
-          tabBar={props => <TabBar {...props} lang={lang} profile={profile} />}
+          tabBar={props => <TabBar {...props} lang={lang} profile={profile} fastingDiet={fastingDiet} />}
           initialRouteName="HomeRouter"
           backBehavior="firstRoute"
+          screenOptions={{ headerShown: false }}
         >
           <Tab.Screen name="HomeRouter" component={HomeRouter} />
           <Tab.Screen name="DailyRouter" component={DailyRouter} />
@@ -358,7 +361,7 @@ const Tabs = (props) => {
       {
         diet.isForceUpdate == true &&
         <TouchableOpacity activeOpacity={1} style={{ width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, position: "absolute", alignItems: "center", justifyContent: "center" }}>
-          <BlurView
+          {/* <BlurView
             style={{
               position: 'absolute',
               top: 0,
@@ -366,7 +369,7 @@ const Tabs = (props) => {
               right: 0,
               bottom: 0,
             }} blurType="dark" blurAmount={1}
-          />
+          /> */}
           <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
             <LottieView
               source={require('../../res/animations/forceU.json')}
@@ -382,14 +385,14 @@ const Tabs = (props) => {
               title={lang.forceUpdateBtn}
               style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
               onPress={() => {
-                Linking.openURL("https://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170")
+                Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
               }}
             />
           </View>
         </TouchableOpacity>
       }
       {premiumModal && user.countryId == 128 && starRating.vipShown ?
-        <BlurView style={{ position: "absolute", height: moderateScale(160), width: dimensions.WINDOW_WIDTH }} blurType={"dark"} overlayColor={"transparent"} blurAmount={5}>
+        // <BlurView style={{ position: "absolute", height: moderateScale(160), width: dimensions.WINDOW_WIDTH }} blurType={"dark"} overlayColor={"transparent"} blurAmount={5}>
           <Animated.View style={{ transform: [{ translateY: translateY }] }}>
             <TouchableOpacity
               onPress={() => fadeModal()}
@@ -421,7 +424,8 @@ const Tabs = (props) => {
               />
             </TouchableOpacity>
           </Animated.View>
-        </BlurView> : null
+        // {/* </BlurView>  */}
+        : null
       }
       {
         Vip && user.countryId == 128 && starRating.vipShown ?
@@ -462,7 +466,7 @@ const Tabs = (props) => {
       {errorVisible ? (
         <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
           <View style={styles.wrapper}>
-            <BlurView style={styles.absolute} blurType="dark" blurAmount={2} />
+            {/* <BlurView style={styles.absolute} blurType="dark" blurAmount={2} /> */}
             <Information
               visible={errorVisible}
               context={errorContext}

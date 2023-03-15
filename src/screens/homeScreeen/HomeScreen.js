@@ -97,6 +97,7 @@ const HomeScreen = (props) => {
   const starRating = useSelector((state) => state.starRating)
   const specification = useSelector((state) => state.specification);
   const syncedDate = useSelector((state) => state.syncedDate)
+  const fastingDiet = useSelector((state) => state.fastingDiet)
 
   const pkExpireDate = moment(profile.pkExpireDate, 'YYYY-MM-DDTHH:mm:ss');
   const today = moment();
@@ -133,9 +134,9 @@ const HomeScreen = (props) => {
 
     AppState.addEventListener("change", _handleAppStateChange);
 
-    return () => {
-      AppState.removeEventListener("change", _handleAppStateChange);
-    };
+    // return () => {
+    //   AppState.removeEventListener("change", _handleAppStateChange);
+    // };
   }, []);
 
   const _handleAppStateChange = (nextAppState) => {
@@ -689,7 +690,7 @@ const HomeScreen = (props) => {
       }
 
     } else {
-      arrayOfDates=[]
+      arrayOfDates = []
       AsyncStorage.setItem("syncedDates", `${date}`)
     }
 
@@ -1288,7 +1289,16 @@ const HomeScreen = (props) => {
   const onDietPressed = () => {
 
     if (diet.isActive == true && diet.isBuy == true) {
-      props.navigation.navigate("DietPlanScreen")
+
+      if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
+        &&
+        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)) {
+
+        props.navigation.navigate("FastingDietplan")
+      } else {
+
+        props.navigation.navigate("DietPlanScreen")
+      }
     } else if (diet.isActive == false && diet.isBuy == true) {
       props.navigation.navigate("DietStartScreen")
     } else if (diet.isActive == true && diet.isBuy == false) {

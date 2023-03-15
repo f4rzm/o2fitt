@@ -10,9 +10,10 @@ import { PieChart } from 'react-native-chart-kit'
 import { VictoryPie, VictoryLabel } from 'victory-native'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import moment from "moment-jalaali";
+import { useSelector } from "react-redux";
 
 const MealDetailsCard = props => {
-    console.warn(props.data);
+    const fastingDiet = useSelector(state => state.fastingDiet)
     const [breakFast, setBreakFast] = useState(0);
     const [lunch, setLunch] = useState(0);
     const [dinner, setDinner] = useState(0)
@@ -25,33 +26,70 @@ const MealDetailsCard = props => {
     const convertedDate = props.user.countryId === 128 ? moment(props.date, "YYYY-MM-DD").format("jYYYY/jMM/jDD") : props.date
     console.warn(moment(props.date, 'YYYY-MM-DD').format('jYYYY/jMM/jDD'))
     useEffect(() => {
-        if (props.data) {
-            const filteredBreakfast = props.data.filter((item) => item.foodMeal == 0)
-            const filteredlunch = props.data.filter((item) => item.foodMeal == 1)
-            const filtereddinner = props.data.filter((item) => item.foodMeal == 3)
-            const filteredsnack = props.data.filter((item) => item.foodMeal == 2)
-            filteredBreakfast.map(item => {
-                const breakfast = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
-                consumedBreakfast += (parseInt(breakfast[23]))
-            })
-            filteredlunch.map(item => {
-                const lunch = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
-                consumedLunch += (parseInt(lunch[23]))
 
-            })
-            filtereddinner.map(item => {
-                const dinner = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
-                consumedDinner += (parseInt(dinner[23]))
-            })
-            filteredsnack.map(item => {
-                const snack = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
-                consumedSnack += (parseInt(snack[23]))
-            })
+        if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(props.date).format("YYYYMMDD"))
+            &&
+            (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(props.date).format("YYYYMMDD")) : true)) {
+            if (props.data) {
+                if (props.data) {
+                    const filteredSahari = props.data.filter((item) => item.foodMeal == 9)
+                    const filteredEftar = props.data.filter((item) => item.foodMeal == 6)
+                    const filtereddinner = props.data.filter((item) => item.foodMeal == 3)
+                    const filteredsnack = props.data.filter((item) => item.foodMeal == 7)
+                    filteredSahari.map(item => {
+                        const breakfast = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                        consumedBreakfast += (parseInt(breakfast[23]))
+                    })
+                    filteredEftar.map(item => {
+                        const lunch = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                        consumedLunch += (parseInt(lunch[23]))
+
+                    })
+                    filtereddinner.map(item => {
+                        const dinner = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                        consumedDinner += (parseInt(dinner[23]))
+                    })
+                    filteredsnack.map(item => {
+                        const snack = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                        consumedSnack += (parseInt(snack[23]))
+                    })
+                }
+                setBreakFast(consumedBreakfast)
+                setLunch(consumedLunch)
+                setDinner(consumedDinner)
+                setSnack(consumedSnack)
+            }
         }
-        setBreakFast(consumedBreakfast)
-        setLunch(consumedLunch)
-        setDinner(consumedDinner)
-        setSnack(consumedSnack)
+        else {
+
+            if (props.data) {
+                const filteredBreakfast = props.data.filter((item) => item.foodMeal == 0)
+                const filteredlunch = props.data.filter((item) => item.foodMeal == 1)
+                const filtereddinner = props.data.filter((item) => item.foodMeal == 3)
+                const filteredsnack = props.data.filter((item) => item.foodMeal == 2)
+                filteredBreakfast.map(item => {
+                    const breakfast = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                    consumedBreakfast += (parseInt(breakfast[23]))
+                })
+                filteredlunch.map(item => {
+                    const lunch = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                    consumedLunch += (parseInt(lunch[23]))
+
+                })
+                filtereddinner.map(item => {
+                    const dinner = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                    consumedDinner += (parseInt(dinner[23]))
+                })
+                filteredsnack.map(item => {
+                    const snack = typeof (item.foodNutrientValue) === "string" ? item.foodNutrientValue.split(",") : item.foodNutrientValue
+                    consumedSnack += (parseInt(snack[23]))
+                })
+            }
+            setBreakFast(consumedBreakfast)
+            setLunch(consumedLunch)
+            setDinner(consumedDinner)
+            setSnack(consumedSnack)
+        }
     }, []);
 
     const foodsGraphicColor = ["#e63946", "#52489c", defaultTheme.green2, "#3376bd"]
@@ -109,24 +147,48 @@ const MealDetailsCard = props => {
                             labelPlacement={"parallel"}
                         />
                     </View>
-                    <View style={styles.foodMealContainer}>
-                        <View style={{ justifyContent: "space-around", alignItems: "flex-start" }}>
-                            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                                <View style={[styles.foodMealView, { backgroundColor: "#e63946" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.breakfast}</Text>
+                    {
+                        parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(props.date).format("YYYYMMDD"))
+                            &&
+                            (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(props.date).format("YYYYMMDD")) : true) ?
+                            <View style={styles.foodMealContainer}>
+                                <View style={{ justifyContent: "space-around", alignItems: "flex-start" }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: "#e63946" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.sahari}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: "#52489c" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.eftar}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ justifyContent: "space-around", alignItems: "flex-start" }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: defaultTheme.green2 }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.dinner}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: "#3376bd" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.snack}</Text>
+                                    </View>
+                                </View>
                             </View>
-                            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                                <View style={[styles.foodMealView, { backgroundColor: "#52489c" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.lunch}</Text>
+                            :
+                            <View style={styles.foodMealContainer}>
+                                <View style={{ justifyContent: "space-around", alignItems: "flex-start" }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: "#e63946" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.breakfast}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: "#52489c" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.lunch}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ justifyContent: "space-around", alignItems: "flex-start" }}>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: defaultTheme.green2 }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.dinner}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                                        <View style={[styles.foodMealView, { backgroundColor: "#3376bd" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.snack}</Text>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                        <View style={{ justifyContent: "space-around", alignItems: "flex-start" }}>
-                            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                                <View style={[styles.foodMealView, { backgroundColor: defaultTheme.green2 }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.dinner}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                                <View style={[styles.foodMealView, { backgroundColor: "#3376bd" }]} /><Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(16) }}>{props.lang.snack}</Text>
-                            </View>
-                        </View>
-                    </View>
+                    }
                 </View>
                 :
                 null}

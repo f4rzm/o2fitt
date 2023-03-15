@@ -1,6 +1,6 @@
 import React from "react"
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
     SplashScreen,
     EditGoalScreen,
@@ -73,6 +73,8 @@ import BillScreen from "../screens/BillScreen/BillScreen";
 import ChooseDietTargetScreen from "../screens/DietScreens/ChooseDietTargetScreen";
 import BodyAnalyzeScreen from '../screens/homeScreeen/BodyAnalyzeScreen'
 import DrawerNavigator from "./DrawerNavigator";
+import FastingDietplan from "../screens/FastingDiet/FastingDietplan";
+import { createStackNavigator } from "@react-navigation/stack";
 
 
 const MainRoute = props => {
@@ -96,8 +98,10 @@ const MainRoute = props => {
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
-                animationEnabled: false
+                animationEnabled: true,
+
             }}
+            // initialRouteName={"FastingDietplan"}
         >
             {
                 app.appIsLoading ?
@@ -105,13 +109,17 @@ const MainRoute = props => {
                     auth.access_token ?
                         profile.id && profile.id > 0 && parseInt(specification.weightSize) > 0 ?
                             <>
-                                <Stack.Screen initialParams={{
+                                <Stack.Screen
+                                    initialParams={{
                                         lang: lang,
                                         profile: profile,
                                         auth: auth,
                                         app: app,
                                         user: user
-                                    }} name="Drawer" component={DrawerNavigator} />
+                                    }}
+                                    name="Drawer"
+                                    component={DrawerNavigator}
+                                />
                                 {/* <Stack.Screen
                                     name="Tabs"
                                     component={Tabs}
@@ -124,7 +132,7 @@ const MainRoute = props => {
                                         user: user
                                     }}
                                 /> */}
-                                <Stack.Screen name="EditGoalScreen" component={EditGoalScreen} options={options} />
+                                <Stack.Screen name="EditGoalScreen" component={EditGoalScreen} />
                                 <Stack.Screen name="EditGoalNutritionScreen" component={EditGoalNutritionScreen} options={options} />
                                 <Stack.Screen name="EditGoalBodyScreen" component={EditGoalBodyScreen} options={options} />
                                 <Stack.Screen name="RegisterWeightScreen" component={RegisterWeightScreen} options={options} />
@@ -186,6 +194,7 @@ const MainRoute = props => {
                                 <Stack.Screen name="BodyAnalyzeScreen" component={BodyAnalyzeScreen} options={options} />
                                 <Stack.Screen name="BlogCatScreen" component={BlogCatScreen} options={options} />
                                 <Stack.Screen name="SetRefferalCode" component={SetRefferalCode} options={options} />
+                                <Stack.Screen name="FastingDietplan" component={FastingDietplan} options={options} />
 
                             </> :
                             <Stack.Screen name="WelcomeRouter" component={WelcomeRouter} options={options} /> :
@@ -198,6 +207,5 @@ const MainRoute = props => {
     )
 }
 
-const Stack = createStackNavigator();
 
 export default MainRoute
