@@ -12,7 +12,7 @@
     "build:ios": "react-native bundle --minify --entry-file index.js --platform ios --dev false --bundle-output ./ios/main.jsbundle --assets-dest ./ios"
   },
   "dependencies": {
-    "@craftzdog/pouchdb-core-react-native": "^7.2.2",
+    "@craftzdog/pouchdb-core-react-native": "^7.0.0",
     "@craftzdog/pouchdb-replication-react-native": "^7.0.0",
     "@gorhom/bottom-sheet": "^4.4.5",
     "@react-native-async-storage/async-storage": "^1.17.11",

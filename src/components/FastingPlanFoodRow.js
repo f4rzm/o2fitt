@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { dimensions } from '../constants/Dimensions'
 import { allMeasureUnits } from '../utils/measureUnits'
@@ -11,10 +11,13 @@ import { urls } from '../utils/urls'
 import { setFastingMeal } from '../redux/actions/fasting'
 import { useDispatch } from 'react-redux';
 import { calculatePercent } from '../redux/actions/diet'
+import ChangePackage from '../../res/img/changePackage.svg'
 
-const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, offlineDB, user, auth, selectedDate, mealDB, fastingDiet,diet }) => {
+const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, offlineDB, user, auth, selectedDate, mealDB, fastingDiet, diet, icon }) => {
     const dispatch = useDispatch()
+    const [loading, setLoading] = useState(false)
     const getFromDb = async () => {
+        setLoading(true)
 
         await pack.dietPackFoods.forEach(async (item, index) => {
             await foodDB.get(`${item.foodName}_${item.foodId}`)
@@ -87,11 +90,11 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
             let percent = diet.percent + 0.55
             setTimeout(() => {
                 dispatch(calculatePercent(percent))
-    
+                setLoading(false)
             }, 1000);
         }
 
-        
+
 
     }
 
@@ -121,7 +124,7 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
     };
 
     const removeFromServer = (id, modalId) => {
-
+        setLoading(true)
         pack.dietPackFoods.forEach((element, index) => {
 
             offlineDB.allDocs({ include_docs: false }).then((records) => {
@@ -146,14 +149,14 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
 
     const removeMealDB = (element, index) => {
 
-        let removedmealFromServer=fastingDiet
-        removedmealFromServer[selectedDate][meal].isAte=false
+        let removedmealFromServer = fastingDiet
+        removedmealFromServer[selectedDate][meal].isAte = false
         if (pack.dietPackFoods.length - 1 == index) {
             dispatch(setFastingMeal(removedmealFromServer))
             let percent = diet.percent - 0.55
             setTimeout(() => {
                 dispatch(calculatePercent(percent))
-           
+                setLoading(false)
             }, 1000);
         }
 
@@ -171,9 +174,15 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{ color: defaultTheme.mainText, fontFamily: lang.font, fontSize: moderateScale(15) }}>
-                    {title}
-                </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                    <Image
+                        source={icon}
+                        style={{ width: moderateScale(27), height: moderateScale(27), resizeMode: "contain" }}
+                    />
+                    <Text style={{ color: defaultTheme.mainText, fontFamily: lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(10) }}>
+                        {title}
+                    </Text>
+                </View>
                 <Text style={{ color: defaultTheme.mainText, fontFamily: lang.font, fontSize: moderateScale(15) }}>
                     {pack.caloriValue} کالری
                 </Text>
@@ -185,35 +194,39 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
             }
 
             {
-                pack.isAte == true ?
-                    <View style={[styles.footerContainer, { justifyContent: "center" }]}>
-                        <ConfirmButton
-                            lang={lang}
-                            title={"لغو"}
-                            style={{ width: dimensions.WINDOW_WIDTH * 0.5, backgroundColor: defaultTheme.white, borderWidth: 1, borderColor: defaultTheme.error, elevation: 5 }}
-                            textStyle={{ fontSize: moderateScale(15), color: defaultTheme.error }}
+                loading ?
+                    <View style={{paddingVertical:moderateScale(18)}}>
+                        <ActivityIndicator color={defaultTheme.primaryColor} size={"large"}/>
+                    </View> :
+                    pack.isAte == true ?
+                        <View style={[styles.footerContainer, { justifyContent: "center" }]}>
+                            <ConfirmButton
+                                lang={lang}
+                                title={"لغو"}
+                                style={{ width: dimensions.WINDOW_WIDTH * 0.5, backgroundColor: defaultTheme.white, borderWidth: 1, borderColor: defaultTheme.error}}
+                                textStyle={{ fontSize: moderateScale(15), color: defaultTheme.error }}
 
-                            onPress={removeFromServer}
-                        />
-                    </View>
-                    :
-                    <View style={styles.footerContainer}>
-                        <ConfirmButton
-                            lang={lang}
-                            title={lang.add}
-                            style={{ width: dimensions.WINDOW_WIDTH * 0.4 }}
-                            textStyle={{ fontSize: moderateScale(15) }}
+                                onPress={removeFromServer}
+                            />
+                        </View>
+                        :
+                        <View style={styles.footerContainer}>
 
-                            onPress={getFromDb}
-                        />
-                        <ConfirmButton
-                            lang={lang}
-                            title={lang.change}
-                            style={{ width: dimensions.WINDOW_WIDTH * 0.4, backgroundColor: defaultTheme.white }}
-                            textStyle={{ color: defaultTheme.mainText, fontSize: moderateScale(15) }}
-                            onPress={() => { onChangepackage(meal) }}
-                        />
-                    </View>
+                            <TouchableOpacity onPress={() => getFromDb()} activeOpacity={0.8} style={{ height: moderateScale(40), justifyContent: "center", flexDirection: "row", borderRadius: 10, backgroundColor: defaultTheme.primaryColor, alignItems: "center", padding: moderateScale(10) }}>
+                                <Image
+                                    source={require('../../res/img/done.png')}
+                                    style={{ width: moderateScale(20), height: moderateScale(20), resizeMode: "contain" }}
+                                />
+                                <Text style={{ color: "white", fontFamily: lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(5) }}>ثبت در روزانه</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() => onChangepackage(meal)} activeOpacity={0.8} style={{ height: moderateScale(42), justifyContent: "center", flexDirection: "row", borderRadius: 10, alignItems: "center", borderColor: defaultTheme.border, borderWidth: 1, paddingHorizontal: moderateScale(15) }}>
+                                <ChangePackage />
+                                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(5), color: defaultTheme.darkText }}>تعویض برنامه</Text>
+                            </TouchableOpacity>
+
+
+                        </View>
             }
 
 
@@ -242,9 +255,8 @@ const styles = StyleSheet.create({
     footerContainer: {
         flexDirection: "row",
         width: "100%",
-        backgroundColor: defaultTheme.grayBackground,
-        padding: moderateScale(15),
-        justifyContent: "space-between",
+        paddingVertical: moderateScale(15),
+        justifyContent: "space-around",
         alignItems: "center"
     }
 })

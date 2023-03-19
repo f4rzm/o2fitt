@@ -27,7 +27,7 @@ const DietCard = props => {
                                 برنامه غذایی فعالی ندارین!
                             </Text>
                             {
-                                props.diet.isBuy == false ? <Text style={{ fontSize: moderateScale(14), color: "gray", fontFamily: props.lang.font, marginHorizontal: moderateScale(20), lineHeight: moderateScale(18), paddingTop: moderateScale(14) }}>اگر میخواین با برنامه غذایی به وزن دلخواه برسین <Text style={{ color: defaultTheme.green }}>اینجا کلیک</Text> کنین</Text> : null
+                                props.diet.isBuy == false ? <Text style={{ fontSize: moderateScale(14), color: "gray", fontFamily: props.lang.font, marginHorizontal: moderateScale(20), lineHeight: moderateScale(18), paddingTop: moderateScale(14),textAlign:"left" }}>اگر میخواین با برنامه غذایی به وزن دلخواه برسین <Text style={{ color: defaultTheme.green }}>اینجا کلیک</Text> کنین</Text> : null
 
                             }
 
@@ -71,7 +71,7 @@ const DietCard = props => {
 const styles = StyleSheet.create({
     mainContainer: {
         flexDirection: "row",
-        height: moderateScale(130),
+       
         width: "92%",
         justifyContent: "space-between",
         alignItems: "flex-start",
@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(18),
         maxWidth: moderateScale(75),
         textAlign: "center",
-        color: defaultTheme.darkText
+        color: defaultTheme.darkText,
+        textAlign:"left"
     },
     button: {
         width: moderateScale(95),
@@ -144,7 +145,8 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         color: defaultTheme.darkText,
-        fontSize: moderateScale(16)
+        fontSize: moderateScale(16),
+        textAlign:"left"
     },
     btnContainer: {
         backgroundColor: defaultTheme.green,

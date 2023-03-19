@@ -26,3 +26,8 @@ export const clearFastingDiet=()=>{
         
     }
 }
+export const shutDownFastingDiet=()=>{
+    return{
+        type:actions.SHUTDOWN_FASTING_DIET
+    }
+}

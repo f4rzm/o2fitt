@@ -15,6 +15,7 @@ import moment from 'moment';
 import analytics from '@react-native-firebase/analytics';
 import { updateProfileLocaly, updateSpecification } from "../../redux/actions"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { CommonActions } from '@react-navigation/native';
@@ -22,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function UserDataAcceptionScreen(props) {
     const [goalinWeek, setGoalinWeek] = useState()
+    const navigation=useNavigation()
     const [isShowingweekly, setIsShowingweekly] = useState(true)
     const [gender, setGender] = useState()
     const [isLoading, setIsLoading] = useState(false)
@@ -164,7 +166,7 @@ export default function UserDataAcceptionScreen(props) {
         setIsLoading(false);
         AsyncStorage.setItem('welcomeRoute', 'false')
         // props.navigation.navigate('Tabs')
-        props.navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Tabs' }] }))
+    //    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Tabs' }] }))
 
     };
 

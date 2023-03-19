@@ -159,7 +159,7 @@ function DietConfirmation(props) {
 
                                 props.navigation.navigate("FastingDietplan")
                             }, () => { }))
-                            analytics().logEvent('setWeight')
+                            analytics().logEvent('set_fastingDiet')
                         },
                         (err) => {
                             setLoading(false)
@@ -196,7 +196,7 @@ function DietConfirmation(props) {
 
                                 props.navigation.navigate("DietPlanScreen")
                             }, () => { }))
-                            analytics().logEvent('setWeight')
+                            analytics().logEvent('set_normalDiet')
                         },
                         (err) => {
                             setLoading(false)

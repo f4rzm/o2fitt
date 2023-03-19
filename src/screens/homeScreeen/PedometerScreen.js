@@ -925,7 +925,7 @@ const PedometerScreen = (props) => {
             <Text
               style={[
                 styles.text,
-                { fontFamily: lang.font, fontSize: moderateScale(16) },
+                { fontFamily: lang.font, fontSize: moderateScale(16),marginHorizontal:5 },
               ]}>
               0
             </Text>
@@ -936,8 +936,8 @@ const PedometerScreen = (props) => {
               tintColor={defaultTheme.green2}
               backgroundColor={'rgba(0,0,0,0.2)'}
               lineCap='round'
-              arcSweepAngle={280}
-              rotation={-140}
+              arcSweepAngle={182}
+              rotation={-90}
               tintColorSecondary={defaultTheme.green}
 
               style={{ alignItems: "center", justifyContent: "center" }}
@@ -1086,7 +1086,7 @@ const PedometerScreen = (props) => {
             <Text
               style={[
                 styles.text,
-                { fontFamily: lang.font, fontSize: moderateScale(16) },
+                { fontFamily: lang.font, fontSize: moderateScale(16),marginHorizontal:5 },
               ]}
               allowFontScaling={false}>
               {profile.targetStep}

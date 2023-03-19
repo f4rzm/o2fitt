@@ -1285,14 +1285,17 @@ const HomeScreen = (props) => {
   const onFailureUnit = () => {
     console.log('failure');
   };
-
   const onDietPressed = () => {
+    
+    // console.error(parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD")),parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")))
 
     if (diet.isActive == true && diet.isBuy == true) {
 
       if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
         &&
-        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)) {
+        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
+        
+        ) {
 
         props.navigation.navigate("FastingDietplan")
       } else {

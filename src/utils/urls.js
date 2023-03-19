@@ -1,7 +1,7 @@
 export const urls = {
     identityBaseUrl : "https://identity.o2fitt.com/api/v1/",
     identityBaseUrl2 : "https://identity.o2fitt.com/api/v2/",
-    userBaseUrl : "https://user.o2fitt.com/api/v1/",
+    userBaseUrl : "https://usertest.o2fitt.com/api/v1/",
     foodBaseUrl : "https://food.o2fitt.com/api/v1/",
     foodBaseUrl2 : "https://food.o2fitt.com/api/v2/",
     workoutBaseUrl : "https://workout.o2fitt.com/api/v1/",

@@ -17,6 +17,9 @@ import { moderateScale } from 'react-native-size-matters';
 import { BlurView } from '@react-native-community/blur';
 import { ConfirmButton } from '../components';
 import { clearDiet } from '../redux/actions/diet';
+import analytics from '@react-native-firebase/analytics';
+import { urls } from '../utils/urls';
+import { RestController } from '../classess/RestController';
 
 
 const DrawerNavigator = (props) => {
@@ -58,14 +61,12 @@ const DrawerNavigator = (props) => {
                 <RamadanSwitch
                     isActive={fastingDiet.isActive}
                     onChangeSwitch={(e) => {
-                        // dispatch(setFastingActivation(e))
+     
                         if (e == true) {
                             setShowFastingModal(true)
-                            // dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: e }))
                         }
                         else {
                             setNormalDietModal(true)
-                            // dispatch(setActivaitonAndDeativation({ endDate: moment().format("YYYY-MM-DD"), isActive: e }))
                         }
                     }}
                     lang={lang}
@@ -78,6 +79,46 @@ const DrawerNavigator = (props) => {
                 />
             </DrawerContentScrollView>
         )
+    }
+
+    const setFastingServerActivationTrue = () => {
+        const url = urls.userBaseUrl + urls.userProfiles + "updateFastingMode"
+        const RC = new RestController()
+        const params = {
+            userId: user.id,
+            fastingMode: true
+        }
+        const header = { headers: { Authorization: "Bearer " + auth.access_token } }
+
+        RC.put(url, params, header, onSuccessRead, () => onFailureRead(params));
+    }
+    const onFailureRead = (params) => {
+        
+        const url = urls.userBaseUrl + urls.userProfiles + "updateFastingMode"
+        offlineDB.post({
+            method: "put",
+            type: "profile",
+            url: url,
+            header: { headers: { Authorization: "Bearer " + auth.access_token } },
+            params: params
+        }).then(res => {
+            onSuccess()
+        })
+    }
+    const onSuccessRead = (params) => {
+
+    }
+    const setFastingServerActivationFasle = () => {
+        const url = urls.userBaseUrl + urls.userProfiles + "updateFastingMode"
+        const RC = new RestController()
+        const header = { headers: { Authorization: "Bearer " + auth.access_token } }
+
+        const params = {
+            userId: user.id,
+            isActive: true
+        }
+
+        RC.put(url, params, header, onSuccessRead, () => onFailureRead(params));
     }
     return (
         <>
@@ -124,18 +165,20 @@ const DrawerNavigator = (props) => {
                     <Text style={[styles.textHeader, { fontFamily: lang.font }]}>حالت روزه داری براتون فعال بشه؟</Text>
                     {
                         diet.isActive &&
-                        <Text style={styles.desText}>با انتخاب بله، اگر از امکان برنامه غذایی استفاده میکنین، برنامه غذایی فعلیتون لغو میشه و متناسب با روزه داری باید مجدد رژیم دریافت کنین.</Text>
+                        <Text style={[styles.desText, { fontFamily: lang.font }]}>با انتخاب بله، اگر از امکان برنامه غذایی استفاده میکنین، برنامه غذایی فعلیتون لغو میشه و متناسب با روزه داری باید مجدد رژیم دریافت کنین.</Text>
                     }
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <ConfirmButton
                             lang={lang}
                             title={lang.yes}
                             onPress={() => {
-                                if(diet.isActive){
+                                setFastingServerActivationTrue()
+                                analytics().logEvent('ramadan_switch_True')
+                                if (diet.isActive) {
                                     dispatch(clearFastingDiet())
                                     dispatch(clearDiet())
                                 }
-                                dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true,endDate:null }))
+                                dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true, endDate: null }))
                                 setShowFastingModal(false)
 
                             }}
@@ -164,18 +207,20 @@ const DrawerNavigator = (props) => {
                     <Text style={[styles.textHeader, { fontFamily: lang.font }]}>حالت روزه داری براتون غیر فعال بشه؟</Text>
                     {
                         diet.isActive &&
-                        <Text style={styles.desText}>با انتخاب بله، اگر از امکان برنامه غذایی استفاده میکنین، برنامه غذایی روزه داری لغو میشه و باید مجدد رژیم دریافت کنین.</Text>
+                        <Text style={[styles.desText, { fontFamily: lang.font }]}>با انتخاب بله، اگر از امکان برنامه غذایی استفاده میکنین، برنامه غذایی روزه داری لغو میشه و باید مجدد رژیم دریافت کنین.</Text>
                     }
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <ConfirmButton
                             lang={lang}
                             title={lang.yes}
                             onPress={() => {
-                                if(diet.isActive){
+                                analytics().logEvent('ramadan_switch_False')
+                                setFastingServerActivationFasle()
+                                if (diet.isActive) {
                                     dispatch(clearFastingDiet())
                                     dispatch(clearDiet())
                                 }
-                                dispatch(setActivaitonAndDeativation({ endDate: moment().format("YYYY-MM-DD"), isActive: false }))
+                                dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))
                                 setNormalDietModal(false)
                             }}
                             style={{ width: dimensions.WINDOW_WIDTH * 0.35, backgroundColor: defaultTheme.green, elevation: 2 }}
