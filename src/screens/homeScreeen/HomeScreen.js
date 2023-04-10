@@ -81,6 +81,7 @@ const HomeScreen = (props) => {
   const diet = useSelector((state) => state.diet)
   const starRating = useSelector((state) => state.starRating)
   const syncedDate = useSelector((state) => state.syncedDate)
+  const fastingDiet = useSelector((state) => state.fastingDiet)
 
   const specification = useSelector((state) => state.specification);
 
@@ -120,9 +121,9 @@ const HomeScreen = (props) => {
 
     AppState.addEventListener("change", _handleAppStateChange);
 
-    return () => {
-      AppState.removeEventListener("change", _handleAppStateChange);
-    };
+    // return () => {
+    //   AppState.removeEventListener("change", _handleAppStateChange);
+    // };
   }, []);
 
   const _handleAppStateChange = (nextAppState) => {
@@ -265,18 +266,18 @@ const HomeScreen = (props) => {
     getMealFromDB(time, false);
     if (app.networkConnectivity) {
 
-    //syncedDays.indexOf(selectedDate) === -1
-    // syncedDays.push(selectedDate)
-    // syncMeal(time);
-    syncWater(time);
-    // // syncSteps(selectedDate);
-    syncSleep(time);
-    syncActivities(time);
+      //syncedDays.indexOf(selectedDate) === -1
+      // syncedDays.push(selectedDate)
+      // syncMeal(time);
+      syncWater(time);
+      // // syncSteps(selectedDate);
+      syncSleep(time);
+      syncActivities(time);
 
     } else {
-    getWaterFromDB(time);
-    getSleepFromDB(time);
-    getActivityFromDB(time);
+      getWaterFromDB(time);
+      getSleepFromDB(time);
+      getActivityFromDB(time);
     }
   }
 
@@ -341,26 +342,26 @@ const HomeScreen = (props) => {
     requestUserPermission();
   }, []);
 
-  // React.useEffect(() => {
-  //   ////console.warn(app.unreadMessages)
-  //   let backHandler = null;
-  //   const focusUnsubscribe = props.navigation.addListener('focus', () => {
-  //     backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-  //       setCloseDialogVisible(true);
-  //       return true;
-  //     });
-  //   });
 
-  //   const blurUnsubscribe = props.navigation.addListener('blur', () => {
-  //     backHandler && backHandler.remove();
-  //   });
+  React.useEffect(() => {
+    ////console.warn(app.unreadMessages)
+    let backHandler = null;
+    const focusUnsubscribe = props.navigation.addListener('focus', () => {
+      backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+        BackHandler.exitApp()
+      });
+    });
 
-  //   return () => {
-  //     backHandler && backHandler.remove();
-  //     focusUnsubscribe();
-  //     blurUnsubscribe();
-  //   };
-  // }, []);
+    const blurUnsubscribe = props.navigation.addListener('blur', () => {
+      backHandler && backHandler.remove();
+    });
+
+    return () => {
+      backHandler && backHandler.remove();
+      focusUnsubscribe();
+      blurUnsubscribe();
+    };
+  }, []);
 
   // const pD = async () => {
   //   console.log("workeFine");
@@ -560,7 +561,7 @@ const HomeScreen = (props) => {
       }
 
     } else {
-      arrayOfDates=[]
+      arrayOfDates = []
       AsyncStorage.setItem("syncedDates", `${date}`)
     }
 
@@ -1159,7 +1160,16 @@ const HomeScreen = (props) => {
   const onDietPressed = () => {
 
     if (diet.isActive == true && diet.isBuy == true) {
-      props.navigation.navigate("DietPlanScreen")
+
+      if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(selectedDate).format("YYYYMMDD"))
+        &&
+        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(selectedDate).format("YYYYMMDD")) : true)) {
+
+        props.navigation.navigate("FastingDietplan")
+      } else {
+
+        props.navigation.navigate("DietPlanScreen")
+      }
     } else if (diet.isActive == false && diet.isBuy == true) {
       props.navigation.navigate("DietStartScreen")
     } else if (diet.isActive == true && diet.isBuy == false) {
@@ -1186,6 +1196,9 @@ const HomeScreen = (props) => {
     timezone()
   }, [])
 
+  // useEffect(() => {
+  //     console.warn(fastingDiet.allDinner.length,fastingDiet.allSahar.length,fastingDiet.allSnack.length,fastingDiet.allEftar.length);
+  // }, [])
 
   return (
     <>
@@ -1243,14 +1256,14 @@ const HomeScreen = (props) => {
           autoSteps={pedometer.AutoStepsCounter}
         />
         {
-          user.countryId !== 128 ? null :
-            <DietCard
-              lang={lang}
-              profile={profile}
-              specification={specification}
-              diet={diet}
-              onCardPressed={onDietPressed}
-            />
+          user.countryId == 128 && lang.langName == "persian" &&
+          <DietCard
+            lang={lang}
+            profile={profile}
+            specification={specification}
+            diet={diet}
+            onCardPressed={onDietPressed}
+          />
         }
 
 

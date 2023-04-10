@@ -36,6 +36,7 @@ const CountryPicker = props =>{
                 value={props.searchText}
                 onVoice={search=>props.searchTextChanged(search)}
                 autoFocusDisable
+                setTextEmpty={()=>setText("")}
            />
          
            <SectionList

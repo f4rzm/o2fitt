@@ -129,16 +129,17 @@ const styles = StyleSheet.create({
   circle: {
     width: 20,
     height: 20,
-    borderRadius: 20,
+    borderRadius: 10,
     marginEnd: 10,
+    top:moderateScale(2)
   },
   unit: {
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(15),
     color: defaultTheme.darkText
   },
   number: {
     marginHorizontal: moderateScale(5),
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(15),
     color: defaultTheme.darkText
   },
   rowFloor: {
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
     left: moderateScale(-4)
   },
   textSmallNutrient: {
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(15),
     color: defaultTheme.darkText
   }
 })

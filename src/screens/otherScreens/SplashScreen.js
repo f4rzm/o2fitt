@@ -169,13 +169,6 @@ const SplashScreen = props => {
       <Byo2
         width={dimensions.WINDOW_WIDTH * 0.27}
       />
-      {errorVisible && (
-        <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
-          <View style={styles.wrapper}>
-            <BlurView style={styles.absolute} blurType="light" blurAmount={6} />
-          </View>
-        </TouchableWithoutFeedback>
-      )}
 
       <View style={{ marginBottom: 12, marginTop: 15 }}>
         <Text style={styles.text}>

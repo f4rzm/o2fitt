@@ -100,6 +100,7 @@ const ActivityScreen = props => {
           onChangeText={(search=>setText(search))}
           value={searchText}
           onVoice={search=>setText(search)}
+          setTextEmpty={()=>setText("")}
         />
         <ActivityTab
           lang={lang}

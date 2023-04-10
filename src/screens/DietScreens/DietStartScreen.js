@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from 'react-native'
+import { View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView, BackHandler } from 'react-native'
 import { ConfirmButton, Toolbar, DietCaloriePayment, Information } from '../../components'
 import { useSelector, useDispatch } from 'react-redux'
 import { defaultTheme } from '../../constants/theme'
@@ -29,7 +29,17 @@ function DietStartScreen(props) {
     const profile = useSelector(state => state.profile)
     const [autoFuces, setAutoFuces] = useState(false)
     const translateY = useRef(new Animated.Value(100)).current
+    React.useEffect(() => {
+        BackHandler.addEventListener("hardwareBackPress", ()=>{
+            props.navigation.goBack()
+            return true
+        });
 
+        return () => BackHandler.removeEventListener("hardwareBackPress", ()=>{
+            props.navigation.popToTop()
+            return true
+        });
+    }, [])
 
     const data = [
         { id: 0, name: lang.walnut, measure: lang.twoMedium, caloire: 65 },

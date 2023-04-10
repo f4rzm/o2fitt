@@ -87,7 +87,7 @@ function RecipeDetails(props) {
 
     const onPressActivate = (inx) => {
         Animated.spring(scrollX, {
-            toValue: -dimensions.WINDOW_WIDTH * 0.3 * inx,
+            toValue: -dimensions.WINDOW_WIDTH * 0.3 * inx - moderateScale(3),
             useNativeDriver: true
         }).start()
     }
@@ -197,24 +197,28 @@ function RecipeDetails(props) {
                                 ))
                             }
                         </View>
-                        <View style={styles.pagerContainer}>
-                            {
-                                tabs.map((item, index) => {
-                                    return (
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setSelectedTab(item.id)
-                                                onPressActivate(index)
-                                            }}
-                                            style={{ zIndex: 10, borderRadius: moderateScale(10), padding: moderateScale(10), paddingVertical: Platform.OS == "ios" ? moderateScale(10) : moderateScale(5), width: dimensions.WINDOW_WIDTH * 0.3 }}
-                                        >
-                                            <Text style={{ fontSize: moderateScale(17), color: item.id === selectedTab ? defaultTheme.white : defaultTheme.gray, fontFamily: lang.font, alignSelf: "center" }}>{item.neme}</Text>
-                                        </TouchableOpacity>
-                                    )
-                                })
+                        <View
+                            style={{}}
+                        >
+                            <View style={styles.pagerContainer}>
+                                {
+                                    tabs.map((item, index) => {
+                                        return (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setSelectedTab(item.id)
+                                                    onPressActivate(index)
+                                                }}
+                                                style={{ zIndex: 10, borderRadius: moderateScale(10), padding: moderateScale(10), paddingVertical: Platform.OS == "ios" ? moderateScale(10) : moderateScale(5), width: dimensions.WINDOW_WIDTH * 0.28 }}
+                                            >
+                                                <Text style={{ fontSize: moderateScale(17), color: item.id === selectedTab ? defaultTheme.white : defaultTheme.mainText, fontFamily: lang.font, alignSelf: "center" }}>{item.neme}</Text>
+                                            </TouchableOpacity>
+                                        )
+                                    })
 
-                            }
-                            <Animated.View style={{ position: "absolute", width: dimensions.WINDOW_WIDTH * 0.3, height: "100%", backgroundColor: defaultTheme.primaryColor, transform: [{ translateX: scrollX }], borderRadius: moderateScale(10) }} />
+                                }
+                                <Animated.View style={{ position: "absolute", width: dimensions.WINDOW_WIDTH * 0.28, height: "100%", backgroundColor: defaultTheme.primaryColor, transform: [{ translateX: scrollX }], borderRadius: moderateScale(10) }} />
+                            </View>
                         </View>
                         {
                             selectedTab == 2 ?
@@ -293,7 +297,7 @@ function RecipeDetails(props) {
 }
 const styles = StyleSheet.create({
     pagerContainer: {
-        marginTop: moderateScale(15),
+
         width: dimensions.WINDOW_WIDTH * 0.9,
         borderRadius: 13,
         alignItems: "center",
@@ -301,9 +305,10 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         justifyContent: "space-between",
         overflow: "hidden",
-        elevation: 5,
-        backgroundColor: "white",
-        shadowColor: defaultTheme.darkText,
+        // elevation: 5,
+        backgroundColor: defaultTheme.grayBackground,
+        paddingVertical: moderateScale(3),
+        paddingHorizontal: moderateScale(3)
 
     },
     foodName: {

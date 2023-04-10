@@ -1043,7 +1043,7 @@ export const ar =
     "backgroundProcessText":"يجب السماح بتشغيل O2Fit في الخلفية لتحسين أداء عداد الخطى التلقائي",
     "accept":"السماح",
     "disagree":"لا",
-    "setPhoneNumber":"تسجيل الدخول"
-
-
+    "setPhoneNumber":"تسجيل الدخول",
+    "typePhoneNumber": "أدخل رقم الهاتف",
+    "typeEmail": "أدخل عنوان البريد الالكتروني",
 }

@@ -24,6 +24,17 @@ const PickerGoalWeight = ({
   for (let index = 0; index < 95; index++) {
     arrayGoalWeight.push((index + 35).toString());
   }
+  // if (target == 1) {
+  //   for (let index = stableWeight + 1; index <= 150; index++) {
+  //     arrayGoalWeight.push((index).toString());
+  //   }
+
+  // } else {
+  //   for (let index = stableWeight - 1; index >= 35; index--) {
+  //     arrayGoalWeight.push((index).toString());
+
+  //   }
+  // }
 
   const text =
     target === 0 ? lang.stable : target === 1 ? lang.increase : lang.decrease;
@@ -89,8 +100,8 @@ const PickerGoalWeight = ({
           onItemSelected={onItemSelected}
           itemTextFontFamily={lang.titleFont}
           selectedItemTextFontFamily={lang.titleFont}
-          itemTextSize={moderateScale(19)}
-          selectedItemTextSize={moderateScale(19)}
+          itemTextSize={moderateScale(16)}
+          selectedItemTextSize={moderateScale(17)}
           indicatorWidth={2}
           indicatorColor='gray'
         />
@@ -103,8 +114,8 @@ const PickerGoalWeight = ({
           onItemSelected={onItemSelectedAmount}
           itemTextFontFamily={lang.titleFont}
           selectedItemTextFontFamily={lang.titleFont}
-          itemTextSize={moderateScale(19)}
-          selectedItemTextSize={moderateScale(19)}
+          itemTextSize={moderateScale(16)}
+          selectedItemTextSize={moderateScale(18)}
           indicatorWidth={2}
           indicatorColor='gray'
         />

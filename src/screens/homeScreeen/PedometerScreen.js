@@ -11,6 +11,7 @@ import {
   Animated,
   TouchableOpacity,
   Platform,
+  BackHandler,
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
@@ -39,7 +40,7 @@ import analytics from '@react-native-firebase/analytics';
 import { BlurView } from '@react-native-community/blur';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- import RNWalkCounter from 'react-native-walk-counter';
+import RNWalkCounter from 'react-native-walk-counter';
 import { increase, setAutoCounterZero, setPedometerDate, setActiveCounter, updateTarget, setPedometerCounter } from '../../redux/actions/index'
 import Shoe from '../../../res/img/shoe.svg'
 import { Modal } from 'react-native-paper';
@@ -50,8 +51,9 @@ import BackgroundService from 'react-native-background-actions'
 import { PERMISSIONS } from 'react-native-permissions'
 import IMGTXTmodal from '../../components/IMGTXTmodal';
 import { requestIgnoreBatteryOptimizations } from 'react-native-send-intent'
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
- const WalkEvent = new NativeEventEmitter(RNWalkCounter);
+const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
 
 PouchDB.plugin(pouchdbSearch);
@@ -59,6 +61,9 @@ const pedoDB = new PouchDB('pedo', { adapter: 'react-native-sqlite' });
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
 const PedometerScreen = (props) => {
+
+
+
 
   const sleep = (time) =>
     new Promise((resolve) => setTimeout(() => {
@@ -68,6 +73,18 @@ const PedometerScreen = (props) => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
 
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      goBack
+    );
+    return () => backHandler.remove();
+  }, [])
+
+  const goBack = () => {
+    navigation.popToTop()
+    return true
+  }
 
   const lang = useSelector((state) => state.lang);
   const user = useSelector((state) => state.user);
@@ -526,12 +543,12 @@ const PedometerScreen = (props) => {
 
 
       }).catch((error) => console.log(error));
-      
+
     Toast.show({
       type: "success",
       props: { text2: lang.successful, style: { fontFamily: lang.font } },
       visibilityTime: 1000,
-      onShow: navigation.goBack(),
+      onShow: navigation.popToTop(),
     })
     analytics().logEvent('setSteps');
 
@@ -691,7 +708,7 @@ const PedometerScreen = (props) => {
   const [elevationC, setElevationC] = React.useState(5)
   const textInput = useRef(null)
 
-  const onConfirmManualSteps = async() => {
+  const onConfirmManualSteps = async () => {
     const date = await AsyncStorage.getItem("homeDate")
     if (textStep !== 0 && textStep !== "0" && textStep !== "") {
       setLoading(true)
@@ -699,7 +716,7 @@ const PedometerScreen = (props) => {
         id: props.route.params ? props.route.params.item.id : 0,
         _id: props.route.params ? props.route.params.item._id : Date.now().toString(),
         "userId": user.id,
-        "insertDate":  date,
+        "insertDate": date,
         "stepsCount": textStep,
         "duration": `${hour < 10 ? "0" + hour : hour}:${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`,
         "userWeight": specification[0].weightSize,
@@ -715,8 +732,8 @@ const PedometerScreen = (props) => {
         visibilityTime: 800
       })
     }
-
   }
+  
   const batteryPermissionRequest = () => {
     setBatteryOptimizeModal(false)
     requestIgnoreBatteryOptimizations().then((res) => {
@@ -725,7 +742,7 @@ const PedometerScreen = (props) => {
         analytics().logEvent('battery_optimization_turned_on')
       })
     }).catch(err => {
-      console.error(err);
+      console.warn('this is error',err);
     })
   }
 
@@ -878,9 +895,7 @@ const PedometerScreen = (props) => {
 
 
         <View style={[styles.container2]}>
-          <RowStart>
 
-          </RowStart>
 
           <RowCenter
             style={{
@@ -890,10 +905,84 @@ const PedometerScreen = (props) => {
             <Text
               style={[
                 styles.text,
-                { fontFamily: lang.font, fontSize: moderateScale(16) },
+                { fontFamily: lang.font, fontSize: moderateScale(16),marginHorizontal:5 },
               ]}>
               0
             </Text>
+            <AnimatedCircularProgress
+              size={dimensions.WINDOW_WIDTH * 0.6}
+              width={17}  
+              fill={fill}
+              tintColor={defaultTheme.green2}
+              backgroundColor={'rgba(0,0,0,0.2)'}
+              lineCap='round'
+              arcSweepAngle={182}
+              rotation={-90}
+              tintColorSecondary={defaultTheme.green}
+
+              style={{ alignItems: "center", justifyContent: "center" }}
+            >
+              {
+                () => (
+                  <>
+                    <View
+                      style={{
+                       
+                      }}>
+                      <Text
+                        style={[styles.text3, { fontFamily: lang.font }]}
+                        allowFontScaling={false}>
+                        <Text
+                          style={[styles.text2, { fontFamily: lang.titleFont }]}
+                          allowFontScaling={false}>
+                          {wholeSteps + ' '}
+                        </Text>
+                        {lang.step}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                       
+                      }}>
+                      <Text
+                        style={[styles.text3, { fontFamily: lang.font }]}
+                        allowFontScaling={false}>
+                        <Text
+                          style={[styles.text4, { fontFamily: lang.titleFont }]}
+                          allowFontScaling={false}>
+                          {stepBurnedCalorie(
+                            wholeSteps,
+                            specification[0].weightSize,
+                          ) + ' '}
+                        </Text>
+                        {lang.stepBurnedCal}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        position: 'absolute',
+                        flexDirection: 'row',
+                        top: -moderateScale(30),
+                        left: 0,
+                        width: size,
+                        height: textHeight,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={[
+                          styles.text,
+                          { fontFamily: lang.font, fontSize: moderateScale(16) },
+                        ]}
+                        allowFontScaling={false}>
+                        {parseInt(profile.targetStep * 0.5)}
+                      </Text>
+                    </View>
+                  </>
+                )
+              }
+            </AnimatedCircularProgress>
             {/* <AnimatedGaugeProgress
               size={size}
               width={gaugeWidth}
@@ -976,7 +1065,7 @@ const PedometerScreen = (props) => {
             <Text
               style={[
                 styles.text,
-                { fontFamily: lang.font, fontSize: moderateScale(16) },
+                { fontFamily: lang.font, fontSize: moderateScale(16),marginHorizontal:5 },
               ]}
               allowFontScaling={false}>
               {profile.targetStep}
@@ -1055,7 +1144,6 @@ const PedometerScreen = (props) => {
                     props: { text2: lang.typeEN, style: { fontFamily: lang.font } },
                     visibilityTime: 1000,
                   })
-
                 }
               }}
               maxLength={5}

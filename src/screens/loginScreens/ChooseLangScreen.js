@@ -142,7 +142,7 @@ const ChooseLangScreen = props => {
             <TouchableOpacity onPress={() => {
               langSelected(selectedLang.lang, selectedLang.id)
             }} style={{ width: dimensions.WINDOW_WIDTH * 0.4, backgroundColor: defaultTheme.primaryColor, borderRadius: moderateScale(50), alignItems: "center", paddingVertical: moderateScale(15), height: moderateScale(55), justifyContent: "center" }}>
-              <Text style={{ color: defaultTheme.white, fontSize: moderateScale(22), fontFamily: selectedLang.fontFamily }}>{selectedLang.continue}</Text>
+              <Text style={{ color: defaultTheme.white, fontSize: moderateScale(22), fontFamily: selectedLang.fontFamily,top:moderateScale(-3) }}>{selectedLang.continue}</Text>
             </TouchableOpacity>
           </Animated.View>
         }

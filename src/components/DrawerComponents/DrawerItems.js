@@ -47,13 +47,14 @@ const DrawerItems = (props) => {
                 navigation.navigate("InviteScreen")
             }
         },
-        {
-            text: lang.setShareFriend,
-            img: require("../../../res/img/exchange.png"),
-            onPress: () => {
-                navigation.navigate("SetRefferalCode")
-            }
-        },
+        lang.langName !== "english" && user.countryId == 128 ?
+            {
+                text: lang.setShareFriend,
+                img: require("../../../res/img/exchange.png"),
+                onPress: () => {
+                    navigation.navigate("SetRefferalCode")
+                }
+            } : null,
         {
             text: lang.report,
             img: require("../../../res/img/paper.png"),

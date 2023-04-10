@@ -125,9 +125,9 @@ const AuthCodeScreen = props => {
         isTablet: isTablet(),
         isEmulator: `${await isEmulator()}`,
         appVersion: `${getVersion()}`,
-        // market:"googlePlay",
+        market:"googlePlay",
         // market:"cafe bazar",
-        market:"web",
+        // market:"web",
         
       }
       console.error(params);

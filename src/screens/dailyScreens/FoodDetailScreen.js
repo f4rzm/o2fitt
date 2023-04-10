@@ -48,13 +48,12 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import { BlurView } from '@react-native-community/blur';
+import { mealsName } from '../../utils/interfaces/mealsInterface';
 
-PouchDB.plugin(pouchdbSearch);
+PouchDB.plugin(pouchdbSearch)
+const personalFoodDB = new PouchDB('personalFood', { adapter: 'react-native-sqlite' })
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
 const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
-const personalFoodDB = new PouchDB('personalFood', {
-  adapter: 'react-native-sqlite',
-});
 const favoriteFood = new PouchDB('favoriteFood', {
   adapter: 'react-native-sqlite',
 });
@@ -74,32 +73,12 @@ const FoodDetailScreen = (props) => {
   const user = useSelector((state) => state.user);
   const app = useSelector((state) => state.app);
   const profile = useSelector((state) => state.profile);
+  const fastingDiet = useSelector((state) => state.fastingDiet);
   const [originalFood, setOriginalFood] = React.useState({});
   const [showTextEditor, setShowTextEditor] = React.useState(false);
   const [isEdited, setIsEdited] = React.useState(false);
   const [showDefautImage, setshowDefautImage] = React.useState(false);
-  const mealsName = [
-    {
-      persian: 'صبحانه',
-      arabic: 'الفطور',
-      english: 'Breakfast',
-    },
-    {
-      persian: 'ناهار',
-      arabic: 'الغداء',
-      english: 'Lunch',
-    },
-    {
-      persian: 'میان وعده',
-      arabic: 'وجبة خفيفة',
-      english: 'Snack',
-    },
-    {
-      persian: 'شام',
-      arabic: 'العشاء',
-      english: 'Dinner',
-    },
-  ];
+
   const mealModel = React.useRef({
     id: 0,
     userId: user.id,
@@ -196,11 +175,12 @@ const FoodDetailScreen = (props) => {
   }, []);
 
   React.useEffect(() => {
-    getFromServer()
+    getFromDB()
 
   }, []);
 
   const getFromDB = async () => {
+
     // const measureUnitsPersonal = JSON.parse(await AsyncStorage.getItem('unit'));
     const measureUnitsPersonal = [1214, 1215, 1122, 1106, 1213, 1211, 1212, 1120, 1209, 1210, 1208, 1207, 1205, 1206, 1118, 1204, 1202, 1203, 1201, 1200, 1199, 1193, 1198, 1121, 1197, 1116, 1191, 1196, 1194, 1192, 1187, 1189, 1190, 1186, 1124, 1125, 1123, 1113, 1112, 1111, 1107];
 
@@ -208,11 +188,10 @@ const FoodDetailScreen = (props) => {
     //   await AsyncStorage.getItem('MeasureUnits'),
     // );
     // console.warn(wholeMeasureunits);
-    let DB = null;
+
     if (!isNaN(parseInt(food.personalFoodId))) {
-      DB = personalFoodDB;
-      DB.find({
-        selector: { personalFoodId: food.personalFoodId },
+      personalFoodDB.find({
+        selector: { foodName: food.foodName },
       }).then((records) => {
         if (records.docs.length > 0) {
           // console.log('#####', records);
@@ -312,11 +291,13 @@ const FoodDetailScreen = (props) => {
           console.warn("log")
           // getFromServer();
         }
-      });
+      }).catch(err => {
+        // console.error(err);
+        getFromServer();
+      })
     } else {
-      DB = foodDB;
       // console.log(`${food.foodName}_${food.foodId}`);
-      DB.get(`${food.foodName}_${food.foodId}`)
+      foodDB.get(`${food.foodName}_${food.foodId}`)
         .then((records) => {
           // console.log('getFromDB records', records);
           if (records) {
@@ -435,7 +416,7 @@ const FoodDetailScreen = (props) => {
           }
         })
         .catch((error) => {
-          // getFromServer();
+          getFromServer();
           console.warn("log")
         });
     }
@@ -515,6 +496,7 @@ const FoodDetailScreen = (props) => {
         measureUnits.push(allMeasureUnits.find((unit) => item === unit.id)),
     );
     if (food.personalFoodId > 0) {
+
       setFood({
         ...food,
         ...response.data.data,
@@ -524,6 +506,7 @@ const FoodDetailScreen = (props) => {
           name: unit[lang.langName],
           value: unit.value,
         })),
+
       });
     }
     else {
@@ -548,22 +531,20 @@ const FoodDetailScreen = (props) => {
     } else {
       updateSelectedMeasureUnit(response.data.data.measureUnits[0]);
     }
-
+    console.warn('this is measure');
     setMeal({
       ...meal,
-      measureUnitId: meal.measureUnitId
-        ? meal.measureUnitId
-        : response.data.data.measureUnits[0],
       foodNutrientValue: response.data.data.nutrientValue,
       measureUnitName: meal.measureUnitName
         ? meal.measureUnitName
-        : response.data.data.measureUnitName[0],
+        :measureUnits[0][lang.langName],
+      measureUnitId: measureUnits[0].id
     });
   };
 
   const getFailure = (err) => {
 
-    getFromDB()
+    // getFromDB()
   };
 
   const setSelectedMeasureUnit = (item) => {
@@ -1337,67 +1318,138 @@ const FoodDetailScreen = (props) => {
               allowFontScaling={false}>
               {lang.meal +
                 ' - ' +
-                mealsName[parseFloat(meal.foodMeal)][lang.langName]}
+                // mealsName[parseFloat(meal.foodMeal)][lang.langName]}
+                mealsName.find(item => item.id == meal.foodMeal)[lang.langName]}
             </Text>
 
-            <RowWrapper
-              style={{
-                marginVertical: 0,
-                marginHorizontal: 0,
-              }}>
-              <TouchableOpacity
-                style={{ marginHorizontal: moderateScale(5) }}
-                onPress={() => setMeal({ ...meal, foodMeal: 0 })}>
-                <Image
-                  source={
-                    meal.foodMeal === 0
-                      ? require('../../../res/img/breakfast.png')
-                      : require('../../../res/img/breakfast2.png')
-                  }
-                  style={styles.meal}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginHorizontal: moderateScale(5) }}
-                onPress={() => setMeal({ ...meal, foodMeal: 1 })}>
-                <Image
-                  source={
-                    meal.foodMeal === 1
-                      ? require('../../../res/img/lunch.png')
-                      : require('../../../res/img/lunch2.png')
-                  }
-                  style={styles.meal}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginHorizontal: moderateScale(5) }}
-                onPress={() => setMeal({ ...meal, foodMeal: 3 })}>
-                <Image
-                  source={
-                    meal.foodMeal === 3
-                      ? require('../../../res/img/dinner.png')
-                      : require('../../../res/img/dinner2.png')
-                  }
-                  style={styles.meal2}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginHorizontal: moderateScale(5) }}
-                onPress={() => setMeal({ ...meal, foodMeal: 2 })}>
-                <Image
-                  source={
-                    meal.foodMeal === 2
-                      ? require('../../../res/img/snack.png')
-                      : require('../../../res/img/snack2.png')
-                  }
-                  style={styles.meal}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </RowWrapper>
+
+            {
+              parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(meal.insertDate).format("YYYYMMDD"))
+                &&
+                (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(meal.insertDate).format("YYYYMMDD")) : true)
+                ?
+                <View
+                  style={{
+                    marginVertical: 0,
+                    marginHorizontal: 0,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                  }}>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 9 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 9
+                          ? require('../../../res/img/sahari-icon.png')
+                          : require('../../../res/img/sahari-icon1.png')
+                      }
+                      style={styles.meal}
+                      resizeMode="stretch"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 6 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 6
+                          ? require('../../../res/img/eftar-icon.png')
+                          : require('../../../res/img/eftar-icon1.png')
+                      }
+                      style={styles.meal}
+                      resizeMode="stretch"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 3 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 3
+                          ? require('../../../res/img/dinner-icon.png')
+                          : require('../../../res/img/dinner-icon1.png')
+                      }
+                      style={styles.meal}
+                      resizeMode="stretch"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 7 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 7
+                          ? require('../../../res/img/snack-icon.png')
+                          : require('../../../res/img/snack-icon1.png')
+                      }
+                      style={styles.meal2}
+                      resizeMode="stretch"
+                    />
+                  </TouchableOpacity>
+                </View>
+                :
+                <RowWrapper
+                  style={{
+                    marginVertical: 0,
+                    marginHorizontal: 0,
+                  }}>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 0 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 0
+                          ? require('../../../res/img/breakfast.png')
+                          : require('../../../res/img/breakfast2.png')
+                      }
+                      style={styles.meal}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 1 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 1
+                          ? require('../../../res/img/lunch.png')
+                          : require('../../../res/img/lunch2.png')
+                      }
+                      style={styles.meal}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 3 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 3
+                          ? require('../../../res/img/dinner.png')
+                          : require('../../../res/img/dinner2.png')
+                      }
+                      style={styles.meal2}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ marginHorizontal: moderateScale(5) }}
+                    onPress={() => setMeal({ ...meal, foodMeal: 2 })}>
+                    <Image
+                      source={
+                        meal.foodMeal === 2
+                          ? require('../../../res/img/snack.png')
+                          : require('../../../res/img/snack2.png')
+                      }
+                      style={styles.meal}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                </RowWrapper>
+            }
+
           </RowSpaceBetween>
           <RowSpaceBetween style={styles.rowStyle}>
             <Text
@@ -1721,8 +1773,8 @@ const styles = StyleSheet.create({
     height: moderateScale(30),
   },
   meal2: {
-    width: moderateScale(25),
-    height: moderateScale(25),
+    width: moderateScale(30),
+    height: moderateScale(30),
   },
   cautionContainer: {
     width: dimensions.WINDOW_WIDTH - moderateScale(32),

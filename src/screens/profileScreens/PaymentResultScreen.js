@@ -25,7 +25,7 @@ import moment from 'moment';
 
 
 const PaymentResultScreen = props => {
-  console.error(props.route.params.orderid);
+  // console.error(props.route.params.orderid);
   const lang = useSelector(state => state.lang)
   const auth = useSelector(state => state.auth)
   const user = useSelector(state => state.user)

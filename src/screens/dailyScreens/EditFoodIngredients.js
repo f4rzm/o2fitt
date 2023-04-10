@@ -177,7 +177,7 @@ const EditFoodIngredients = props => {
             ...ingredients,
             ingredient
         ])
-        props.navigation.navigate("EditFoodIngredients")
+        props.navigation.pop(2)
     }
 
     const removeIngredient = (index) => {

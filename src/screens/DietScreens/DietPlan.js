@@ -72,7 +72,6 @@ function DietPlan(props) {
     const [advice, setAdvice] = useState()
     const [fullDayAteModal, setFullDayAteModal] = useState(false)
     const [planingDone, setPlaningDone] = useState(false)
-    console.warn(diet.dietStartDate);
 
     const dispatch = useDispatch()
 
@@ -403,7 +402,7 @@ function DietPlan(props) {
         });
 
     }
-    
+
     const removeMealDB = (res, element, id, selectedpackage, index, wholePackage) => {
         console.warn('element', element);
         if (selectedpackage.length - 1 == index) {
@@ -507,7 +506,7 @@ function DietPlan(props) {
 
 
     const getFromDb = async (id, mealId) => {
-        
+
         setFooterLoading(true)
 
         let data = mealId == 0 ? selectedDateBreakFast[0] : mealId == 1 ? selectedDateLunch[0] : mealId == 3 ? selectedDateDinner[0] : mealId == 10 ? selectedDateSnack[0] : mealId == 11 ? selectedDateSnack[1] : mealId == 12 ? selectedDateSnack[2] : null
@@ -582,40 +581,10 @@ function DietPlan(props) {
                 index: records.total_rows
             })
                 .then((res) => {
-                    // console.log(res);
-                    // saveToDB({
-                    //     ...params,
-                    //     foodId: packages.foodId,
-                    // });
                     onSuccess(params, id, packages, packageData, indexing)
                 });
         })
-        const url = urls.foodBaseUrl + urls.userTrackFood;
-        const header = {
-            headers: {
-                Authorization: 'Bearer ' + auth.access_token,
-                Language: lang.capitalName,
-            },
-        };
 
-        // const CancelToken = axios.CancelToken;
-        // const source = CancelToken.source();
-        // const timeout = setTimeout(() => {
-        //     source.cancel();
-        // }, 2000)
-
-        // axios.post(url, params, header)
-        //     .then((response) => {
-        //         // clearTimeout(timeout)
-        //         onSuccess(response, id, packages, packageData, indexing)
-        //     })
-        //     .catch((err) => {
-        //         // clearTimeout(timeout)
-        //         onFailure(err, id, packages, packageData, indexing, params)
-        //     })
-
-
-        // console.error("e");
     }
 
     const onSuccess = (params, id, packages, packageData, indexing) => {
@@ -971,51 +940,51 @@ function DietPlan(props) {
     const renderingItems = () => {
 
         // if (hasNetwork) {
-            if (moment(diet.dietStartDate).add(30, 'days').format("YYYYMMDD") > moment(selectedDate).format("YYYYMMDD")) {
+        if (moment(diet.dietStartDate).add(30, 'days').format("YYYYMMDD") > moment(selectedDate).format("YYYYMMDD")) {
 
-                if (loading) {
-                    return <View style={{ justifyContent: "center", alignItems: "center", padding: moderateScale(50) }}>
-                        <ActivityIndicator color={defaultTheme.primaryColor} size={"large"} />
-                    </View>
-                } else {
-                    if (isCheetDay) {
-                        return (
-                            <View style={{ flexDirection: "row", height: moderateScale(225), alignItems: "center", justifyContent: "space-around", width: dimensions.WINDOW_WIDTH * 0.90, top: moderateScale(-25) }}>
-                                <LottieView
-                                    source={require('../../../res/animations/cheet.json')}
-                                    style={{ width: moderateScale(180), height: moderateScale(180), alignSelf: "center" }}
-                                    autoPlay={true}
-                                    loop={false}
-                                />
-                                <View>
-                                    <Text style={{ alignSelf: "center", fontFamily: lang.font, color: defaultTheme.darkText, fontSize: moderateScale(16), }}>امروز روز آزاد شماست</Text>
-                                    <Text style={{ alignSelf: "center", fontFamily: lang.font, color: defaultTheme.mainText, fontSize: moderateScale(12), textAlign: "center", lineHeight: moderateScale(23), width: dimensions.WINDOW_WIDTH * 0.60 }}>{lang.cheetDayTitle}</Text>
-                                </View>
-                            </View>
-                        )
-                    }
-                    else {
-                        return renderFoods()
-                    }
-                }
+            if (loading) {
+                return <View style={{ justifyContent: "center", alignItems: "center", padding: moderateScale(50) }}>
+                    <ActivityIndicator color={defaultTheme.primaryColor} size={"large"} />
+                </View>
             } else {
-                return <EndingPlan
-                    lang={lang}
-                    onReject={() => {
-                        dispatch(clearDiet())
-                        analytics().logEvent('reject_getting_diet')
-                        props.navigation.popToTop()
-
-                    }}
-                    onAccept={() => {
-                        dispatch(clearDiet())
-                        analytics().logEvent('get_new_diet')
-                        props.navigation.navigate("DietStartScreen")
-
-                    }}
-                    diet={diet}
-                />
+                if (isCheetDay) {
+                    return (
+                        <View style={{ flexDirection: "row", height: moderateScale(225), alignItems: "center", justifyContent: "space-around", width: dimensions.WINDOW_WIDTH * 0.90, top: moderateScale(-25) }}>
+                            <LottieView
+                                source={require('../../../res/animations/cheet.json')}
+                                style={{ width: moderateScale(180), height: moderateScale(180), alignSelf: "center" }}
+                                autoPlay={true}
+                                loop={false}
+                            />
+                            <View>
+                                <Text style={{ alignSelf: "center", fontFamily: lang.font, color: defaultTheme.darkText, fontSize: moderateScale(16), }}>امروز روز آزاد شماست</Text>
+                                <Text style={{ alignSelf: "center", fontFamily: lang.font, color: defaultTheme.mainText, fontSize: moderateScale(12), textAlign: "center", lineHeight: moderateScale(23), width: dimensions.WINDOW_WIDTH * 0.60 }}>{lang.cheetDayTitle}</Text>
+                            </View>
+                        </View>
+                    )
+                }
+                else {
+                    return renderFoods()
+                }
             }
+        } else {
+            return <EndingPlan
+                lang={lang}
+                onReject={() => {
+                    dispatch(clearDiet())
+                    analytics().logEvent('reject_getting_diet')
+                    props.navigation.popToTop()
+
+                }}
+                onAccept={() => {
+                    dispatch(clearDiet())
+                    analytics().logEvent('get_new_diet')
+                    props.navigation.navigate("DietStartScreen")
+
+                }}
+                diet={diet}
+            />
+        }
 
 
         // } else {

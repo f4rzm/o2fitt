@@ -50,6 +50,7 @@ const TabPlusButton = props => {
                 lang={props.lang}
                 profile={props.profile}
                 navigation={props.navigation}
+                fastingDiet={props.fastingDiet}
             />
         </TouchableOpacity>
     );

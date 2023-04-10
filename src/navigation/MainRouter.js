@@ -73,6 +73,7 @@ import BillScreen from "../screens/BillScreen/BillScreen";
 import ChooseDietTargetScreen from "../screens/DietScreens/ChooseDietTargetScreen";
 import BodyAnalyzeScreen from '../screens/homeScreeen/BodyAnalyzeScreen'
 import DrawerNavigator from "./DrawerNavigator";
+import FastingDietplan from "../screens/FastingDiet/FastingDietplan";
 
 
 const MainRoute = props => {
@@ -99,7 +100,7 @@ const MainRoute = props => {
                 animationEnabled: false,
 
             }}
-
+            // initialRouteName={"FastingDietplan"}
         >
             {
                 app.appIsLoading ?
@@ -192,6 +193,7 @@ const MainRoute = props => {
                                 <Stack.Screen name="BodyAnalyzeScreen" component={BodyAnalyzeScreen} options={options} />
                                 <Stack.Screen name="BlogCatScreen" component={BlogCatScreen} options={options} />
                                 <Stack.Screen name="SetRefferalCode" component={SetRefferalCode} options={options} />
+                                <Stack.Screen name="FastingDietplan" component={FastingDietplan} options={options} />
 
                             </> :
                             <Stack.Screen name="WelcomeRouter" component={WelcomeRouter} options={options} /> :

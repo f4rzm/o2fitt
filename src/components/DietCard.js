@@ -14,7 +14,7 @@ const DietCard = props => {
                         <Text style={[styles.text, { fontFamily: props.lang.titleFont, marginHorizontal: moderateScale(16) }]} allowFontScaling={false}>
                             هدف برنامه غذایی
                         </Text>
-                        <Text style={[styles.text2, { fontFamily: props.lang.font, lineHeight: moderateScale(40), color: defaultTheme.green }]}>پیشرفت برنامه : {props.diet.percent.toFixed(0)} % </Text>
+                        <Text style={[styles.text2, { fontFamily: props.lang.font, lineHeight: moderateScale(40), color: defaultTheme.green }]}>پیشرفت برنامه : {props.diet.percent.toFixed(0)<0?0:props.diet.percent.toFixed(0)} % </Text>
                         <Text style={[styles.text2, { fontFamily: props.lang.font, lineHeight: moderateScale(25), color: defaultTheme.mainText }]}>تعداد روز آزاد : {2 - props.diet.cheetDays.length} روز</Text>
                         {/* <Text style={[styles.text2, { fontFamily: props.lang.font, lineHeight: moderateScale(25), color: defaultTheme.mainText }]}><Text style={{fontSize:moderateScale(17),color:defaultTheme.darkText}}>{Math.abs(parseInt(DietPackageEndDate)) + 1}</Text> روز مانده به اتمام برنامه </Text> */}
                     </View>
@@ -71,7 +71,7 @@ const DietCard = props => {
 const styles = StyleSheet.create({
     mainContainer: {
         flexDirection: "row",
-        height: moderateScale(130),
+        // height: moderateScale(130),
         width: "92%",
         justifyContent: "space-between",
         alignItems: "flex-start",

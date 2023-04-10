@@ -8,14 +8,14 @@ import {
   Image,
   KeyboardAvoidingView,
   SafeAreaView,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
 import { useSelector, useDispatch } from 'react-redux'
 import { Toolbar, BodyInput, ConfirmButton, Information } from '../../components';
 import { moderateScale } from 'react-native-size-matters';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { updateSpecification } from "../../redux/actions"
 import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient'
@@ -44,10 +44,7 @@ const EditBodyScreen = props => {
     Keyboard.addListener("keyboardDidHide", keyboardDidHide);
 
     // cleanup function
-    return () => {
-      Keyboard.removeListener("keyboardDidShow", keyboardDidShow);
-      Keyboard.removeListener("keyboardDidHide", keyboardDidHide);
-    }
+
   }, [])
 
   const keyboardDidShow = (e) => {
@@ -313,11 +310,11 @@ const EditBodyScreen = props => {
     props.navigation.replace("BodyShapeScreen")
     // setErrorContext(lang.serverError)
     // setErrorVisible(true)
-    Toast.show({
-      type: "error",
-      props: { text2: lang.serverError, style: { fontFamily: lang.font } },
-      visibilityTime:800
-    })
+    // Toast.show({
+    //   type: "error",
+    //   props: { text2: lang.serverError, style: { fontFamily: lang.font } },
+    //   visibilityTime:800
+    // })
   }
   const stickyHeader = () => {
     return (
@@ -340,7 +337,7 @@ const EditBodyScreen = props => {
         title={lang.bodymeasurementtitle}
         onBack={() => props.navigation.goBack()}
       />
-      <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS=="ios" ?moderateScale(60):moderateScale(-150)}>
+      <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS=="ios" ?moderateScale(60):moderateScale(-190)}>
         <SafeAreaView style={{flex:1}}>
         <ScrollView
           style={{ flex: 1 }}

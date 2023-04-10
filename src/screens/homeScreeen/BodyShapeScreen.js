@@ -6,6 +6,7 @@ import {
     Text,
     I18nManager,
     Platform,
+    BackHandler,
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
@@ -187,6 +188,17 @@ const BodyShapeScreen = props => {
 
     // console.log(profile);
     // console.log(specification);
+    React.useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+         ()=> {
+            props.navigation.popToTop()
+            return true
+        }
+        );
+        return () => backHandler.remove();
+      }, [])
+      
 
     React.useEffect(() => {
         const factor = height / wrist;

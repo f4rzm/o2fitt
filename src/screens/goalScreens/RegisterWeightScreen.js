@@ -34,12 +34,13 @@ const RegisterWeightScreen = props => {
   // const [kg , setKg] = React.useState("")
   // const [gr , setGr] = React.useState("")
   const [loading, setLoading] = React.useState(false)
-  const [selectedKg, setSelectedKg] = useState(50)
+  const [selectedKg, setSelectedKg] = useState(specification[0].weightSize-35)
   const [selectedGr, setSelectedGr] = useState(0)
 
 
   const kg = Array.from({ length: 126 }, (x, i) => (i + 35).toString())
   const gr = Array.from({ length: 10 }, (x, i) => (i ).toString())
+
   const onKGselected = useCallback(
     selectedItem => {
       setSelectedKg(selectedItem);
@@ -54,7 +55,10 @@ const RegisterWeightScreen = props => {
   );
 
   useEffect(() => {
-    setSelectedKg(specification[0].weightSize-35)
+    setTimeout(() => {
+      
+      setSelectedKg(specification[0].weightSize-35)
+    }, 500);
   }, [])
   console.log("specification", specification)
 

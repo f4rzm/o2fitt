@@ -239,7 +239,7 @@ const GoalBodyScreen = props => {
                     <ConfirmButton
                         lang={lang}
                         style={styles.editButton}
-                        title={lang.changeGol}
+                        title={lang.editGolTitle}
                         leftImage={require("../../../res/img/edit.png")}
                         onPress={editGoal}
                     /></View>

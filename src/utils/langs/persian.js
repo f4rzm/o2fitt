@@ -195,7 +195,7 @@ export const fa =
   "youDoUpLevel": "میتونین کاربریتون رو از ساده به سطح طلایی ارتقاء بدین و از همه امکانات استفاده کنین",
   "buyAccountTitle": "خرید اشتراک",
   "changeGol": "تغییر هدف",
-  "editGolTitle": "تغییر هدف",
+  "editGolTitle": "تعیین هدف",
   "golFittBoy": "آنالیز بدن",
   "golInWeek": "هدف هفتگی",
   "rateActivity": "کالری سوزانده شده",
@@ -281,7 +281,7 @@ export const fa =
   "sendCodeViaShare": ":",
   "sendCodeViaShare_": "اگه مثل من میخوای رژیمتو دقیق و آسون کنترل کنی، O2Fit رو نصب کن\nکلی امکان رایگان هم داره\nیادت نره موقع ثبت نام کد معرف منو بزن تا 10 درصد تخفیف بگیری\nکد معرف من\n",
   // "sendCodeViaShare_2": "نصب از کافه بازار\nhttps://cafebazaar.ir/app/com.o2fitt\nدانلود مستقیم\nhttps://o2fit.me/Products/DownloadApplication\n",
-  "sendCodeViaShare_2": "نصب از اپ استور\nhttps://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170\n\nنصب از گوگل پلی\nhttps://play.google.com/store/apps/details?id=com.o2fitt\nوب سایت\nhttps://o2fit.me/Products/DownloadApplication\nاینستاگرام\nhttps://www.instagram.com/o2fit.fa",
+  "sendCodeViaShare_2": "نصب از اپ استور\nhttps://apps.apple.com/us/app/o2fit-diet-calorie-counter/id1556681170\n\nنصب از گوگل پلی\nhttps://play.google.com/store/apps/details?id=com.o2fitt\nوب سایت\nhttps://o2fit.me/DownloadApp\nاینستاگرام\nhttps://www.instagram.com/o2fit.fa",
   "forgetPassword": "رمز عبور را فراموش کردم !",
   "insertYourMobileOrEmailForForgotPass": "شماره همراه یا ایمیلی که موقع ثبت نام وارد کردین رو وارد کنید",
   "sendYourCode": "ارسال کد فعالسازی",
@@ -922,5 +922,15 @@ export const fa =
   "setShareFriend": "ثبت کد معرف",
   "setShareFriendDes": "اگر از طریق دعوت دوستاتون ثبت نام کردین\nلطفا کد معرف ایشون رو در باکس پایین وارد و ثبت کنین\nتا هم دوستتون و هم خودتون در خرید اشتراک تخفیف بگیرین",
   "enterReferalHere": "کد معرف رو اینجا وارد کنین",
-  "setShareBtn": "ثبت کد معرف"
+  "setShareBtn": "ثبت کد معرف",
+  "sahari": 'سحری',
+  "eftar": "افطار",
+  "fastingCalorie": "حالت روزه داری",
+  "fastingCalorieDes": "با فعال کردن حالت روزه داری کالری هدف روزانه و تمام وعده ها، بر اساس روزه داری تعیین میشه و شما به راحتی میتونین در زمان هایی که روزه هستین کالری شماری کنین.",
+  "fastingMode": "رژیم روزه داری",
+  "fastingModeDes": "اگر دوست دارین در روزهایی که روزه هستین با برنامه غذایی مخصوص ماه رمضان یا غیره پیش برین، اکسیژن فیت غذاهای مخصوص روزه داری رو بهتون میده",
+  "typePhoneNumber":"شماره تلفن همراه رو وارد کنین",
+  "typeEmail":"آدرس ایمیل رو وارد کنین",
+  
+
 }

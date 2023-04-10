@@ -55,11 +55,8 @@ export default function VIP(props) {
 
     }
     return (
-        <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => props.crossPressed()}
-            style={{ position: "absolute", width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, alignItems: "center", justifyContent: "center" }}>
-            <BlurView
+        <View>
+            {/* <BlurView
                 style={{
                     position: 'absolute',
                     top: 0,
@@ -67,7 +64,7 @@ export default function VIP(props) {
                     right: 0,
                     bottom: 0,
                 }} blurType="dark" blurAmount={1}
-            />
+            /> */}
             <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
                 <TouchableOpacity
                     onPress={() => props.crossPressed()}
@@ -84,7 +81,7 @@ export default function VIP(props) {
                     autoPlay={true}
                     loop={false}
                 />
-                <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(14), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.80, alignItems: 'center', lineHeight: moderateScale(23),textAlign:"left" }}>{props.lang.vipTitle}</Text>
+                <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(14), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.80, alignItems: 'center', lineHeight: moderateScale(23), textAlign: "left" }}>{props.lang.vipTitle}</Text>
                 <View style={{ width: dimensions.WINDOW_WIDTH * 0.85, alignItems: "baseline", paddingVertical: moderateScale(5) }}>
                     {
                         data.map((item) => {
@@ -94,13 +91,13 @@ export default function VIP(props) {
                                         source={require('../../res/img/done.png')}
                                         style={{ resizeMode: "contain", tintColor: defaultTheme.primaryColor, width: moderateScale(15), height: moderateScale(15), marginHorizontal: moderateScale(5) }}
                                     />
-                                    <Text style={{ color: defaultTheme.darkText, fontFamily: props.lang.font, fontSize: moderateScale(13), width: dimensions.WINDOW_WIDTH * 0.8,textAlign:"left" }}>{item.des}</Text>
+                                    <Text style={{ color: defaultTheme.darkText, fontFamily: props.lang.font, fontSize: moderateScale(13), width: dimensions.WINDOW_WIDTH * 0.8, textAlign: "left" }}>{item.des}</Text>
                                 </View>
                             )
                         })
                     }
                 </View>
-                <Text style={{ fontFamily: props.lang.font, color: defaultTheme.darkText, fontSize: moderateScale(14), width: dimensions.WINDOW_WIDTH * 0.80, lineHeight: moderateScale(23),textAlign:"left" }}>{props.lang.vipfooter.split("مخصوص")[0]}{severData.name}{props.lang.vipfooter.split("مخصوص")[1]}</Text>
+                <Text style={{ fontFamily: props.lang.font, color: defaultTheme.darkText, fontSize: moderateScale(14), width: dimensions.WINDOW_WIDTH * 0.80, lineHeight: moderateScale(23), textAlign: "left" }}>{props.lang.vipfooter.split("مخصوص")[0]}{severData.name}{props.lang.vipfooter.split("مخصوص")[1]}</Text>
                 {
                     severData.length <= 0 ?
                         <ActivityIndicator color={defaultTheme.primaryColor} style={{ marginVertical: moderateScale(15) }} /> :
@@ -117,7 +114,7 @@ export default function VIP(props) {
                             />
 
 
-                            <Text style={{ textDecorationLine: "none", color: defaultTheme.darkText, fontFamily: props.lang.font, fontSize: moderateScale(15),textAlign:"left",marginVertical:Platform.OS=="ios"? moderateScale(10):0 }}>
+                            <Text style={{ textDecorationLine: "none", color: defaultTheme.darkText, fontFamily: props.lang.font, fontSize: moderateScale(15), textAlign: "left", marginVertical: Platform.OS == "ios" ? moderateScale(10) : 0 }}>
                                 <Text style={{ textDecorationLine: "line-through", color: defaultTheme.mainText }}>{severData.price} {severData.currency == 1 ? "تومان" : " € "}</Text> - {severData.price - (severData.price * severData.discountPercent / 100)} {severData.currency == 1 ? "تومان" : " € "}
                             </Text>
                             <Text style={{ color: defaultTheme.green, fontSize: scale(17), fontFamily: props.lang.font }}>{severData.description}</Text>
@@ -125,6 +122,6 @@ export default function VIP(props) {
                 }
                 <View style={{ height: moderateScale(15) }} />
             </View>
-        </TouchableOpacity>
+        </View>
     )
 }

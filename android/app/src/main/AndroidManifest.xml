@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+      <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
     
 
     <application
@@ -63,9 +65,9 @@
 
         <meta-data  android:name="appKey" android:value="1daGFE2yW40iodl/lNk1Jg=="/>
 
-        <meta-data
+        <!-- <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5068390718976208~8689711912"/>
+            android:value="ca-app-pub-5068390718976208~8689711912"/> -->
 		<meta-data 
 			android:name="com.google.firebase.messaging.default_notification_icon" 
 			android:resource="@mipmap/ic_notification" />

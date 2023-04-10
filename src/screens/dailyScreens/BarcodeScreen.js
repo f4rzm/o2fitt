@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { BarcodeReader, Information, Toolbar } from '../../components';
 import { urls } from '../../utils/urls';
@@ -6,7 +6,7 @@ import { RestController } from '../../classess/RestController';
 import PouchDB from '../../../pouchdb';
 import { defaultTheme } from '../../constants/theme';
 import { BlurView } from '@react-native-community/blur';
-import { StyleSheet, View } from 'react-native';
+import { BackHandler, StyleSheet, View } from 'react-native';
 import PopupLostBarcode from '../../components/PopupLostBarcode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -38,6 +38,17 @@ const BarcodeScreen = props => {
       getBarcodeGs1(e);
     }
   };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', function () {
+        setShowPopupWrapper(false)
+        
+    });
+    return ()=>{
+      BackHandler.removeEventListener()
+    }
+  }, [])
+  
 
   const getBarcodeGs1 = barcode => {
     barcodeGs1DB
@@ -190,7 +201,7 @@ const BarcodeScreen = props => {
         context={errorContext}
         onRequestClose={() => { setErrorVisible(false); isFetching = false; }}
         lang={lang}
-      />
+      /> 
 
       {showPopupWrapper && (
         <View style={styles.wrapper}>
@@ -199,6 +210,7 @@ const BarcodeScreen = props => {
             blurType="xlight"
             blurAmount={4}
             reducedTransparencyFallbackColor="white"
+            overlayColor='transparent'
           />
           <PopupLostBarcode {...{ lang, onClosePopup, navigate }} />
         </View>
@@ -224,6 +236,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    backgroundColor: "rgba(255,255,255,0.5)"
+    backgroundColor: "rgba(255,255,255,0.5)", 
+    overflow:"hidden"
   },
 })

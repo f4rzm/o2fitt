@@ -276,27 +276,44 @@ const SignUpScreen = props => {
 
   }
   const referralSignUp = () => {
-    setIsLoading(true)
-    const url = urls.identityBaseUrl2 + urls.user
-    const params = {
-      // "email": latinNumbers(email),
-      "userName": mobile ? latinNumbers(mobile) : latinNumbers(email),
-      // "password": latinNumbers(pass),
-      "countryId": parseInt(user.countryId),
-      "languageId": parseInt(lang.langId),
-      "referreralInviter": referreralInviter ? latinNumbers(referreralInviter) : null,
-      "startOfWeek": parseInt(user.startOfWeek),
+    if (mobile.length > 10 || email.length > 10) {
+      setIsLoading(true)
+      const url = urls.identityBaseUrl2 + urls.user
+      const params = {
+        // "email": latinNumbers(email),
+        "userName": mobile ? latinNumbers(mobile) : latinNumbers(email),
+        // "password": latinNumbers(pass),
+        "countryId": parseInt(user.countryId),
+        "languageId": parseInt(lang.langId),
+        "referreralInviter": referreralInviter ? latinNumbers(referreralInviter) : null,
+        "startOfWeek": parseInt(user.startOfWeek),
 
+      }
+      const header = {}
+      const RC = new RestController()
+      RC.post(
+        url,
+        params,
+        header,
+        onSignUpSuccess,
+        onSignUpFailure,
+      )
+    } else {
+      if(user.countryId==128){
+
+        Toast.show({
+          type: "error",
+          props: { text2: lang.typePhoneNumber },
+          visibilityTime: 1800
+        })
+      }else{
+        Toast.show({
+          type: "error",
+          props: { text2: lang.typeEmail },
+          visibilityTime: 1800
+        })
+      }
     }
-    const header = {}
-    const RC = new RestController()
-    RC.post(
-      url,
-      params,
-      header,
-      onSignUpSuccess,
-      onSignUpFailure,
-    )
   }
   return (
     <>

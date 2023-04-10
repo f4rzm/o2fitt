@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, I18nManager, ScrollView,Easing } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, I18nManager, ScrollView, Easing, Animated,Image } from 'react-native';
 import { ConfirmButton, Information, PageIndicator } from '../../components';
 import { useSelector } from 'react-redux';
 import { defaultTheme } from '../../constants/theme';
@@ -10,9 +10,17 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 // import Orientation from 'react-native-orientation-locker';
 // import RNSpeedometer from 'react-native-speedometer'
-
+import { Gauge } from '@wz-mobile/rn-gauge';
 
 const BMIScreen = props => {
+  const AnimatedImage = Animated.createAnimatedComponent(Image);
+  const Needle = ({ getNeedleStyle }) => (
+    <AnimatedImage
+      style={[getNeedleStyle(300 / 3, 300 / 3)]}
+      source={require("../../../res/img/needle.png")}
+      resizeMode={"contain"}
+    />
+  );
   try {
     I18nManager.allowRTL(false)
     I18nManager.forceRTL(false)
@@ -45,7 +53,7 @@ const BMIScreen = props => {
   //   require('../../../res/animations/kamboodvazn.json'),
   // ];
 
-  
+
   React.useEffect(() => {
     setBMI((weight / Math.pow(height / 100, 2)).toFixed(1));
     setMax((Math.pow(height / 100, 2) * 25.0).toFixed(1));
@@ -111,16 +119,71 @@ const BMIScreen = props => {
   //   }
   // };
 
+  
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
         <View style={styles.titleContainer}>
           <Text
-            style={[styles.title, { fontFamily: lang.titleFont ,color:defaultTheme.darkText}]}
+            style={[styles.title, { fontFamily: lang.titleFont, color: defaultTheme.darkText }]}
             allowFontScaling={false}>
             {lang.ifWantTapNextBotton}
           </Text>
         </View>
+        <Gauge
+          emptyColor={defaultTheme.grayBackground}
+          colors={['#96031c', '#96031c',"yellow", defaultTheme.green,defaultTheme.error,  defaultTheme.error, defaultTheme.error]}
+          sweepAngle={300}
+          strokeWidth={0}
+          fillProgress={BMI * 2 >= 50 ? (BMI - 0.2) * 2 : BMI * 2}
+          size={dimensions.WINDOW_WIDTH * 0.6}
+          thickness={20}
+          steps={[0, 20, 34, 50, 66, 80, 100]}
+          renderStep={({
+            step,
+            angle,
+            getX,
+            getY,
+            radius,
+          }) => (
+            <>
+              <View
+                style={[
+                  {
+                    width: 4,
+                    marginLeft: -2,
+                    height: 20,
+                    borderRadius: 2,
+                    position: 'absolute',
+                    left: getX(0, radius + 50),
+                    top: getY(10, radius + 50),
+                    backgroundColor: defaultTheme.lightGray,
+                    transform: [{ rotateZ: `${angle}deg` }],
+                  },
+                ]}
+              />
+              <Text
+                style={[
+                  {
+                    position: 'absolute',
+                    left: getX(-10, radius + 75),
+                    top: getY(10, radius + 75),
+                    color: 'rgba(0,0,0,1)',
+                    transform: [{ rotateZ: `${angle}deg` }],
+                  },
+                ]}
+              >{`${step}` / 2}</Text>
+            </>
+          )}
+          springConfig={{
+            velocity: 1.5,
+            mass: 25,
+            stiffness: 800,
+            damping: 300,
+          }}
+          renderNeedle={Needle}
+        />
         {/* <LottieView
           style={{ width: dimensions.WINDOW_WIDTH * 0.8 }}
           source={getSuitableLottie()}
@@ -236,7 +299,7 @@ const BMIScreen = props => {
             onPress={onBack}
             leftImage={require('../../../res/img/back.png')}
             rotate
-            textStyle={{marginHorizontal:moderateScale(10)}}
+            textStyle={{ marginHorizontal: moderateScale(10) }}
           />
           <ConfirmButton
             title={lang.continuation}
@@ -245,7 +308,7 @@ const BMIScreen = props => {
             onPress={onNext}
             rightImage={require('../../../res/img/next.png')}
             rotate
-            textStyle={{marginHorizontal:moderateScale(0)}}
+            textStyle={{ marginHorizontal: moderateScale(0) }}
           />
         </View>
         <PageIndicator pages={new Array(6).fill(1)} activeIndex={2} />
@@ -309,7 +372,7 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(5),
     textAlign: 'center',
     lineHeight: moderateScale(26),
-    width:dimensions.WINDOW_WIDTH
+    width: dimensions.WINDOW_WIDTH
   },
   text2: {
     color: defaultTheme.gray,

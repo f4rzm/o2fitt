@@ -10,7 +10,7 @@ import { setIsActive, dietStartDate } from '../../redux/actions/diet'
 import moment from 'moment'
 import { updateTarget, updateSpecification } from '../../redux/actions'
 import SetTargetScreen from '../otherScreens/SetTargetScreen'
-
+import analytics from '@react-native-firebase/analytics';
 
 function DietConfirmation(props) {
     console.warn(props.route.params.weightChangeRate);
@@ -21,6 +21,7 @@ function DietConfirmation(props) {
     const auth = useSelector(state => state.auth)
     const profile = useSelector(state => state.profile)
     const diet = useSelector(state => state.diet)
+    const fastingDiet = useSelector(state => state.fastingDiet)
     const specification = useSelector((state) => state.specification);
     const [activityRate, setActivityRate] = useState(profile.dailyActivityRate)
     const [hardShip, setHardShip] = useState("")
@@ -132,41 +133,82 @@ function DietConfirmation(props) {
     ]
     console.warn(parseInt(props.route.params.targetWeight), parseInt(props.route.params.activityRate), parseInt(props.route.params.weightChangeRate), parseFloat(props.route.params.weight).toFixed(1),);
     const onConfirm = () => {
-        setLoading(true)
-        dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
-        dispatch(setIsActive(true))
-        setTimeout(() => {
-            dispatch(
-                updateTarget(
-                    {
-                        ...profile,
-                        targetWeight: parseInt(props.route.params.targetWeight),
-                        dailyActivityRate: parseInt(props.route.params.activityRate),
-                        weightChangeRate: parseInt(props.route.params.weightChangeRate)
-                    },
-                    auth,
-                    app,
-                    user,
-                    () => {
-                        dispatch(updateSpecification({
-                            ...specification[0],
-                            _id: Date.now(),
-                            insertDate: moment().format("YYYY-MM-DD"),
-                            weightSize: parseFloat(props.route.params.weight).toFixed(1),
-                        }, auth, app, user, () => {
-                           
-                            props.navigation.navigate("DietPlanScreen")
-                        }, () => { }))
-                        analytics().logEvent('setWeight')
-                    },
-                    (err) => {
-                        setLoading(false)
-                        console.error(err);
-                    }
+        if (fastingDiet.isActive) {
+            
+            setLoading(true)
+            dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
+            dispatch(setIsActive(true))
+            setTimeout(() => {
+                dispatch(
+                    updateTarget(
+                        {
+                            ...profile,
+                            targetWeight: parseInt(props.route.params.targetWeight),
+                            dailyActivityRate: parseInt(props.route.params.activityRate),
+                            weightChangeRate: parseInt(props.route.params.weightChangeRate)
+                        },
+                        auth,
+                        app,
+                        user,
+                        () => {
+                            dispatch(updateSpecification({
+                                ...specification[0],
+                                _id: Date.now(),
+                                insertDate: moment().format("YYYY-MM-DD"),
+                                weightSize: parseFloat(props.route.params.weight).toFixed(1),
+                            }, auth, app, user, () => {
 
+                                props.navigation.navigate("FastingDietplan")
+                            }, () => { }))
+                            analytics().logEvent('set_fastingDiet')
+                        },
+                        (err) => {
+                            setLoading(false)
+                            console.error(err);
+                        }
+
+                    )
                 )
-            )
-        }, 800);
+            }, 800);
+        }
+        else {
+            setLoading(true)
+            dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
+            dispatch(setIsActive(true))
+            setTimeout(() => {
+                dispatch(
+                    updateTarget(
+                        {
+                            ...profile,
+                            targetWeight: parseInt(props.route.params.targetWeight),
+                            dailyActivityRate: parseInt(props.route.params.activityRate),
+                            weightChangeRate: parseInt(props.route.params.weightChangeRate)
+                        },
+                        auth,
+                        app,
+                        user,
+                        () => {
+                            dispatch(updateSpecification({
+                                ...specification[0],
+                                _id: Date.now(),
+                                insertDate: moment().format("YYYY-MM-DD"),
+                                weightSize: parseFloat(props.route.params.weight).toFixed(1),
+                            }, auth, app, user, () => {
+
+                                props.navigation.navigate("DietPlanScreen")
+                            }, () => { }))
+                            analytics().logEvent('set_normalDiet')
+                        },
+                        (err) => {
+                            setLoading(false)
+                            console.error(err);
+                        }
+
+                    )
+                )
+            }, 800);
+        }
+
 
     }
 

@@ -16,7 +16,7 @@ export default function TimeZoneError(props) {
             activeOpacity={1}
             onPress={() => props.crossPressed()}
             style={{ position: "absolute", width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, alignItems: "center", justifyContent: "center" }}>
-            <BlurView
+            {/* <BlurView
                 style={{
                     position: 'absolute',
                     top: 0,
@@ -24,7 +24,7 @@ export default function TimeZoneError(props) {
                     right: 0,
                     bottom: 0,
                 }} blurType="dark" blurAmount={1}
-            />
+            /> */}
             <View style={styles.subContainer}>
                
                 <ClockError/>

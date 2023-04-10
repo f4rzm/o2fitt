@@ -29,7 +29,7 @@ function StarRatingModal(props) {
             props.setShowStarModal()
         }}
             style={styles.mainContainer}>
-            <BlurView style={styles.absolute} />
+            {/* <BlurView style={styles.absolute} /> */}
             <TouchableOpacity activeOpacity={1} style={styles.subContainer}>
 
                 <TouchableOpacity

@@ -26,6 +26,7 @@ import TimeZoneError from "../components/TimeZoneError";
 import { RecipeCatScreen } from "../screens";
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from "axios";
+import { Modal } from "react-native-paper";
 // import Source from 'react-native-vpn-detect'
 
 const Tab = createBottomTabNavigator();
@@ -40,6 +41,7 @@ const Tabs = (props) => {
   const app = { ...props.route.params.app }
   const user = { ...props.route.params.user }
   const diet = useSelector(state => state.diet)
+  const fastingDiet = useSelector(state => state.fastingDiet)
   const profile = useSelector(state => state.profile)
   const starRating = useSelector(state => state.starRating)
   const [showMmarketDialog, setShowMarketDialog] = React.useState(false)
@@ -281,7 +283,8 @@ const Tabs = (props) => {
               toValue: 0,
               duration: 500,
               easing: Easing.out(Easing.exp), // Easing is an additional import from react-native
-              useNativeDriver: true  // To make use of native driver for performance
+              useNativeDriver: true  // To make use of native driver for import { fastingDiet } from '../redux/reducers/fasting/fasting';
+
             }
           ).start()
         })
@@ -323,12 +326,13 @@ const Tabs = (props) => {
   }, [])
 
 
+
   return (
     <>
 
       <SafeAreaView style={{ flex: 1 }}>
         <Tab.Navigator
-          tabBar={props => <TabBar {...props} lang={lang} profile={profile} />}
+          tabBar={props => <TabBar {...props} lang={lang} profile={profile} fastingDiet={fastingDiet} />}
           initialRouteName="HomeRouter"
           backBehavior="firstRoute"
           screenOptions={{ headerShown: false }}
@@ -355,10 +359,14 @@ const Tabs = (props) => {
         />
       } */}
 
-      {
-        diet.isForceUpdate == true &&
-        <TouchableOpacity activeOpacity={1} style={{ width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, position: "absolute", alignItems: "center", justifyContent: "center" }}>
-          <BlurView
+      {/* {
+        diet.isForceUpdate == true && */}
+        <Modal
+          visible={diet.isForceUpdate}
+          style={{ alignItems: "center", justifyContent: "center" }}
+        >
+          <TouchableOpacity activeOpacity={1}>
+            {/* <BlurView
             style={{
               position: 'absolute',
               top: 0,
@@ -366,103 +374,129 @@ const Tabs = (props) => {
               right: 0,
               bottom: 0,
             }} blurType="dark" blurAmount={1}
-          />
-          <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
-            <LottieView
-              source={require('../../res/animations/forceU.json')}
-              style={{ width: moderateScale(400), height: moderateScale(400) }}
-              autoPlay={true}
-              loop={true}
-            />
-            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText }}>{lang.forceUpdateTitle}</Text>
-            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, textAlign: "center", padding: 10, lineHeight: moderateScale(23) }}>{lang.forceUpdateText}</Text>
-
-            <ConfirmButton
-              lang={lang}
-              title={lang.forceUpdateBtn}
-              style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
-              onPress={() => {
-                Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-      }
-      {premiumModal && user.countryId == 128 && starRating.vipShown ?
-        <BlurView style={{ position: "absolute", height: moderateScale(160), width: dimensions.WINDOW_WIDTH }} blurType={"dark"} overlayColor={"transparent"} blurAmount={5}>
-          <Animated.View style={{ transform: [{ translateY: translateY }] }}>
-            <TouchableOpacity
-              onPress={() => fadeModal()}
-              style={{ alignSelf: "baseline", alignItems: "center", padding: moderateScale(7), flexDirection: "row", borderWidth: 1, borderColor: defaultTheme.border, borderRadius: moderateScale(20), marginHorizontal: moderateScale(15), marginVertical: moderateScale(5) }}>
-              <Image
-                source={require('../../res/img/cross.png')}
-                style={{ width: moderateScale(18), height: moderateScale(18), tintColor: defaultTheme.white }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => fadeModal()} style={{ flexDirection: "row", alignItems: "center", width: dimensions.WINDOW_WIDTH * 0.95, alignSelf: "center", backgroundColor: defaultTheme.lightBackground, borderRadius: moderateScale(11) }}>
+          /> */}
+            <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
               <LottieView
-                source={require('../../res/animations/vip.json')}
+                source={require('../../res/animations/forceU.json')}
+                style={{ width: moderateScale(400), height: moderateScale(400) }}
                 autoPlay={true}
-                loop={false}
-                style={{ width: moderateScale(100), height: moderateScale(100) }}
+                loop={true}
               />
-              <View style={{ width: dimensions.WINDOW_WIDTH * 0.45 }}>
-                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText }}>{lang.expiredPremium}</Text>
-                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, textAlign: "left" }}>{lang.expirePremiumDes}</Text>
-              </View>
+              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText }}>{lang.forceUpdateTitle}</Text>
+              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, textAlign: "center", padding: 10, lineHeight: moderateScale(23) }}>{lang.forceUpdateText}</Text>
+
               <ConfirmButton
                 lang={lang}
-                style={{ backgroundColor: defaultTheme.green2, width: moderateScale(80), heigth: moderateScale(20) }}
-                title={lang.reNew}
+                title={lang.forceUpdateBtn}
+                style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
                 onPress={() => {
-                  setPremiumModal(false)
-                  navigation.navigate("PackagesScreen")
+                  // Linking.openURL("https://cafebazaar.ir/app/com.o2fitt")
+                  // Linking.openURL("https://o2fit.me/DownloadApp")
+                  Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
                 }}
               />
-            </TouchableOpacity>
-          </Animated.View>
-        </BlurView> : null
-      }
-      {
-        Vip && user.countryId == 128 && starRating.vipShown ?
-          <VIP
-            lang={lang}
-            auth={auth}
-            user={user}
-            crossPressed={() => {
-              setVIP(false)
-              dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
-              dispatch(vipShown(false))
-            }}
-          />
-          :
-          null
-      }
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      {/* } */}
 
-      {
-        parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3 &&
+      {premiumModal && user.countryId == 128 && starRating.vipShown ?
+        <Animated.View style={{ transform: [{ translateY: translateY }], position: "absolute", backgroundColor: "rgba(0,0,0,0.3)", width: dimensions.WINDOW_WIDTH }}>
+          <TouchableOpacity
+            onPress={() => fadeModal()}
+            style={{ alignSelf: "baseline", alignItems: "center", padding: moderateScale(7), flexDirection: "row", borderWidth: 1, borderColor: defaultTheme.border, borderRadius: moderateScale(20), marginHorizontal: moderateScale(15), marginVertical: moderateScale(5) }}>
+            <Image
+              source={require('../../res/img/cross.png')}
+              style={{ width: moderateScale(18), height: moderateScale(18), tintColor: defaultTheme.white }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => fadeModal()} style={{ flexDirection: "row", alignItems: "center", width: dimensions.WINDOW_WIDTH * 0.95, alignSelf: "center", backgroundColor: defaultTheme.lightBackground, borderRadius: moderateScale(11) }}>
+            <LottieView
+              source={require('../../res/animations/vip.json')}
+              autoPlay={true}
+              loop={false}
+              style={{ width: moderateScale(100), height: moderateScale(100) }}
+            />
+            <View style={{ width: dimensions.WINDOW_WIDTH * 0.45 }}>
+              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText }}>{lang.expiredPremium}</Text>
+              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, textAlign: "left" }}>{lang.expirePremiumDes}</Text>
+            </View>
+            <ConfirmButton
+              lang={lang}
+              style={{ backgroundColor: defaultTheme.green2, width: moderateScale(80), heigth: moderateScale(20) }}
+              title={lang.reNew}
+              onPress={() => {
+                setPremiumModal(false)
+                navigation.navigate("PackagesScreen")
+              }}
+            />
+          </TouchableOpacity>
+        </Animated.View>
+        : null}
+
+      {/* {
+        Vip && user.countryId == 128 && starRating.vipShown ? */}
+      <Modal
+        style={{ alignItems: "center", justifyContent: "center" }}
+        visible={Vip && user.countryId == 128 && starRating.vipShown}
+        onDismiss={() => {
+          setVIP(false)
+          dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
+          dispatch(vipShown(false))
+        }}
+      >
+        <VIP
+          lang={lang}
+          auth={auth}
+          user={user}
+          crossPressed={() => {
+            setVIP(false)
+            dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
+            dispatch(vipShown(false))
+          }}
+        />
+      </Modal>
+      {/* :
+          null
+      } */}
+
+      {/* {
+        parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3 && */}
+      <Modal visible={parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3}>
         <TimeZoneError
           lang={lang}
           crossPressed={() => { }}
         />
-      }
+      </Modal>
+      {/* } */}
       {vpn && errorVisible == false &&
-        <VpnErrprModal
-          lang={lang}
-          user={user}
+        <Modal
+          style={{ alignItems: "center", justifyContent: "center" }}
+          visible={vpn && errorVisible == false}
           onDismiss={(doNotShow) => {
             if (doNotShow == true) {
               AsyncStorage.setItem("vpnShown", 'true')
             }
             setVpn(false)
           }}
+        >
+          <VpnErrprModal
+            lang={lang}
+            user={user}
+            onDismiss={(doNotShow) => {
+              if (doNotShow == true) {
+                AsyncStorage.setItem("vpnShown", 'true')
+              }
+              setVpn(false)
+            }}
 
-        />
+          />
+        </Modal>
       }
       {errorVisible ? (
         <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
           <View style={styles.wrapper}>
-            <BlurView style={styles.absolute} blurType="dark" blurAmount={2} />
+            {/* <BlurView style={styles.absolute} blurType="dark" blurAmount={2} /> */}
             <Information
               visible={errorVisible}
               context={errorContext}

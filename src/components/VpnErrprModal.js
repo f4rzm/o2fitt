@@ -12,19 +12,20 @@ import CheckBox from './CheckBox'
 const VpnErrprModal = (props) => {
     const [doNotShow, setDoNotShow] = useState(false)
     return (
-        <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => props.onDismiss()}
-            style={{ position: "absolute", width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, alignItems: "center", justifyContent: "center" }}>
-            <BlurView
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                }} blurType="dark" blurAmount={1}
-            />
+        // <TouchableOpacity
+        //     activeOpacity={1}
+        //     onPress={() => props.onDismiss()}
+        //     style={{ position: "absolute", width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, alignItems: "center", justifyContent: "center" }}>
+        //     <BlurView
+        //         style={{
+        //             position: 'absolute',
+        //             top: 0,
+        //             left: 0,
+        //             right: 0,
+        //             bottom: 0,
+        //         }} blurType="dark" blurAmount={1}
+        //     />
+        <View>
             <TouchableOpacity activeOpacity={1} style={styles.subContainer}>
                 <VPN
                     width={moderateScale(100)}
@@ -48,7 +49,8 @@ const VpnErrprModal = (props) => {
                 />
 
             </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
+        // </TouchableOpacity>
     )
 }
 

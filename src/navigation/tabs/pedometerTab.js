@@ -13,6 +13,7 @@ import { moderateScale } from "react-native-size-matters";
 import { Image } from "react-native"
 import { Toolbar } from "../../components";
 import { useNavigation } from "@react-navigation/native";
+import TabBarComp from "./TabBarComp";
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -44,41 +45,25 @@ const PedometerTabs = (props) => {
                     tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
                     tabBarPressColor:defaultTheme.lightGray
                   }}
+                  tabBar={props => <TabBarComp {...props} lang={lang} />}
+
                 lazy={true}
+                initialRouteName={"PedometerScreen"}
             >
+                <Tab.Screen name="GoalActivityScreen" component={GoalActivityScreen}
+                    options={{
+                        tabBarLabel: lang.report,
+                        tabBarIcon: require("../../../res/img/paper.png")
+                    }}
+                />
                 <Tab.Screen name="PedometerScreen"
                     children={() => <PedometerScreen route={{ params: null }} onPress={(item) => setisActiveModal(item)} />}
                     options={{
                         tabBarLabel: lang.step,
-                        tabBarIcon: ({ tintColor, focused }) => (
-                            <Image
-                                source={focused ? require("../../../res/img/RunningShoe.png") : require("../../../res/img/RunningShoe.png")}
-                                style={{ width: moderateScale(22), height: moderateScale(21), margin: 0 }}
-                                tintColor={focused ? defaultTheme.gold : defaultTheme.gray}
-                                resizeMode="contain"
-                            />
-                        )
+                        tabBarIcon: require("../../../res/img/RunningShoe.png")
                     }}
                 />
 
-                <Tab.Screen name="GoalActivityScreen" component={GoalActivityScreen}
-                    options={{
-                        tabBarLabel: lang.report,
-                        tabBarIcon: ({ tintColor, focused }) => (
-                            !props.hasCredit ? <Image
-                                source={focused ? require("../../../res/img/paper.png") : require("../../../res/img/paper.png")}
-                                style={{ width: moderateScale(15), height: moderateScale(18), margin: 0 }}
-                                tintColor={focused ? defaultTheme.gold : defaultTheme.gray}
-                                resizeMode="contain"
-                            /> : <Image
-                                source={focused ? require("../../../res/img/lock.png") : require("../../../res/img/lock.png")}
-                                style={{ width: moderateScale(15), height: moderateScale(18), margin: 0 }}
-                                tintColor={focused ? defaultTheme.gold : defaultTheme.gray}
-                                resizeMode="contain"
-                            />
-                        )
-                    }}
-                />
             </Tab.Navigator>
         </>
     );

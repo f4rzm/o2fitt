@@ -13,6 +13,7 @@ const DrawerPremium = (props) => {
     const user = props.user
     const profile = props.profile
     const [packageEndDate, updatePackageEndDate] = React.useState(moment().diff(moment(profile.pkExpireDate), "d"))
+    console.warn(profile.pkExpireDate);
     return (
         <TouchableRipple
             onPress={() => {
@@ -21,7 +22,7 @@ const DrawerPremium = (props) => {
                 setTimeout(() => {
                     navigation.dispatch(DrawerActions.closeDrawer());
     
-                }, 1);
+                }, 1000);
             }}
             style={{ marginTop: moderateScale(-4),borderBottomWidth:1,borderColor:defaultTheme.border }}
             rippleColor={defaultTheme.primaryLightColor}
@@ -43,7 +44,7 @@ const DrawerPremium = (props) => {
                                     {lang.premiumSituation}
                                     <Text style={[styles.text, { fontFamily: lang.titleFont, color: defaultTheme.primaryColor }]} allowFontScaling={false}>
                                         {
-                                            Math.abs(parseInt(packageEndDate)) + 1
+                                            Math.abs(parseInt(packageEndDate))
                                         }
                                     </Text>
                                     {

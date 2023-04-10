@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Platform, Animated } from "react-native"
 import { withModal } from "../hoc/withModal"
 import { dimensions } from "../../constants/Dimensions"
@@ -19,15 +19,29 @@ import Body from "../../../res/img/body_manage.svg"
 import Note from "../../../res/img/note.svg"
 import Shoe from "../../../res/img/shoe.svg"
 import Foodmaker from "../../../res/img/foodmaker.svg"
+import Sahari from "../../../res/img/sahari-icon.svg"
+import Dinners from "../../../res/img/dinner-icon.svg"
+import Snacks from "../../../res/img/snack-icon.svg"
+import Eftar from "../../../res/img/eftar-icon.svg"
 import moment from "moment"
 import { TwoOptionModal } from "../../components"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from "react-redux"
 
 const BlurContainer = props => {
     const [optionalDialogVisible, setOptionalDialogVisible] = React.useState(false)
     const [hasCredit, setHasCredit] = React.useState(false)
+    const fastingDiet = useSelector(state => state.fastingDiet)
+    const [date, setDate] = useState()
+
+    const setDate1 = async () => {
+        const selectedDate = await AsyncStorage.getItem("homeDate")
+        setDate(selectedDate)
+        console.warn(date, 's', fastingDiet.startDate);
+    }
 
     React.useEffect(() => {
+        setDate1()
         checkCredit()
     })
 
@@ -47,11 +61,25 @@ const BlurContainer = props => {
             props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.breakfast, mealId: 0 })
         }, Platform.OS === "ios" ? 500 : 50)
     }
+    const goToSahari = () => {
+
+        props.onRequestClose()
+        setTimeout(() => {
+            props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.sahari, mealId: 9 })
+        }, Platform.OS === "ios" ? 500 : 50)
+    }
     const goToLunch = () => {
 
         props.onRequestClose()
         setTimeout(() => {
             props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.lunch, mealId: 1 })
+        }, Platform.OS === "ios" ? 500 : 50)
+    }
+    const goToDinnerRamadan = () => {
+
+        props.onRequestClose()
+        setTimeout(() => {
+            props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.dinner, mealId: 3 })
         }, Platform.OS === "ios" ? 500 : 50)
     }
     const goToDinner = () => {
@@ -61,11 +89,25 @@ const BlurContainer = props => {
             props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.dinner, mealId: 3 })
         }, Platform.OS === "ios" ? 500 : 50)
     }
+    const goToEftar = () => {
+
+        props.onRequestClose()
+        setTimeout(() => {
+            props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.eftar, mealId: 6 })
+        }, Platform.OS === "ios" ? 500 : 50)
+    }
     const goToSnack = () => {
 
         props.onRequestClose()
         setTimeout(() => {
             props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.snack, mealId: 2 })
+        }, Platform.OS === "ios" ? 500 : 50)
+    }
+    const goToSnackRamadan = () => {
+
+        props.onRequestClose()
+        setTimeout(() => {
+            props.navigation.navigate("FoodFindScreen", { type: "", name: props.lang.snack, mealId: 7 })
         }, Platform.OS === "ios" ? 500 : 50)
     }
     const goToActivity = () => {
@@ -171,62 +213,128 @@ const BlurContainer = props => {
             />
             <ScrollView>
                 <View style={styles.container}>
+                    {
+                        parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(date).format("YYYYMMDD"))
+                            &&
+                            (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(date).format("YYYYMMDD")) : true)
+                            ?
+                            <View style={styles.row}>
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToSahari}>
+                                    <Sahari
+                                        width={moderateScale(37)}
+                                        height={moderateScale(37)}
+                                        preserveAspectRatio="none"
+                                    />
+
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.sahari
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToEftar}>
+                                    <Eftar
+                                        width={moderateScale(37)}
+                                        height={moderateScale(37) * 0.86}
+                                        preserveAspectRatio="none"
+                                    />
+
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.eftar
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToDinnerRamadan}>
+                                    <Dinners
+                                        width={moderateScale(34)}
+                                        height={moderateScale(34)}
+                                        preserveAspectRatio="none"
+                                    />
+
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.dinner
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                            </View> : <View style={styles.row}>
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToBreakfast}>
+                                    <Breakfast
+                                        width={moderateScale(37)}
+                                        height={moderateScale(37) * 0.65}
+                                        preserveAspectRatio="none"
+                                    />
+
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.breakfast
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToLunch}>
+                                    <Lunch
+                                        width={moderateScale(37)}
+                                        height={moderateScale(37) * 0.86}
+                                        preserveAspectRatio="none"
+                                    />
+
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.lunch
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToDinner}>
+                                    <Dinner
+                                        width={moderateScale(34)}
+                                        height={moderateScale(34)}
+                                        preserveAspectRatio="none"
+                                    />
+
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.dinner
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                    }
+
                     <View style={styles.row}>
-                        <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToBreakfast}>
-                            <Breakfast
-                                width={moderateScale(37)}
-                                height={moderateScale(37) * 0.65}
-                                preserveAspectRatio="none"
-                            />
+                        {
+                            parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(date).format("YYYYMMDD"))
+                                &&
+                                (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(date).format("YYYYMMDD")) : true)
+                                ?
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToSnackRamadan}>
+                                    <Snacks
+                                        width={moderateScale(42)}
+                                        height={moderateScale(42)}
+                                        preserveAspectRatio="none"
+                                    />
 
-                            <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
-                                {
-                                    props.lang.breakfast
-                                }
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToLunch}>
-                            <Lunch
-                                width={moderateScale(37)}
-                                height={moderateScale(37) * 0.86}
-                                preserveAspectRatio="none"
-                            />
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.snack
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                                :
+                                <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToSnack}>
+                                    <Snack
+                                        width={moderateScale(42)}
+                                        height={moderateScale(42) * 0.67}
+                                        preserveAspectRatio="none"
+                                    />
 
-                            <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
-                                {
-                                    props.lang.lunch
-                                }
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToDinner}>
-                            <Dinner
-                                width={moderateScale(34)}
-                                height={moderateScale(34)}
-                                preserveAspectRatio="none"
-                            />
-
-                            <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
-                                {
-                                    props.lang.dinner
-                                }
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.row}>
-                        <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToSnack}>
-                            <Snack
-                                width={moderateScale(42)}
-                                height={moderateScale(42) * 0.67}
-                                preserveAspectRatio="none"
-                            />
-
-                            <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
-                                {
-                                    props.lang.snack
-                                }
-                            </Text>
-                        </TouchableOpacity>
+                                    <Text style={[styles.text, { fontFamily: props.lang.font }]} allowFontScaling={false}>
+                                        {
+                                            props.lang.snack
+                                        }
+                                    </Text>
+                                </TouchableOpacity>
+                        }
                         <TouchableOpacity style={[styles.button, { paddingBottom: 0 }]} activeOpacity={1} onPress={goToActivity}>
                             <Activity
                                 width={moderateScale(32)}
@@ -290,7 +398,7 @@ const BlurContainer = props => {
                                 }
                             </Text>
                         </TouchableOpacity>
-                        
+
                         <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToBody}>
                             <Body
                                 width={moderateScale(32)}
@@ -315,7 +423,7 @@ const BlurContainer = props => {
                     </View>
 
                     <View style={styles.row}>
-                        
+
                         <TouchableOpacity style={[styles.button]} activeOpacity={1} onPress={goToNote}>
                             <Note
                                 width={moderateScale(27)}
@@ -329,7 +437,7 @@ const BlurContainer = props => {
                                 }
                             </Text>
                         </TouchableOpacity>
-                       
+
                         <TouchableOpacity style={styles.button} activeOpacity={1} onPress={goToWatert}>
                             <Glass
                                 width={moderateScale(28)}
@@ -367,18 +475,18 @@ const BlurContainer = props => {
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={[styles.button, { backgroundColor: defaultTheme.primaryColor }]} activeOpacity={1} onPress={goToInvite}>
-                            <Invite
-                                width={moderateScale(37)}
-                                height={moderateScale(37) * 0.54}
-                                preserveAspectRatio="none"
-                            />
+                        <Invite
+                            width={moderateScale(37)}
+                            height={moderateScale(37) * 0.54}
+                            preserveAspectRatio="none"
+                        />
 
-                            <Text style={[styles.text, { fontFamily: props.lang.font, color: defaultTheme.lightText }]} allowFontScaling={false}>
-                                {
-                                    props.lang.invite
-                                }
-                            </Text>
-                        </TouchableOpacity>
+                        <Text style={[styles.text, { fontFamily: props.lang.font, color: defaultTheme.lightText }]} allowFontScaling={false}>
+                            {
+                                props.lang.invite
+                            }
+                        </Text>
+                    </TouchableOpacity>
 
 
                 </View>
@@ -397,12 +505,13 @@ const BlurContainer = props => {
                             toValue: 1,
                             useNativeDriver: true,
                         }).start()
-                   
-                    setTimeout(() => {
-                        props.onRequestClose()
-                    }, 200);
-                    } }
+
+                        setTimeout(() => {
+                            props.onRequestClose()
+                        }, 200);
+                    }}
                     lang={props.lang}
+
                 />
             </View>
 

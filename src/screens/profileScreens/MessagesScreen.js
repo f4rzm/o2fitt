@@ -299,7 +299,7 @@ const [disabled, setDisabled] = useState(false)
   };
   const callApiForReadMessage = detailsChat => {
     detailsChat.forEach(item => {
-      if (item.adminId && !item.isRead) {
+      if (!item.isRead) {
         const url =
           urls.socialBaseUrl +
           urls.contactUs +

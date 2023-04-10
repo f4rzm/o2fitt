@@ -10,6 +10,7 @@ import {
 import { defaultTheme } from "../../constants/theme";
 import { moderateScale } from "react-native-size-matters";
 import { Image } from "react-native"
+import TabBarComp from "./TabBarComp";
 
 
 const tabbarOptions = {
@@ -37,31 +38,34 @@ const GoalTabs = (props) => {
       //   tabStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
         
       // }}
-      screenOptions={{
-        tabBarActiveTintColor: defaultTheme.primaryColor,
-        tabBarInactiveTintColor: defaultTheme.mainText,
-        tabBarLabelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, bottom: Platform.OS === "ios" ? moderateScale(0) : moderateScale(4) },
-        tabBarIndicatorStyle: { backgroundColor: defaultTheme.primaryColor },
-        tabBarStyle: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0,borderTopLeftRadius:20,borderTopRightRadius:20 },
-        showIcon: true,
-        tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
-        tabBarPressColor:defaultTheme.lightGray,
-        
-      }}
+      tabBar={props => <TabBarComp {...props} lang={lang} />}
 
+      // screenOptions={{
+      //   tabBarActiveTintColor: defaultTheme.primaryColor,
+      //   tabBarInactiveTintColor: defaultTheme.mainText,
+      //   tabBarLabelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, bottom: Platform.OS === "ios" ? moderateScale(0) : moderateScale(4) },
+      //   tabBarIndicatorStyle: { backgroundColor: defaultTheme.primaryColor },
+      //   tabBarStyle: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0,borderTopLeftRadius:20,borderTopRightRadius:20 },
+      //   showIcon: true,
+      //   tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
+      //   tabBarPressColor:defaultTheme.lightGray,
+        
+      // }}
+    initialRouteName={"GoalWeightScreen"}
       lazy={true}
     >
-      <Tab.Screen name="GoalWeightScreen" component={GoalWeightScreen}
+       <Tab.Screen name="GoalBodyScreen" component={GoalBodyScreen}
         options={{
-          tabBarLabel: lang.weight,
+          tabBarLabel: lang.limbBody,
           tabBarIcon: ({ tintColor, focused }) => (
             <Image
-              source={focused ? require("../../../res/img/scale2.png") : require("../../../res/img/scale.png")}
+              source={focused ? require("../../../res/img/body2.png") : require("../../../res/img/body.png")}
               style={{ width: moderateScale(15), height: moderateScale(18) }}
               tintColor={tintColor}
               resizeMode="contain"
             />
-          )
+          ),
+          tabBarIcon:require("../../../res/img/body.png")
         }}
       />
       {
@@ -76,23 +80,31 @@ const GoalTabs = (props) => {
                   tintColor={tintColor}
                   resizeMode="contain"
                 />
-              )
+              ),
+              tabBarIcon:require("../../../res/img/donut.png")
+
             }}
+            
           /> : null
       }
-      <Tab.Screen name="GoalBodyScreen" component={GoalBodyScreen}
+      <Tab.Screen name="GoalWeightScreen" component={GoalWeightScreen}
         options={{
-          tabBarLabel: lang.limbBody,
-          tabBarIcon: ({ tintColor, focused }) => (
+          tabBarLabel: lang.weight,
+          tabBarBadge: ({ tintColor, focused }) => (
             <Image
-              source={focused ? require("../../../res/img/body2.png") : require("../../../res/img/body.png")}
+              source={focused ? require("../../../res/img/scale2.png") : require("../../../res/img/scale.png")}
               style={{ width: moderateScale(15), height: moderateScale(18) }}
               tintColor={tintColor}
               resizeMode="contain"
             />
-          )
+          ),
+          tabBarShowIcon:true,
+          tabBarIcon:require("../../../res/img/scale.png")
+          
         }}
       />
+      
+     
       {/* <Tab.Screen name="GoalActivityScreen" component={GoalActivityScreen} 
           options={{ 
             tabBarLabel: lang.exerciseFavorite , 

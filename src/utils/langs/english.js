@@ -988,5 +988,7 @@ export const en =
     "backgroundProcessText":"O2Fit needs to be allowed to run in the background for better pedometer performance",
     "accept":"Allow",
     "disagree":"Later",
-    "setPhoneNumber":"login"
+    "setPhoneNumber":"login",
+    "typePhoneNumber":"Enter Phone number",
+    "typeEmail":"Enter email address",
 }
