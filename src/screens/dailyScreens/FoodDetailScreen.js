@@ -49,6 +49,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import { BlurView } from '@react-native-community/blur';
 import { mealsName } from '../../utils/interfaces/mealsInterface';
+import { widgetUpdate } from '../../functions/WidgetUpdate';
 
 PouchDB.plugin(pouchdbSearch)
 const personalFoodDB = new PouchDB('personalFood', { adapter: 'react-native-sqlite' })
@@ -74,6 +75,8 @@ const FoodDetailScreen = (props) => {
   const app = useSelector((state) => state.app);
   const profile = useSelector((state) => state.profile);
   const fastingDiet = useSelector((state) => state.fastingDiet);
+  const diet = useSelector(state => state.diet);
+  const specification = useSelector(state => state.specification);
   const [originalFood, setOriginalFood] = React.useState({});
   const [showTextEditor, setShowTextEditor] = React.useState(false);
   const [isEdited, setIsEdited] = React.useState(false);
@@ -86,7 +89,7 @@ const FoodDetailScreen = (props) => {
     foodId: 0,
     foodName: '',
     value: '',
-    measureUnitId: 0,
+    measureUnitId: 36,
     foodMeal: 0,
     insertDate: props.route.params.date
       ? props.route.params.date
@@ -188,7 +191,7 @@ const FoodDetailScreen = (props) => {
     //   await AsyncStorage.getItem('MeasureUnits'),
     // );
     // console.warn(wholeMeasureunits);
- 
+
     if (!isNaN(parseInt(food.personalFoodId))) {
       personalFoodDB.find({
         selector: { foodName: food.foodName },
@@ -743,7 +746,10 @@ const FoodDetailScreen = (props) => {
         Toast.show({
           type: 'success',
           props: { text2: lang.successful, style: { fontFamily: lang.font } },
-          onShow: props.navigation.goBack(),
+          onShow: () => {
+            widgetUpdate({profile:profile,user:user,specification:specification,hasCredit:hasCredit,diet:diet});
+            props.navigation.goBack()
+          },
           visibilityTime: 800
         });
       });

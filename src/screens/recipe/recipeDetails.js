@@ -14,6 +14,7 @@ import FastImage from 'react-native-fast-image';
 import { StyleSheet } from 'react-native';
 
 function RecipeDetails(props) {
+
     const cookType = [
         {
             bakingType: 0,

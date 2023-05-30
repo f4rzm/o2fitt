@@ -153,7 +153,26 @@ function ChangePackageModal(props) {
                 }}
             >
                 <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH, marginBottom: 0 }}>
-                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025 }}>
+
+                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025, paddingBottom: moderateScale(30) }}>
+
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: moderateScale(10) }}>
+                            <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }}
+                                onPress={foodPressed}>
+                                <Image
+                                    style={styles.crossImage}
+                                    source={require("../../../res/img/done.png")}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }} onPress={() => {
+                                setFocused(false)
+                            }}>
+                                <Image
+                                    style={styles.doneImage}
+                                    source={require("../../../res/img/cross.png")}
+                                />
+                            </TouchableOpacity>
+                        </View>
                         {
                             selectedPackageData.length <= 0 ?
                                 null :
@@ -185,14 +204,14 @@ function ChangePackageModal(props) {
                                 </View>
                         }
 
-                        <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0, paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0 }}>
+                        {/* <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0, paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0 }}>
                             <ConfirmButton
                                 lang={props.lang}
                                 title={"انتخاب"}
                                 style={styles.confirmButton}
                                 onPress={foodPressed}
                             />
-                        </View>
+                        </View> */}
                     </View>
                 </Animated.View>
             </Modal>
@@ -223,6 +242,18 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginBottom: moderateScale(25),
         zIndex: 15
+    },
+    doneImage: {
+        width: moderateScale(20),
+        height: moderateScale(25),
+        tintColor: defaultTheme.darkGray,
+        resizeMode: "contain"
+    },
+    crossImage: {
+        width: moderateScale(25),
+        height: moderateScale(25),
+        tintColor: defaultTheme.primaryColor,
+        resizeMode: "contain"
     }
 
 });

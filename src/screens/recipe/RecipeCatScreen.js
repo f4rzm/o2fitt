@@ -135,17 +135,20 @@ function RecipeCatScreen(props) {
                     data.map((item) => {
                         return (
                             <TouchableOpacity onPress={() => {
-                                setSelectedCat(item.id)
-                                setLoading(true)
-                                setSearchText(null)
-                                setNoResult(false)
-                                setFilteredRecipes([])
+                                if(item.id!==selectedCat){
+
+                                    setSelectedCat(item.id)
+                                    setLoading(true)
+                                    setSearchText(null)
+                                    setNoResult(false)
+                                    setFilteredRecipes([])
+                                }
                             }} style={{ alignItems: "center", marginTop: moderateScale(15) }}>
                                 <Image
                                     source={item.image}
                                     style={{ width: moderateScale(30), height: moderateScale(30), tintColor: selectedCat == item.id ? defaultTheme.primaryColor : defaultTheme.gray, resizeMode: 'contain' }}
                                 />
-                                <Text style={{ fontFamily: lang.font, color: selectedCat == item.id ? defaultTheme.primaryColor : defaultTheme.gray }}>{item.title}</Text>
+                                <Text style={{ fontFamily: lang.font, color: selectedCat == item.id ? defaultTheme.primaryColor : defaultTheme.gray,marginTop:moderateScale(8) }}>{item.title}</Text>
                             </TouchableOpacity>
                         )
                     })
@@ -162,6 +165,7 @@ function RecipeCatScreen(props) {
                         placeholder={"اینجا جستجو کنین"}
                         onChangeText={onChangeText}
                         value={searchText}
+                        placeholderTextColor={defaultTheme.gray}
                     >
 
                     </TextInput>
@@ -170,7 +174,7 @@ function RecipeCatScreen(props) {
                     <View style={{ flexWrap: "wrap", width: dimensions.WINDOW_WIDTH }}>
                         {
                             // hasnetwork ?
-                            loading ? <View style={{ width: dimensions.WINDOW_WIDTH, height: "100%", alignItems: 'center', justifyContent: 'center' }}>
+                            loading ? <View style={{ width: dimensions.WINDOW_WIDTH, height: "80%", alignItems: 'center', justifyContent: 'center' }}>
                                 <LottieView
                                     source={require('../../../res/animations/dietLoader.json')}
                                     style={{ width: moderateScale(200), height: moderateScale(200) }}

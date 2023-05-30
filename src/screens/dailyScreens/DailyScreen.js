@@ -34,6 +34,7 @@ import axios from 'axios';
 import StarRatingModal from '../../components/starRatingModal';
 import VIP from '../../components/VIP';
 import { addDate } from '../../redux/actions/syncedDate';
+import { widgetUpdate } from '../../functions/WidgetUpdate';
 
 
 
@@ -307,7 +308,7 @@ const DailyScreen = props => {
     setActivities([])
     setPedos([])
     setMeals([])
-    // getPedofromDB(selectedDate)
+    
 
     getMealFromDB(selectedDate, false)
 
@@ -317,6 +318,7 @@ const DailyScreen = props => {
       syncActivities(selectedDate)
     }
     else {
+      getPedofromDB(selectedDate)
       getActivityFromDB(selectedDate)
     }
   }, [selectedDate, app.networkConnectivity])
@@ -540,6 +542,7 @@ const DailyScreen = props => {
         mealDB.put({ ...rec.docs[0], _deleted: true }).then(() => {
           // setErrorContext(lang.successful)
           // setErrorVisible(true)
+          widgetUpdate({profile:profile,user:user,specification:specification,hasCredit:hasCredit,diet:diet})
           Toast.show({
             type: "success",
             props: { text2: lang.successful, style: { fontFamily: lang.font } },
@@ -629,11 +632,13 @@ const DailyScreen = props => {
       pedoDB.put({ ...item, _deleted: true }).then(() => {
         // setErrorContext(lang.successful)
         // setErrorVisible(true)
+        widgetUpdate({profile:profile,user:user,specification:specification,hasCredit:hasCredit,diet:diet})
         Toast.show({
           type: "success",
           props: { text2: lang.successful, style: { fontFamily: lang.font } },
-
+          
         })
+      
       })
       getPedofromDB(selectedDate)
     }
@@ -831,7 +836,7 @@ const DailyScreen = props => {
             lang: lang,
             meal: meals.filter(item => item.foodMeal === 9),
             budget: (targetCalorie * 0.25).toFixed(2),
-            mealName: lang.sahar,
+            mealName: lang.sahari,
             targetCarbo: carbo / 4,
             targetProtein: pro / 4,
             targetFat: fat / 9,
@@ -855,9 +860,9 @@ const DailyScreen = props => {
           calculateTarget(parseInt(targetCalorie * 0.35).toFixed(2))
           props.navigation.navigate("AnalyzMealScreen", {
             lang: lang,
-            meal: meals.filter(item => item.foodMeal === 7),
+            meal: meals.filter(item => item.foodMeal === 3),
             budget: (targetCalorie * 0.35).toFixed(2),
-            mealName: lang.eftar,
+            mealName: lang.dinner,
             targetCarbo: carbo / 4,
             targetProtein: pro / 4,
             targetFat: fat / 9,
@@ -865,11 +870,11 @@ const DailyScreen = props => {
           break
         }
         case "Rsnack": {
-          calculateTarget(parseInt(targetCalorie * 0.05).toFixed(2))
+          calculateTarget(parseInt(targetCalorie * 0.1).toFixed(2))
           props.navigation.navigate("AnalyzMealScreen", {
             lang: lang,
-            meal: meals.filter(item => item.foodMeal === 7),
-            budget: (targetCalorie * 0.05).toFixed(2),
+            meal: [...meals.filter(item => item.foodMeal === 7),...meals.filter(item => item.foodMeal === 8)],
+            budget: (targetCalorie * 0.1).toFixed(2),
             mealName: lang.snack,
             targetCarbo: carbo / 4,
             targetProtein: pro / 4,
@@ -917,7 +922,7 @@ const DailyScreen = props => {
       lang: lang,
       image: require("../../../res/img/sahari-icon.png"),
       title: "سحری",
-      addPressed: () => props.navigation.navigate("sahar-icon", { type: "", name: lang.dinner, mealId: 9 }),
+      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.sahari, mealId: 9 }),
       data: meals.filter(item => item.foodMeal === 9),
       edit: editMeal,
       remove: item => { setDeleteAction(item); showDeleteDialog(true) },
@@ -931,7 +936,7 @@ const DailyScreen = props => {
       lang: lang,
       image: require("../../../res/img/eftar-icon.png"),
       title: "افطار",
-      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.dinner, mealId: 6 }),
+      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.eftar, mealId: 6 }),
       data: meals.filter(item => item.foodMeal === 6),
       edit: editMeal,
       remove: item => { setDeleteAction(item); showDeleteDialog(true) },
@@ -959,12 +964,15 @@ const DailyScreen = props => {
       lang: lang,
       image: require("../../../res/img/snack-icon.png"),
       title: "میان وعده",
-      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.dinner, mealId: 7 }),
-      data: meals.filter(item => item.foodMeal === 7),
+      addPressed: () => props.navigation.navigate("FoodFindScreen", { type: "", name: lang.snack, mealId: 7 }),
+      data: [...meals.filter(item => item.foodMeal === 7),...meals.filter(item => item.foodMeal === 8)],
       edit: editMeal,
-      remove: item => { setDeleteAction(item); showDeleteDialog(true) },
+      remove: item => { 
+        setDeleteAction(item);
+         showDeleteDialog(true)
+         },
       barcode: () => props.navigation.navigate("BarcodeScreen", { foodMeal: 7 }),
-      budget: (targetCalorie * 0.05).toFixed(2),
+      budget: (targetCalorie * 0.1).toFixed(2),
       hasCredit: hasCredit,
       analyzMealPress: analyzMealPress.bind(null, 'Rsnack'),
       diet: diet

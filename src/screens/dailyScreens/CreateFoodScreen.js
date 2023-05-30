@@ -27,6 +27,7 @@ import analytics from '@react-native-firebase/analytics';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message'
 import { BlurView } from '@react-native-community/blur';
+import moment from 'moment'
 
 
 const cookType = [
@@ -93,11 +94,13 @@ const cookType = [
 ]
 PouchDB.plugin(pouchdbSearch)
 const personalFoodDB = new PouchDB('personalFood', { adapter: 'react-native-sqlite' })
+
 const CreateFoodScreen = props => {
     const lang = useSelector(state => state.lang)
     const user = useSelector(state => state.user)
     const auth = useSelector(state => state.auth)
     const app = useSelector(state => state.app)
+    const fastingDiet = useSelector(state => state.fastingDiet)
     const personalFoodModel = React.useRef({
         "id": 0,
         "userId": user.id,
@@ -349,7 +352,10 @@ const CreateFoodScreen = props => {
                     Toast.show({
                         type: "success",
                         props: { text2: lang.successful, style: { fontFamily: lang.font } },
-                        onShow: props.navigation.replace("FoodFindScreen",{nextRoute : "SearchCookingTab" , type : "" , name : lang.snack , mealId : 0}),
+                        onShow: props.navigation.replace("FoodFindScreen",{nextRoute : "SearchCookingTab" , type : "" , name : lang.snack , mealId : parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
+                        &&
+                        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
+                        ?9:0}),
                         visibilityTime:800
                     })
                 }).catch(error => console.log(error))
@@ -363,7 +369,10 @@ const CreateFoodScreen = props => {
                     Toast.show({
                         type: "success",
                         props: { text2: lang.successful, style: { fontFamily: lang.font } },
-                        onShow:props.navigation.replace("FoodFindScreen",{nextRoute : "SearchCookingTab" , type : "" , name : lang.snack , mealId : 0}),
+                        onShow:props.navigation.replace("FoodFindScreen",{nextRoute : "SearchCookingTab" , type : "" , name : lang.snack , mealId : parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
+                        &&
+                        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
+                        ?9:0}),
                         visibilityTime:800
 
                     })

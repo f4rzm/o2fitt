@@ -52,7 +52,7 @@ const DetailsMeal = props => {
     <View style={styles.container}>
       <View style={[styles.row, styles.title]}>
         {props.iconMeal}
-        <Text style={[styles.titleMeal, { fontFamily: lang.titleFont, color: defaultTheme.darkText }]}>{props.mealName}</Text>
+        <Text style={[styles.titleMeal, { fontFamily: lang.titleFont, color: defaultTheme.darkText,textAlign:"left" }]}>{props.mealName}</Text>
 
         <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), color: defaultTheme.darkText }}>{calculateCalorie()}</Text>
         <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), color: defaultTheme.darkText }}> {lang.from} </Text>

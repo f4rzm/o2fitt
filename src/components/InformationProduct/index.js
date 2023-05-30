@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { I18nManager, ScrollView, Text, TextInput, View } from 'react-native';
+import { defaultTheme } from '../../constants/theme';
 import CommonText from '../CommonText';
 import styles from './styles';
 
@@ -30,11 +31,12 @@ const InformationProduct = (props) => {
             style={index ? styles.barcode : [styles.textInput]}
             onChangeText={(text)=>props.onChangeText(text)}
             defaultValue={index ? props.barcode : inputText}
-            textAlign={I18nManager.isRTL ? 'right' : 'left'}
+            textAlign={I18nManager.isRTL ? 'right' : 'right'}
             fontFamily={props.lang.font}
             editable={index ? false : true}
-            placeholder={index ? null : props.lang.example}
+            placeholder={index ? props.barcode.toString() : props.lang.example}
             autoFocus={index ? null : true}
+            placeholderTextColor={defaultTheme.darkGray}
           />
         </View>
       );

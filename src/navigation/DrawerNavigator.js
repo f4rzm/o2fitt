@@ -20,9 +20,12 @@ import { clearDiet } from '../redux/actions/diet';
 import analytics from '@react-native-firebase/analytics';
 import { urls } from '../utils/urls';
 import { RestController } from '../classess/RestController';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart'
+import Power from '../../res/img/power.svg'
 
 const DrawerNavigator = (props) => {
+    const [deletationModal, setDeletationModal] = useState(false)
 
     const Drawer = createDrawerNavigator()
 
@@ -38,6 +41,14 @@ const DrawerNavigator = (props) => {
     const [normalDietModal, setNormalDietModal] = useState(false)
     const [showFastingModal, setShowFastingModal] = useState(false)
 
+    const deleteAccount = async () => {
+        await AsyncStorage.clear().then(() => {
+            AsyncStorage.setItem('deletedAccount', user.username).then(() => {
+
+                RNRestart.Restart()
+            })
+        })
+    }
 
     const CustomDrawer = (props) => {
         const width = useWindowDimensions().width * 0.7;
@@ -58,24 +69,29 @@ const DrawerNavigator = (props) => {
                         specification={specification}
                     />
                 }
-                <RamadanSwitch
-                    isActive={fastingDiet.isActive}
-                    onChangeSwitch={(e) => {
-     
-                        if (e == true) {
-                            setShowFastingModal(true)
-                        }
-                        else {
-                            setNormalDietModal(true)
-                        }
-                    }}
-                    lang={lang}
-                />
+                {
+                    lang.langName !== "english" && user.countryId == 128 &&
+                    <RamadanSwitch
+                        isActive={fastingDiet.isActive}
+                        onChangeSwitch={(e) => {
+                            if (e == true) {
+                                setShowFastingModal(true)
+                            }
+                            else {
+                                setNormalDietModal(true)
+                            }
+                        }}
+                        lang={lang}
+                    />
+                }
                 <DrawerItems
                     lang={lang}
                     user={user}
                     profile={profile}
                     specification={specification}
+                    setDelete={() => {
+                        setDeletationModal(true)
+                    }}
                 />
             </DrawerContentScrollView>
         )
@@ -93,7 +109,7 @@ const DrawerNavigator = (props) => {
         RC.put(url, params, header, onSuccessRead, () => onFailureRead(params));
     }
     const onFailureRead = (params) => {
-        
+
         const url = urls.userBaseUrl + urls.userProfiles + "updateFastingMode"
         offlineDB.post({
             method: "put",
@@ -237,6 +253,33 @@ const DrawerNavigator = (props) => {
                     </View>
                 </View>
 
+            </Modal>
+            <Modal
+                visible={deletationModal}
+                onDismiss={() => setDeletationModal(false)}
+            >
+                <View style={{ alignItems: "center" }}>
+                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.8, height: dimensions.WINDOW_HEIGTH * 0.4, backgroundColor: defaultTheme.white, borderRadius: 13, alignItems: "center", justifyContent: "center" }}>
+                        <Power width={moderateScale(50)} height={moderateScale(50)} />
+                        <Text style={{ paddingVertical: moderateScale(50), fontSize: moderateScale(18), paddingHorizontal: moderateScale(20), textAlign: "center", lineHeight: moderateScale(27) }}>{lang.confirmationDeleteAccount}</Text>
+                        <View style={{ bottom: moderateScale(20), position: "absolute", flexDirection: "row", width: dimensions.WINDOW_WIDTH * 0.7, alignItems: "center", justifyContent: "center" }}>
+                            <ConfirmButton
+                                lang={lang}
+                                title={"Yes"}
+                                style={{ backgroundColor: defaultTheme.white, borderColor: defaultTheme.error, borderWidth: 1, width: moderateScale(110) }}
+                                textStyle={{ color: defaultTheme.darkText }}
+                                onPress={deleteAccount}
+                            />
+                            <ConfirmButton
+                                lang={lang}
+                                title={"No"}
+                                style={{ backgroundColor: defaultTheme.green, width: moderateScale(110) }}
+                                textStyle={{}}
+                                onPress={() => setDeletationModal(false)}
+                            />
+                        </View>
+                    </View>
+                </View>
             </Modal>
         </>
     )

@@ -21,14 +21,14 @@ const BMIScreen = props => {
       resizeMode={"contain"}
     />
   );
-  try {
-    I18nManager.allowRTL(false)
-    I18nManager.forceRTL(false)
-    I18nManager.swapLeftAndRightInRTL(false);
+  // try {
+  //   I18nManager.allowRTL(false)
+  //   I18nManager.forceRTL(false)
+  //   I18nManager.swapLeftAndRightInRTL(false);
 
-  } catch (e) {
-    console.error(e)
-  }
+  // } catch (e) {
+  //   console.error(e)
+  // }
   // Orientation.lockToPortrait()
   const lang = useSelector(state => state.lang);
   const profile = useSelector(state => state.profile);
@@ -131,7 +131,7 @@ const BMIScreen = props => {
             {lang.ifWantTapNextBotton}
           </Text>
         </View>
-        <Gauge
+        {/* <Gauge
           emptyColor={defaultTheme.grayBackground}
           colors={['#96031c', '#96031c',"yellow", defaultTheme.green,defaultTheme.error,  defaultTheme.error, defaultTheme.error]}
           sweepAngle={300}
@@ -183,7 +183,7 @@ const BMIScreen = props => {
             damping: 300,
           }}
           renderNeedle={Needle}
-        />
+        /> */}
         {/* <LottieView
           style={{ width: dimensions.WINDOW_WIDTH * 0.8 }}
           source={getSuitableLottie()}
@@ -335,10 +335,10 @@ const styles = StyleSheet.create({
     flex: 1,
     // width: dimensions.WINDOW_WIDTH,
     // flexDirection: 'row',
-    // justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     // paddingHorizontal: 10,
-    marginTop: moderateScale(20),
+    marginTop: moderateScale(120),
   },
   informationContainer: {
     width: dimensions.WINDOW_WIDTH * 0.55,

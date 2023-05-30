@@ -38,7 +38,8 @@ export default StyleSheet.create({
     paddingVertical: 10,
     color: defaultTheme.gray,
     paddingHorizontal: 10,
-    fontSize:moderateScale(18)
+    fontSize:moderateScale(18),
+    color:defaultTheme.darkGray
 
   },
 });

@@ -110,11 +110,13 @@ const DrawerItems = (props) => {
             img: require("../../../res/img/amaze.png"),
             onPress: () => Linking.openURL("https://o2fitt.com/?culture=" + lang.langLocaleAbout)
         },
-        // {
-        //     text: lang.deletation,
-        //     img: require("../../../res/img/cross.png"),
-        //     onPress: () =>props.setDelete()
-        // },
+        (lang.langName == "english") && user.countryId !== 128 ?
+            
+        {
+            text: lang.deletation,
+            img: require("../../../res/img/cross.png"),
+            onPress: () =>props.setDelete()
+        }:null,
         {
             text: lang.references,
             img: require("../../../res/img/amaze.png"),

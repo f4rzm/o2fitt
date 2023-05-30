@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct WidgetDailyCalorieBundle: WidgetBundle {
     var body: some Widget {
+      
         WidgetDailyCalorie()
         WidgetDailyCalorieLiveActivity()
     }

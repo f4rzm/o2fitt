@@ -166,7 +166,7 @@ const ChatScreen = ({ navigation, route }) => {
       title: '',
       isForce: true,
       classification: detailsChat[0].classification,
-      isReadAdmin: true,
+      isReadAdmin: false,
       replyToMessage: detailsChat[0].id,
       canReply: true,
     };

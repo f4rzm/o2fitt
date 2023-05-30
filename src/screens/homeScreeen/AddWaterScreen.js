@@ -240,8 +240,6 @@ const AddWaterScreen = props => {
         "value": parseFloat(waterValue).toFixed(1)
       }
 
-      // console.log({data});
-
       if (app.networkConnectivity) {
         saveServer(data)
       }

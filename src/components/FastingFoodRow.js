@@ -5,15 +5,16 @@ import { dimensions } from '../constants/Dimensions'
 import { defaultTheme } from '../constants/theme'
 import { moderateScale } from 'react-native-size-matters'
 
-const FastingFoodRow = ({ foodDB, item, lang }) => {
+const FastingFoodRow = ({ foodDB, item, lang ,selectedDate}) => {
     const value = parseFloat(item.value)
-    const [measureunit, setMeasureunit] = useState([0])
+    // const [measureunit, setMeasureunit] = useState(allMeasureUnits.filter((measure) => measure.id == item.measureUnitId))
     const [food, setFood] = useState({
         nutrientValue: [10],
     })
+   const  measureunit=allMeasureUnits.filter((measure) => measure.id == item.measureUnitId)
     const foodValue = parseFloat(item.value)
     useEffect(() => {
-        setMeasureunit(allMeasureUnits.filter((measure) => measure.id == item.measureUnitId))
+        // setMeasureunit(allMeasureUnits.filter((measure) => measure.id == item.measureUnitId))
 
         let DB = foodDB;
         DB.get(`${item.foodName}_${item.foodId}`)
@@ -35,7 +36,7 @@ const FastingFoodRow = ({ foodDB, item, lang }) => {
         //     // console.warn(res.data.data)
         // })
 
-    }, [])
+    }, [item])
 
     return (
         <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, justifyContent: 'center', borderBottomWidth: 1, borderColor: defaultTheme.border, paddingVertical: moderateScale(5) }}>

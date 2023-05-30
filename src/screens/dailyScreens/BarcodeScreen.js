@@ -33,10 +33,10 @@ const BarcodeScreen = props => {
   
   const onBarcodeRead = e => {
     // console.log(e);
-    setBarcode(e.data)
+    setBarcode(e)
     if (!isFetching) {
       isFetching = true;
-      getBarcodeGs1(e.data);
+      getBarcodeGs1(e);
     }
   };
 

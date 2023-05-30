@@ -1,12 +1,12 @@
 export const urls = {
-    identityBaseUrl : "https://identity.o2fitt.com/api/v1/",
-    identityBaseUrl2 : "https://identity.o2fitt.com/api/v2/",
-    userBaseUrl : "https://usertest.o2fitt.com/api/v1/",
+    identityBaseUrl : "https://idetitytest.o2fitt.com/api/v1/",
+    identityBaseUrl2 : "https://idetitytest.o2fitt.com/api/v2/",
+    userBaseUrl : "https://user.o2fitt.com/api/v1/",
     foodBaseUrl : "https://food.o2fitt.com/api/v1/",
     foodBaseUrl2 : "https://food.o2fitt.com/api/v2/",
     workoutBaseUrl : "https://workout.o2fitt.com/api/v1/",
     blogBaseUrl : "https://blog.o2fitt.com/api/v1/",
-    socialBaseUrl : "https://social.o2fitt.com/api/v1/",
+    socialBaseUrl : "https://socialtest.o2fitt.com/api/v1/",
     orderBaseUrl : "https://order.o2fitt.com/api/v1/",
     orderBaseUrl2 : "https://order.o2fitt.com/api/v2/",
     adBaseUrl : "https://advertise.o2fitt.com/api/v1/",
@@ -27,7 +27,7 @@ export const urls = {
     login : "Login",
     food : "Food/",
     contactUs : "ContactUs/",
-    marketMessage : "MarketMessage",
+    marketMessage : "MarketMessage/",
     package : "Package/",
     order : "Order/",
     addOrder : "AddOrder",
@@ -74,5 +74,8 @@ export const urls = {
     getUtcTime:"GetUtcTime/",
     isExist:"IsExist/",
     AddDeviceInfo:"AddDeviceInfo/",
-    AssignReferralCode:"AssignReferralCode/"
+    AssignReferralCode:"AssignReferralCode/",
+    appVersion:"appVersion/",
+    getAppversion:"getAppversion/",
+    GetByDateUser:"GetByDateUser/"
 }

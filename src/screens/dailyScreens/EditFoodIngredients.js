@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     StyleSheet,
     View,
@@ -157,12 +157,12 @@ const EditFoodIngredients = props => {
             let newIngredients = [...ingredients]
             newIngredients[index] = v
             setIngredients(newIngredients)
-        }else{
+        } else {
             Toast.show({
-                type:"error",
-                props:{text2:lang.typeEN},
-                visibilityTime:1800
-              })
+                type: "error",
+                props: { text2: lang.typeEN },
+                visibilityTime: 1800
+            })
         }
     }
 
@@ -184,7 +184,7 @@ const EditFoodIngredients = props => {
             ...ingredients,
             ingredient
         ])
-        props.navigation.navigate("EditFoodIngredients")
+        props.navigation.pop(2)
     }
 
     const removeIngredient = (index) => {
@@ -195,7 +195,9 @@ const EditFoodIngredients = props => {
         setIngredients([...a])
     }
 
+
     const onConfirm = () => {
+        // console.warn(ingredients[0]);
         props.route.params.updateIngredients(ingredients, bakingType, hour + ":" + min)
         props.navigation.goBack()
     }
@@ -277,21 +279,21 @@ const EditFoodIngredients = props => {
                     lang={lang}
                     style={styles.button}
                     title={lang.save}
-                    textStyle={{ fontSize:moderateScale(17) }}
+                    textStyle={{ fontSize: moderateScale(17) }}
                     leftImage={require("../../../res/img/done.png")}
                     onPress={onConfirm}
                 />
                 <ConfirmButton
                     lang={lang}
                     style={styles.button2}
-                    textStyle={{ color: defaultTheme.green,fontSize:moderateScale(17),marginHorizontal:0 }}
+                    textStyle={{ color: defaultTheme.green, fontSize: moderateScale(17), marginHorizontal: 0 }}
                     imageStyle={{ tintColor: defaultTheme.green, width: moderateScale(15) }}
                     title={lang.addIngerdientFood}
                     leftImage={require("../../../res/img/plus.png")}
                     onPress={onAdd}
                 />
             </View>
-           
+
             <DynamicTimePicker
                 lang={lang}
                 user={user}
@@ -338,13 +340,13 @@ const styles = StyleSheet.create({
         width: dimensions.WINDOW_WIDTH,
         alignItems: "center",
         flexDirection: "row",
-        justifyContent:"space-around"
+        justifyContent: "space-around"
     },
     button: {
         width: dimensions.WINDOW_WIDTH * 0.4,
         height: moderateScale(45),
         backgroundColor: defaultTheme.green,
-        paddingHorizontal:5
+        paddingHorizontal: 5
     },
     button2: {
         width: dimensions.WINDOW_WIDTH * 0.4,
@@ -352,7 +354,7 @@ const styles = StyleSheet.create({
         backgroundColor: defaultTheme.lightBackground,
         borderColor: defaultTheme.green,
         borderWidth: 1.5,
-        paddingHorizontal:5
+        paddingHorizontal: 5
 
     },
     rowAction: {

@@ -497,7 +497,7 @@ const PedometerScreen = (props) => {
         Toast.show({
           type: "success",
           props: { text2: lang.successful, style: { fontFamily: lang.font } },
-          onShow: navigation.goBack(),
+          onShow: navigation.popToTop(),
           visibilityTime: 800
         })
         setLoading(false);

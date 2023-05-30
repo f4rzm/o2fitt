@@ -7,7 +7,7 @@ import { moderateScale } from 'react-native-size-matters';
 const RamadanSwitch = ({ onChangeSwitch, isActive, lang }) => {
     return (
         <View style={styles.container}>
-            <Text style={{ fontSize: moderateScale(15), fontFamily: lang.font, color: defaultTheme.mainText }}>رمضان</Text>
+            <Text style={{ fontSize: moderateScale(15), fontFamily: lang.font, color: defaultTheme.mainText }}>حالت روزه داری{isActive?" : فعال":" : غیر فعال"}</Text>
             <Switch
                 value={isActive}
                 onValueChange={(e) => {
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: moderateScale(15),
         paddingVertical: moderateScale(10),
         borderBottomWidth: 1,
-        borderBottomColor: defaultTheme.border
+        borderBottomColor: defaultTheme.border,
+        alignItems:"center"
     }
 })

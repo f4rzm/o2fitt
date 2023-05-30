@@ -1006,6 +1006,9 @@ export const en =
     "deletation": "Delete account",
     "deleteAccount": "Delete account",
     "confirmationDeleteAccount": "Are you sure you want to delete your account",
-    "setPhoneNumber":"login"
+    "setPhoneNumber":"login",
+    "typePhoneNumber":"Enter Phone number",
+    "typeEmail":"Enter email address",
+
 
 }

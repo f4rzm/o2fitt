@@ -33,7 +33,7 @@ const DynamicTimePicker = props =>{
                 style={styles.container}
             >
                <Picker
-                    style={{backgroundColor: defaultTheme.transparent, width: dimensions.WINDOW_WIDTH * 0.22 }}
+                    style={{backgroundColor: defaultTheme.transparent, width: dimensions.WINDOW_WIDTH * 0.3 }}
                     selectedValue={selectedHour}
                     pickerData={hour}
                     onValueChange={value => updateSelectedHour(value)}

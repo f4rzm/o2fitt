@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState,useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,7 +15,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { updateSpecification } from "../../redux/actions"
 import { SpecificationDBController } from "../../classess/SpecificationDBController"
 import analytics from '@react-native-firebase/analytics';
-import { WheelPicker } from 'react-native-wheel-picker-android';
+import { Picker } from '@react-native-picker/picker';
+// import { WheelPicker } from 'react-native-wheel-picker-android';
 
 const RegisterWeightScreen = props => {
 
@@ -39,23 +40,22 @@ const RegisterWeightScreen = props => {
 
 
   const kg = Array.from({ length: 126 }, (x, i) => (i + 35).toString())
-  const gr = Array.from({ length: 10 }, (x, i) => (i ).toString())
+  const gr = Array.from({ length: 10 }, (x, i) => (i).toString())
   const onKGselected = useCallback(
     selectedItem => {
       setSelectedKg(selectedItem);
     },
     [selectedKg],
   );
-  const onGRselected = useCallback(
+  const onGRselected =
     selectedItem => {
       setSelectedGr(selectedItem);
-    },
-    [selectedGr],
-  );
+    }
 
-  useEffect(() => {
-    setSelectedKg(specification[0].weightSize-35)
-  }, [])
+
+  // useEffect(() => {
+  //   setSelectedKg(specification[0].weightSize - 35)
+  // }, [])
   console.log("specification", specification)
 
   const onDateSelected = (newDate) => {
@@ -65,14 +65,14 @@ const RegisterWeightScreen = props => {
   console.warn(selectedDate,)
 
   const onConfirm = async () => {
-    if (!isNaN(parseFloat(kg[selectedKg] + "." + gr[selectedGr]))) {
+    if (!isNaN(parseFloat(selectedKg + "." + selectedGr))) {
       setLoading(true)
       if (selectedDate === today) {
         dispatch(updateSpecification({
           ...specification[0],
           _id: Date.now(),
           insertDate: selectedDate,
-          weightSize: parseFloat(kg[selectedKg] + "." + gr[selectedGr]).toFixed(2),
+          weightSize: parseFloat(selectedKg + "." + selectedGr).toFixed(2),
         }, auth, app, user, backToGoal))
       }
       else {
@@ -82,7 +82,7 @@ const RegisterWeightScreen = props => {
         dispatch(updateSpecification({
           ...oldData,
           _id: Date.now(),
-          weightSize: parseFloat(kg[selectedKg] + "." + gr[selectedGr]).toFixed(2),
+          weightSize: parseFloat(selectedKg + "." + selectedGr).toFixed(2),
         }, auth, app, user, backToGoal))
       }
 
@@ -105,7 +105,7 @@ const RegisterWeightScreen = props => {
     }
   }
 
-  const newWeight = kg === "" ? 0 : isNaN(parseFloat(kg[selectedKg] + "." + gr[selectedGr])) ? 0 : parseFloat(kg[selectedKg] + "." + gr[selectedGr])
+  const newWeight = kg === "" ? 0 : isNaN(parseFloat(selectedKg + "." + selectedGr)) ? 0 : parseFloat(selectedKg + "." + selectedGr)
   return (
     <View style={styles.mainContainer}>
       <Toolbar
@@ -131,7 +131,7 @@ const RegisterWeightScreen = props => {
           <Text style={[styles.text, { fontFamily: lang.font }]} allowFontScaling={false}>
             {lang.oldWeight}
           </Text>
-          <Text style={[styles.text, { fontFamily: lang.font, fontSize: moderateScale(17),color:defaultTheme.lightGray2 }]} allowFontScaling={false}>
+          <Text style={[styles.text, { fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.lightGray2 }]} allowFontScaling={false}>
             {specification[0].weightSize + " " + lang.kg}
           </Text>
         </RowSpaceBetween>
@@ -152,10 +152,10 @@ const RegisterWeightScreen = props => {
                     placeholder2={lang.gr}
                     autoFocus={true}
                 /> */}
-          <View style={{ flexDirection: lang.langName === "persian" ? "row-reverse" : "row",}}>
-            <View style={{ justifyContent: "center",  alignItems: "center"}}>
-              <Text style={{alignItems:"center",justifyContent:"center",fontSize:moderateScale(16),fontFamily:lang.font}}>{lang.kgMeasureName}</Text>
-              <WheelPicker
+          <View style={{ flexDirection: lang.langName === "persian" ? "row-reverse" : "row",alignItems:"center" }}>
+            <View style={{ width: "45%" }}>
+              <Text style={{ alignItems: "center", justifyContent: "center", fontSize: moderateScale(16), fontFamily: lang.font, textAlign: "center" }}>{lang.kgMeasureName}</Text>
+              {/* <WheelPicker
                 selectedItem={selectedKg}
                 data={kg}
                 onItemSelected={onKGselected}
@@ -167,11 +167,29 @@ const RegisterWeightScreen = props => {
                 indicatorColor='gray'
                 selectedItemTextColor={"black"}
                 style={{ width: moderateScale(100)  }}
-              />
+              /> */}
+              <Picker
+                selectedValue={selectedKg}
+                style={{}}
+                onValueChange={(itemValue, itemIndex) => {
+                  onKGselected(itemValue, itemIndex)
+                }}
+                itemStyle={{
+                  fontFamily: lang.font,
+                  fontSize: moderateScale(20)
+                }}
+              >
+                {
+                  kg.length !== 0 ? kg.map((item) => (
+                    <Picker.Item value={parseInt(item)} label={item.toString()} />
+                  )) : ["0"]
+                }
+              </Picker>
             </View>
-            <View style={{ justifyContent: "center", alignItems: "center", width: 150 }}>
-              <Text style={{alignItems:"center",justifyContent:"center",fontSize:moderateScale(16),fontFamily:lang.font}}>{lang.gr}</Text>
-              <WheelPicker
+            <Text style={{fontSize:moderateScale(30)}}>.</Text>
+            <View style={{ width: "45%" }}>
+              <Text style={{ alignItems: "center", justifyContent: "center", fontSize: moderateScale(16), fontFamily: lang.font,textAlign:"center" }}>{lang.gr}</Text>
+              {/* <WheelPicker
                 selectedItem={selectedGr}
                 data={gr}
                 onItemSelected={onGRselected}
@@ -183,13 +201,30 @@ const RegisterWeightScreen = props => {
                 indicatorColor='gray'
                 selectedItemTextColor={"black"}
                 style={{ width: moderateScale(100)}}
-              />
+              /> */}
+              <Picker
+                selectedValue={selectedGr}
+                style={{}}
+                onValueChange={(itemValue, itemIndex) => {
+                  onGRselected(itemValue, itemIndex)
+                }}
+                itemStyle={{
+                  fontFamily: lang.font,
+                  fontSize: moderateScale(20)
+                }}
+              >
+                {
+                  gr.length !== 0 ? gr.map((item) => (
+                    <Picker.Item value={parseInt(item)} label={item.toString()} />
+                  )) : ["0"]
+                }
+              </Picker>
             </View>
 
 
           </View>
         </View>
-        <RowCenter style={{ marginTop: moderateScale(24)}}>
+        <RowCenter style={{ marginTop: moderateScale(24) }}>
           <ColumnCenter>
             <Text style={[styles.title2, { fontFamily: lang.font }]} allowFontScaling={false}>
               <Text style={[styles.title, { fontFamily: lang.fontTitle }]} allowFontScaling={false}>

@@ -130,6 +130,7 @@ const IngredientsSearchScreen = props => {
                 placeholder={lang.ingredientSearchHint}
                 value={searchText}
                 onVoice={search => onTextChanged(search)}
+                setTextEmpty={()=>setText('')}
             />
             <ScrollView >
                 {

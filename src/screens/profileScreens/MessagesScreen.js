@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -21,25 +21,25 @@ import {
   Toolbar,
   ConfirmButton,
 } from '../../components';
-import {dimensions} from '../../constants/Dimensions';
-import {defaultTheme} from '../../constants/theme';
-import {moderateScale} from 'react-native-size-matters';
-import {useSelector, useDispatch} from 'react-redux';
-import {urls} from '../../utils/urls';
-import {RestController} from '../../classess/RestController';
+import { dimensions } from '../../constants/Dimensions';
+import { defaultTheme } from '../../constants/theme';
+import { moderateScale } from 'react-native-size-matters';
+import { useSelector, useDispatch } from 'react-redux';
+import { urls } from '../../utils/urls';
+import { RestController } from '../../classess/RestController';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {setUnreadMessageNumber} from '../../redux/actions';
 import LottieView from 'lottie-react-native';
-import {setMarketMessageId, updateMessage} from '../../redux/actions/user';
+import { setMarketMessageId, updateMessage } from '../../redux/actions/user';
 import Header from '../../components/Header';
 import ArrowBack from '../../../res/img/arrowBack.svg';
 import MessageRow from '../../components/MessageRow';
 // import SwipeableFlatList from 'react-native-swipeable-list';
-import {ActivityIndicator} from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 // import Button from '../../components/Button';
 // import MarketMessage from '../../components/MarketMessage';
-import {BlurView} from '@react-native-community/blur';
+import { BlurView } from '@react-native-community/blur';
 import Alert from '../../components/Alert';
 // import CommonText from '../../components/CommonText';
 import { updateShowBottomTab } from '../../redux/actions/app';
@@ -92,7 +92,7 @@ const MessagesScreen = (props, route) => {
   ];
 
   const alertText = lang.deleteMessage;
-  const dataAlert = {arrayButton, alertText};
+  const dataAlert = { arrayButton, alertText };
   const RC = new RestController();
   React.useEffect(() => {
     const focusUnsubscribe = props.navigation.addListener('focus', () => {
@@ -151,9 +151,9 @@ const MessagesScreen = (props, route) => {
     const setUnread = rootMsg.map(item => {
       const hasUnread = m.find(i => i.replyToMessage === item.id && !i.isRead);
       if (hasUnread != undefined) {
-        return {...item, hasUnread: true};
+        return { ...item, hasUnread: true };
       }
-      return {...item, hasUnread: false};
+      return { ...item, hasUnread: false };
     });
     setMessages(setUnread);
     // console.log(m.filter(item => item.replyToMessage === 0));
@@ -164,9 +164,9 @@ const MessagesScreen = (props, route) => {
     const allMessages = JSON.parse(await AsyncStorage.getItem('messages'));
     const m = allMessages.map(item => {
       if (readMessage.find(rm => rm.id === item.id) != undefined) {
-        return {...item, isRead: true};
+        return { ...item, isRead: true };
       }
-      return {...item};
+      return { ...item };
     });
 
     // console.log('m', m);
@@ -212,8 +212,8 @@ const MessagesScreen = (props, route) => {
     // console.log({response});
   };
 
-  const onFailureRead = response => {};
-const [disabled, setDisabled] = useState(false)
+  const onFailureRead = response => { };
+  const [disabled, setDisabled] = useState(false)
   // console.log('messages', messages);
 
   //===================VARIABLES============================
@@ -221,13 +221,13 @@ const [disabled, setDisabled] = useState(false)
   const title = lang.pm;
   const childrenLeft = (
     <TouchableOpacity
-    disabled={disabled}
+      disabled={disabled}
       style={styles.childrenLeft}
       activeOpacity={1}
-      onPress={() => {setDisabled(true);props.navigation.goBack() }}>
+      onPress={() => { setDisabled(true); props.navigation.goBack() }}>
       <Image
-      source={require("../../../res/img/back.png")}
-      style={{width:moderateScale(20),height:moderateScale(18),resizeMode:"contain",transform:[{rotate:I18nManager.isRTL ? "180deg" : "180deg"}]}}
+        source={require("../../../res/img/back.png")}
+        style={{ width: moderateScale(20), height: moderateScale(18), resizeMode: "contain", transform: [{ rotate: I18nManager.isRTL ? "180deg" : "180deg" }] }}
       />
     </TouchableOpacity>
   );
@@ -266,7 +266,7 @@ const [disabled, setDisabled] = useState(false)
 
   //===================FUNCTION============================
   const renderItem = items => (
-    <MessageRow {...{items, lang, profile, goToDetails, askForDelete,user}} />
+    <MessageRow {...{ items, lang, profile, goToDetails, askForDelete, user }} />
   );
 
 
@@ -295,11 +295,11 @@ const [disabled, setDisabled] = useState(false)
         );
       }
     }
-    props.navigation.navigate('ChatScreen', {detailsChat, app});
+    props.navigation.navigate('ChatScreen', { detailsChat, app });
   };
   const callApiForReadMessage = detailsChat => {
     detailsChat.forEach(item => {
-      if (item.adminId && !item.isRead) {
+      if (!item.isRead) {
         const url =
           urls.socialBaseUrl +
           urls.contactUs +
@@ -322,9 +322,8 @@ const [disabled, setDisabled] = useState(false)
   const updateMessageFirstly = async () => {
     const marketMessageId = await AsyncStorage.getItem('marketMessageId');
 
-    const url = `${urls.socialBaseUrl}ContactUs/UserMessages?lastMessageId=${
-      marketMessageId ? parseInt(marketMessageId) : 0
-    }&userId=${profile.userId}`;
+    const url = `${urls.socialBaseUrl}ContactUs/UserMessages?lastMessageId=${marketMessageId ? parseInt(marketMessageId) : 0
+      }&userId=${profile.userId}`;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -379,7 +378,7 @@ const [disabled, setDisabled] = useState(false)
     Toast.show({
       type: 'success',
       // text2: response.data.message,
-      props:{text2:response.data.message,style:{fontFamily:lang.font}},
+      props: { text2: response.data.message, style: { fontFamily: lang.font } },
       visibilityTime: 1000,
     });
   };
@@ -388,7 +387,7 @@ const [disabled, setDisabled] = useState(false)
     Toast.show({
       type: 'error',
       // text2: response.data.message,
-      props:{text2:response.data.message,style:{fontFamily:lang.font}},
+      props: { text2: response.data.message, style: { fontFamily: lang.font } },
       visibilityTime: 1000,
     });
   };
@@ -397,7 +396,7 @@ const [disabled, setDisabled] = useState(false)
     props.navigation.navigate('SupportScreen');
   };
 
-  
+
   const [showMarketMessage, setShowMarketMessage] = useState(false);
 
   // useEffect(() => {
@@ -421,20 +420,20 @@ const [disabled, setDisabled] = useState(false)
   const pressGoToAddress = (data) => {
     setShowMarketMessage(false)
     dispatch(updateShowBottomTab(true));
-    if(data.url.includes('https' || 'http')){
+    if (data.url.includes('https' || 'http')) {
       Linking.openURL(data.url);
-    }else{
+    } else {
       props.navigation.navigate(data.url);
     }
     dispatch(setMarketMessageId(user.marketMessage.id));
     AsyncStorage.setItem('marketMessageId', user.marketMessage.id.toString())
-    
+
   }
 
   if (loading) {
     return (
       <>
-        <Header {...{data: dataHeader}} />
+        <Header {...{ data: dataHeader }} />
         <View style={styles.holderActivity}>
           <ActivityIndicator size={"large"} color={defaultTheme.green2} />
         </View>
@@ -444,7 +443,7 @@ const [disabled, setDisabled] = useState(false)
 
   return (
     <View style={styles.container}>
-      <Header {...{data: dataHeader}} />
+      <Header {...{ data: dataHeader }} />
       {rootMessage.length ? (
         <>
           <FlatList
@@ -482,7 +481,7 @@ const [disabled, setDisabled] = useState(false)
                 blurAmount={4}
                 reducedTransparencyFallbackColor="white"
               />
-              <Alert {...{dataAlert, lang}} />
+              <Alert {...{ dataAlert, lang }} />
             </View>
           )}
         </>
@@ -514,7 +513,7 @@ const [disabled, setDisabled] = useState(false)
         </View>
       )}
 
-{/* {showMarketMessage && (
+      {/* {showMarketMessage && (
         <View style={styles.wrapper}>
           <BlurView
             style={styles.absolute}
@@ -541,7 +540,7 @@ const styles = StyleSheet.create({
     padding: moderateScale(25),
   },
   rightIcon: {
-    transform: [{rotate: '180deg'}],
+    transform: [{ rotate: '180deg' }],
   },
   list: {
     flex: 1,

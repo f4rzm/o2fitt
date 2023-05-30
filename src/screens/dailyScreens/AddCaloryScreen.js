@@ -20,6 +20,7 @@ import moment from "moment"
 import { urls } from "../../utils/urls"
 import pouchdbSearch from 'pouchdb-find'
 import analytics from '@react-native-firebase/analytics';
+import { mealsName } from '../../utils/interfaces/mealsInterface';
 
 PouchDB.plugin(pouchdbSearch)
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' })
@@ -41,7 +42,10 @@ const AddCaloryScreen = props => {
             "foodName": lang.personalCalorie,
             "value": "",
             "measureUnitId": 0,
-            "foodMeal": (moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(props.route.params.selectedDate)).format("YYYYMMDD")&&(fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(props.route.params.selectedDate).format("YYYYMMDD")) : true)?9:0,
+            "foodMeal": parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(props.route.params.selectedDate).format("YYYYMMDD"))
+                &&
+                (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(props.route.params.selectedDate).format("YYYYMMDD")) : true)
+                ? 9 : 0,
             "insertDate": props.route.params.selectedDate,
             "foodNutrientValue": new Array(34).fill(0),
             "_id": null
@@ -283,9 +287,10 @@ const AddCaloryScreen = props => {
                     style={styles.rowStyle}
                 >
                     <Text style={[styles.text1, { fontFamily: lang.font }]} allowFontScaling={false}>
-                        {
-                            lang.meal
-                        }
+
+                        {lang.meal +
+                            ' - ' +
+                            mealsName[parseFloat(meal.foodMeal)][lang.langName]}
                     </Text>
 
                     {
@@ -349,7 +354,7 @@ const AddCaloryScreen = props => {
                                                 ? require('../../../res/img/snack-icon.png')
                                                 : require('../../../res/img/snack-icon1.png')
                                         }
-                                        style={styles.meal2}
+                                        style={styles.meal}
                                         resizeMode="stretch"
                                     />
                                 </TouchableOpacity>
@@ -395,7 +400,7 @@ const AddCaloryScreen = props => {
                                                 ? require('../../../res/img/dinner.png')
                                                 : require('../../../res/img/dinner2.png')
                                         }
-                                        style={styles.meal2}
+                                        style={styles.meal}
                                         resizeMode="contain"
                                     />
                                 </TouchableOpacity>

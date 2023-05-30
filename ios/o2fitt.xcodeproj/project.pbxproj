@@ -23,6 +23,18 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		881E9521C3A5347259C69BCC /* libPods-o2fitt-o2fittTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E8599FDC79EFD0ED0837635 /* libPods-o2fitt-o2fittTests.a */; };
 		88EA7CDE62424C0D90FC0F49 /* IRANSansMobile_numberFa.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68817C82428B4BF5B1A75C49 /* IRANSansMobile_numberFa.ttf */; };
+		8A0D0A5029C70586001D6708 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 8A0D0A4F29C70586001D6708 /* main.jsbundle */; };
+		8A163F622A1B660B00AF659B /* WidgetDailyCalorie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE22A18C25200EA1031 /* WidgetDailyCalorie.swift */; };
+		8A1C9EDA2A18C25200EA1031 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1C9ED92A18C25100EA1031 /* WidgetKit.framework */; };
+		8A1C9EDC2A18C25200EA1031 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1C9EDB2A18C25200EA1031 /* SwiftUI.framework */; };
+		8A1C9EDF2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EDE2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift */; };
+		8A1C9EE12A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE02A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift */; };
+		8A1C9EE62A18C25300EA1031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE52A18C25300EA1031 /* Assets.xcassets */; };
+		8A1C9EE82A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */; };
+		8A1C9EE92A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */; };
+		8A1C9EEC2A18C25300EA1031 /* WidgetDailyCalorieExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8A1C9ED82A18C25100EA1031 /* WidgetDailyCalorieExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8A638CDD2A18F53B00F1143D /* RNSharedWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A638CDC2A18F53B00F1143D /* RNSharedWidget.m */; };
+		8A65F1D12A1A056700115D09 /* WidgetHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A65F1D02A1A056700115D09 /* WidgetHelper.swift */; };
 		8A7E768129A60F6700E898C9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8A7E768029A60F6700E898C9 /* GoogleService-Info.plist */; };
 		8A7E768229A60F6700E898C9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8A7E768029A60F6700E898C9 /* GoogleService-Info.plist */; };
 		8AD1287B29AA0A3C00A37327 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 8AD1287A29AA0A3C00A37327 /* Fonts */; };
@@ -42,7 +54,28 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = o2fitt;
 		};
+		8A1C9EEA2A18C25300EA1031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A1C9ED72A18C25100EA1031;
+			remoteInfo = WidgetDailyCalorieExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8A1C9EED2A18C25300EA1031 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8A1C9EEC2A18C25300EA1031 /* WidgetDailyCalorieExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* o2fittTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = o2fittTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +97,21 @@
 		7ADAD4BA0646423DA5E82198 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		7BA6C3EFB397599633214863 /* Pods-o2fitt.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-o2fitt.release.xcconfig"; path = "Target Support Files/Pods-o2fitt/Pods-o2fitt.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = o2fitt/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8A0D0A4F29C70586001D6708 /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		8A1C9ED82A18C25100EA1031 /* WidgetDailyCalorieExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetDailyCalorieExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A1C9ED92A18C25100EA1031 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		8A1C9EDB2A18C25200EA1031 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		8A1C9EDE2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDailyCalorieBundle.swift; sourceTree = "<group>"; };
+		8A1C9EE02A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDailyCalorieLiveActivity.swift; sourceTree = "<group>"; };
+		8A1C9EE22A18C25200EA1031 /* WidgetDailyCalorie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDailyCalorie.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = WidgetDailyCalorie.intentdefinition; sourceTree = "<group>"; };
+		8A1C9EE52A18C25300EA1031 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8A1C9EE72A18C25300EA1031 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A1C9EF12A18C38C00EA1031 /* WidgetDailyCalorieExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetDailyCalorieExtension.entitlements; sourceTree = "<group>"; };
+		8A638CDC2A18F53B00F1143D /* RNSharedWidget.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSharedWidget.m; sourceTree = "<group>"; };
+		8A65F1CF2A1A056600115D09 /* O2fitt-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "O2fitt-Bridging-Header.h"; sourceTree = "<group>"; };
+		8A65F1D02A1A056700115D09 /* WidgetHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHelper.swift; sourceTree = "<group>"; };
+		8A65F1D22A1A3A2100115D09 /* RNSharedWidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSharedWidget.h; sourceTree = "<group>"; };
 		8A7B2F4329ACDB82009C1BF5 /* o2fitt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = o2fitt.entitlements; path = o2fitt/o2fitt.entitlements; sourceTree = "<group>"; };
 		8A7E768029A60F6700E898C9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8AD1287A29AA0A3C00A37327 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
@@ -99,6 +147,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8A1C9ED52A18C25100EA1031 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A1C9EDC2A18C25200EA1031 /* SwiftUI.framework in Frameworks */,
+				8A1C9EDA2A18C25200EA1031 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -130,6 +187,10 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				8A638CDC2A18F53B00F1143D /* RNSharedWidget.m */,
+				8A65F1D02A1A056700115D09 /* WidgetHelper.swift */,
+				8A65F1CF2A1A056600115D09 /* O2fitt-Bridging-Header.h */,
+				8A65F1D22A1A3A2100115D09 /* RNSharedWidget.h */,
 			);
 			name = o2fitt;
 			sourceTree = "<group>";
@@ -140,6 +201,8 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				E3706E21F1657FE486AF1EDC /* libPods-o2fitt.a */,
 				4E8599FDC79EFD0ED0837635 /* libPods-o2fitt-o2fittTests.a */,
+				8A1C9ED92A18C25100EA1031 /* WidgetKit.framework */,
+				8A1C9EDB2A18C25200EA1031 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -154,10 +217,13 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8A1C9EF12A18C38C00EA1031 /* WidgetDailyCalorieExtension.entitlements */,
+				8A0D0A4F29C70586001D6708 /* main.jsbundle */,
 				8AD1287A29AA0A3C00A37327 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* o2fitt */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* o2fittTests */,
+				8A1C9EDD2A18C25200EA1031 /* WidgetDailyCalorie */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -173,8 +239,22 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* o2fitt.app */,
 				00E356EE1AD99517003FC87E /* o2fittTests.xctest */,
+				8A1C9ED82A18C25100EA1031 /* WidgetDailyCalorieExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8A1C9EDD2A18C25200EA1031 /* WidgetDailyCalorie */ = {
+			isa = PBXGroup;
+			children = (
+				8A1C9EDE2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift */,
+				8A1C9EE02A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift */,
+				8A1C9EE22A18C25200EA1031 /* WidgetDailyCalorie.swift */,
+				8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */,
+				8A1C9EE52A18C25300EA1031 /* Assets.xcassets */,
+				8A1C9EE72A18C25300EA1031 /* Info.plist */,
+			);
+			path = WidgetDailyCalorie;
 			sourceTree = "<group>";
 		};
 		AE6A8EBA06C1436EB621F524 /* Resources */ = {
@@ -247,15 +327,34 @@
 				60043416458A43E4F3DF780A /* [CP] Embed Pods Frameworks */,
 				BFC6EC7C75F4D881D49BB96D /* [CP] Copy Pods Resources */,
 				1F3A7742C05D0AF602EE1331 /* [CP-User] [RNFB] Core Configuration */,
+				8A1C9EED2A18C25300EA1031 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8A1C9EEB2A18C25300EA1031 /* PBXTargetDependency */,
 			);
 			name = o2fitt;
 			productName = o2fitt;
 			productReference = 13B07F961A680F5B00A75B9A /* o2fitt.app */;
 			productType = "com.apple.product-type.application";
+		};
+		8A1C9ED72A18C25100EA1031 /* WidgetDailyCalorieExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A1C9EF02A18C25300EA1031 /* Build configuration list for PBXNativeTarget "WidgetDailyCalorieExtension" */;
+			buildPhases = (
+				8A1C9ED42A18C25100EA1031 /* Sources */,
+				8A1C9ED52A18C25100EA1031 /* Frameworks */,
+				8A1C9ED62A18C25100EA1031 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WidgetDailyCalorieExtension;
+			productName = WidgetDailyCalorieExtension;
+			productReference = 8A1C9ED82A18C25100EA1031 /* WidgetDailyCalorieExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -263,6 +362,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -271,7 +371,12 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 2BA24DXT72;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1410;
+					};
+					8A1C9ED72A18C25100EA1031 = {
+						CreatedOnToolsVersion = 14.1;
+						DevelopmentTeam = 2BA24DXT72;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -290,6 +395,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* o2fitt */,
 				00E356ED1AD99517003FC87E /* o2fittTests */,
+				8A1C9ED72A18C25100EA1031 /* WidgetDailyCalorieExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -307,6 +413,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A0D0A5029C70586001D6708 /* main.jsbundle in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				253CC3AA264E493F83038A82 /* Almarai-Bold.ttf in Resources */,
@@ -326,6 +433,14 @@
 				446297B3449F4FAE9BA16B6D /* DistributionSummary.plist in Resources */,
 				252618693DF44AFAB58CB33D /* ExportOptions.plist in Resources */,
 				FDD350F3CB2E424ABD77069B /* Packaging.log in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A1C9ED62A18C25100EA1031 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A1C9EE62A18C25300EA1031 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,8 +698,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A65F1D12A1A056700115D09 /* WidgetHelper.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				8A638CDD2A18F53B00F1143D /* RNSharedWidget.m in Sources */,
+				8A1C9EE92A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A1C9ED42A18C25100EA1031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A1C9EE12A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift in Sources */,
+				8A163F622A1B660B00AF659B /* WidgetDailyCalorie.swift in Sources */,
+				8A1C9EDF2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift in Sources */,
+				8A1C9EE82A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +725,11 @@
 			target = 13B07F861A680F5B00A75B9A /* o2fitt */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
+		8A1C9EEB2A18C25300EA1031 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A1C9ED72A18C25100EA1031 /* WidgetDailyCalorieExtension */;
+			targetProxy = 8A1C9EEA2A18C25300EA1031 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -603,6 +737,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A6CDCC6198505A6CFCF4FAF4 /* Pods-o2fitt-o2fittTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -626,6 +761,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C5BBF6B5A7D3E2B51F5F7E0B /* Pods-o2fitt-o2fittTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = o2fittTests/Info.plist;
@@ -646,11 +782,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8C48A0FCF6CCE912ECDE107C /* Pods-o2fitt.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = o2fitt/o2fitt.entitlements;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = 2BA24DXT72;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = arm64;
@@ -658,7 +795,9 @@
 				INFOPLIST_FILE = o2fitt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.1.0;
+				MACH_O_TYPE = mh_execute;
+				MARKETING_VERSION = 4.3.7;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -666,6 +805,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.o2fitt;
 				PRODUCT_NAME = o2fitt;
+				SWIFT_OBJC_BRIDGING_HEADER = "o2fitt-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -676,17 +816,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7BA6C3EFB397599633214863 /* Pods-o2fitt.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = o2fitt/o2fitt.entitlements;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = 2BA24DXT72;
-				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = o2fitt/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.1.0;
+				MACH_O_TYPE = mh_execute;
+				MARKETING_VERSION = 4.3.7;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -695,6 +835,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.o2fitt;
 				PRODUCT_NAME = o2fitt;
+				SWIFT_OBJC_BRIDGING_HEADER = "o2fitt-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -757,7 +898,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -819,6 +960,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -828,6 +970,80 @@
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8A1C9EEE2A18C25300EA1031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = WidgetDailyCalorieExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2BA24DXT72;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetDailyCalorie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetDailyCalorie;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.o2fitt.WidgetDailyCalorie;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8A1C9EEF2A18C25300EA1031 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = WidgetDailyCalorieExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2BA24DXT72;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetDailyCalorie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetDailyCalorie;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.o2fitt.WidgetDailyCalorie;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -857,6 +1073,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A1C9EF02A18C25300EA1031 /* Build configuration list for PBXNativeTarget "WidgetDailyCalorieExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A1C9EEE2A18C25300EA1031 /* Debug */,
+				8A1C9EEF2A18C25300EA1031 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -209,12 +209,24 @@ function PackagesScreen(props) {
     const pachagesData = [
         { id: 0, free: true, name: lang.PayCalorieName, title: lang.PayCalorieTitle, shortdes: lang.PayCalorieSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/calorieimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/calorieimgen.jpg') : require('../../../res/img/calorieimg.jpg'), longdes: lang.PayCalorieLd },
         { id: 1, free: true, name: lang.PayStepName, title: lang.PayStepTitle, shortdes: lang.PayStepSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/stepimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/stepimgen.jpg') : require('../../../res/img/stepimg.jpg'), longdes: lang.PayStepLd },
+        (
+            lang.langName == "persian"
+        )?
+        { id: 0, free: true, name: lang.fastingCalorie, title: lang.fastingCalorie, shortdes: "", img: require('../../../res/img/en/fastingcalorie.jpg'), longdes: lang.fastingCalorieDes }
+        :null
+        ,
         { id: 2, free: true, name: lang.PayWaterName, title: lang.PayWaterTitle, shortdes: lang.PayWaterSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/waterimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/waterimgen.jpg') : require('../../../res/img/waterimg.jpg'), longdes: lang.PayWaterLd },
         { id: 3, free: false, name: lang.PayDietName, title: lang.PayDietTitle, shortdes: lang.PayDietSd, img: require('../../../res/img/mealimg.jpg'), longdes: lang.PayDietLd },
         { id: 15, free: false, name: lang.PayRecipeName, title: lang.PayRecipetitle, shortdes: lang.PayRecipeSd, img: require('../../../res/img/Recipesimg.jpg'), longdes: lang.PayRecipeLd },
         { id: 4, free: false, name: lang.PayFoodMakerName, title: lang.PayFoodMakerTitle, shortdes: lang.PayFoodMakerSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/foodmakerimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/foodmakerimgen.jpg') : require('../../../res/img/foodmakerimg.jpg'), longdes: lang.PayFoodMakerLd },
         { id: 12, free: false, name: lang.PayFoodEditName, title: lang.PayFoodEdittitle, shortdes: lang.PayFoodEditSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/editfimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/editfimgen.jpg') : require('../../../res/img/editfimg.jpg'), longdes: lang.PayFoodEditLd },
         { id: 7, free: false, name: lang.PayBAName, title: lang.PayBAtitle, shortdes: lang.PayBASd, img: lang.langName == "arabic" ? require('../../../res/img/ar/BodyAar.jpg') : lang.langName == "english" ? require('../../../res/img/en/BodyAen.jpg') : require('../../../res/img/bodyanimg.jpg'), longdes: lang.PayBALd },
+        (
+            lang.langName == "persian"
+        )?
+        { id: 0, free: false, name: lang.fastingMode, title: lang.fastingMode, shortdes: "", img: require('../../../res/img/en/fastingcalorie.jpg'), longdes: lang.fastingModeDes }
+        :null
+        ,
         { id: 8, free: false, name: lang.PayDAName, title: lang.PayDAtitle, shortdes: lang.PayDASd, img: lang.langName == "arabic" ? require('../../../res/img/ar/analyzeimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/analyzeimgen.jpg') : require('../../../res/img/analyzeimg.jpg'), longdes: lang.PayDALd },
         { id: 9, free: false, name: lang.PayMealAName, title: lang.PayMealAtitle, shortdes: lang.PayMealSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/analyzeimgar.jpg') : lang.langName == "english" ? require('../../../res/img/en/analyzeimgen.jpg') : require('../../../res/img/analyzeimg.jpg'), longdes: lang.PayMealLd },
         { id: 5, free: false, name: lang.PaySleepName, title: lang.PaySleepitle, shortdes: lang.PaySleepSd, img: lang.langName == "arabic" ? require('../../../res/img/ar/sleepar.jpg') : lang.langName == "english" ? require('../../../res/img/en/sleepen.jpg') : require('../../../res/img/sleep.jpg'), longdes: lang.PaySleepLd },

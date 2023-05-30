@@ -313,11 +313,11 @@ const EditBodyScreen = props => {
     props.navigation.replace("BodyShapeScreen")
     // setErrorContext(lang.serverError)
     // setErrorVisible(true)
-    Toast.show({
-      type: "error",
-      props: { text2: lang.serverError, style: { fontFamily: lang.font } },
-      visibilityTime:800
-    })
+    // Toast.show({
+    //   type: "error",
+    //   props: { text2: lang.serverError, style: { fontFamily: lang.font } },
+    //   visibilityTime:800
+    // })
   }
   const stickyHeader = () => {
     return (

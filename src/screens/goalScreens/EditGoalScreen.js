@@ -302,7 +302,7 @@ const EditGoalScreen = props => {
                                 lang={lang}
                                 value={goal.targetWeight.toString()}
                                 onChangeText={text => {
-                                    (/^[0-9\.]+$/i.test(text)) ?
+                                    (/^[0-9\.]+$/i.test(text)||text=='') ?
                                     setGoal({ ...goal, targetWeight: text })
                                 
                                       :Toast.show({
@@ -371,7 +371,7 @@ const EditGoalScreen = props => {
                                 lang={lang}
                                 value={goal.targetStep.toString()}
                                 onChangeText={text => {
-                                    (/^[0-9]+$/i.test(text)) ?
+                                    (/^[0-9]+$/i.test(text)||text=='') ?
                                     setGoal({ ...goal, targetStep: text })
                                       :Toast.show({
                                         type:"error",

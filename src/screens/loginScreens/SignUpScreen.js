@@ -276,27 +276,44 @@ const SignUpScreen = props => {
 
   }
   const referralSignUp = () => {
-    setIsLoading(true)
-    const url = urls.identityBaseUrl2 + urls.user
-    const params = {
-      // "email": latinNumbers(email),
-      "userName": mobile ? latinNumbers(mobile) : latinNumbers(email),
-      // "password": latinNumbers(pass),
-      "countryId": parseInt(user.countryId),
-      "languageId": parseInt(lang.langId),
-      "referreralInviter": referreralInviter ? latinNumbers(referreralInviter) : null,
-      "startOfWeek": parseInt(user.startOfWeek),
+    if (mobile.length > 10 || email.length > 10) {
+      setIsLoading(true)
+      const url = urls.identityBaseUrl2 + urls.user
+      const params = {
+        // "email": latinNumbers(email),
+        "userName": mobile ? latinNumbers(mobile) : latinNumbers(email),
+        // "password": latinNumbers(pass),
+        "countryId": parseInt(user.countryId),
+        "languageId": parseInt(lang.langId),
+        "referreralInviter": referreralInviter ? latinNumbers(referreralInviter) : null,
+        "startOfWeek": parseInt(user.startOfWeek),
 
+      }
+      const header = {}
+      const RC = new RestController()
+      RC.post(
+        url,
+        params,
+        header,
+        onSignUpSuccess,
+        onSignUpFailure,
+      )
+    } else {
+      if(user.countryId==128){
+
+        Toast.show({
+          type: "error",
+          props: { text2: lang.typePhoneNumber },
+          visibilityTime: 1800
+        })
+      }else{
+        Toast.show({
+          type: "error",
+          props: { text2: lang.typeEmail },
+          visibilityTime: 1800
+        })
+      }
     }
-    const header = {}
-    const RC = new RestController()
-    RC.post(
-      url,
-      params,
-      header,
-      onSignUpSuccess,
-      onSignUpFailure,
-    )
   }
   return (
     <>
@@ -410,24 +427,25 @@ const SignUpScreen = props => {
                   </Text>
               }
             </View>
-            <ConfirmButton
-              title={user.countryId == 128 ? lang.setPhoneNumber : lang.continuation}
-              lang={lang}
-              style={{
-                backgroundColor: defaultTheme.primaryColor,
-                width: dimensions.WINDOW_WIDTH * 0.7,
-                height: moderateScale(48),
-                borderRadius: moderateScale(25),
-                margin: moderateScale(20),
-                marginBottom: moderateScale(10),
-                elevation: isLoading ? 0 : 4
 
-              }}
-              textStyle={{ color: defaultTheme.lightText }}
-              onPress={referralSignUp}
-              leftImage={require('../../../res/img/enter.png')}
-              isLoading={isLoading}
-            />
+              <ConfirmButton
+                title={user.countryId == 128 ? lang.setPhoneNumber : lang.continuation}
+                lang={lang}
+                style={{
+                  backgroundColor: defaultTheme.primaryColor,
+                  width: dimensions.WINDOW_WIDTH * 0.7,
+                  height: moderateScale(48),
+                  borderRadius: moderateScale(25),
+                  margin: moderateScale(20),
+                  marginBottom: moderateScale(10),
+                  elevation: isLoading ? 0 : 4
+                }}
+                textStyle={{ color: defaultTheme.lightText }}
+                onPress={referralSignUp}
+                leftImage={require('../../../res/img/enter.png')}
+                isLoading={isLoading}
+              />
+            
           </View>
 
           <Information

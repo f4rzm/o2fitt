@@ -12,8 +12,16 @@ import { setFastingMeal } from '../redux/actions/fasting'
 import { useDispatch } from 'react-redux';
 import { calculatePercent } from '../redux/actions/diet'
 import ChangePackage from '../../res/img/changePackage.svg'
+import PouchDB from '../../pouchdb'
+import pouchdbSearch from 'pouchdb-find';
 
-const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, offlineDB, user, auth, selectedDate, mealDB, fastingDiet, diet, icon }) => {
+PouchDB.plugin(pouchdbSearch);
+
+const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
+const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
+const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
+
+const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, auth, selectedDate,fastingDiet, diet, icon }) => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const getFromDb = async () => {
@@ -189,7 +197,7 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
             </View>
             {pack.dietPackFoods &&
                 pack.dietPackFoods.map((item) => (
-                    <FastingFoodRow item={item} foodDB={foodDB} lang={lang} />
+                    <FastingFoodRow item={item} foodDB={foodDB} lang={lang} selectedDate={selectedDate} />
                 ))
             }
 
