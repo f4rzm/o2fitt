@@ -41,13 +41,13 @@ struct ValuesData:Codable{
   let calorie:Int
 }
 struct ReactValue:Codable{
-  let dailyPro:Float
-  let dailyCarb:Float
-  let DailyFat:Float
+  let dailyPro:CGFloat
+  let dailyCarb:CGFloat
+  let DailyFat:CGFloat
   let dailyCalorie:Int
-  let pro:Float
-  let carbo:Float
-  let fat:Float
+  let pro:CGFloat
+  let carbo:CGFloat
+  let fat:CGFloat
   let calorie:Int
   let dailyCaloriePercent:Double
   let dailyWater:Double
@@ -73,35 +73,24 @@ struct CircularProgressView: View {
     ZStack{
       Circle()
           .stroke(
-              Color.pink.opacity(0.5),
-              lineWidth: 11
+            Color.gray.opacity(0.6),
+              lineWidth: 8
           )
-      Text("Today calorie\n\(userData.dailyCalorie)")
-      .font(.system(size:22))
+      Text("\(userData.calorie) / \(userData.dailyCalorie)\nCalorie")
+      .font(.system(size:15))
       .bold()
       .multilineTextAlignment(.center)
       .frame(width: 100)
       
           
-      Circle()
-        .trim(from: 0, to: userData.dailyCaloriePercent)
-        .stroke(
-              Color.pink,
-              style: StrokeStyle(
-                  lineWidth: 11,
-                  lineCap: .round
-              )
-          )
-          .rotationEffect(.degrees(-90))
-          // 1
-          .animation(.easeOut, value: userData.dailyCaloriePercent)
+     
       if(userData.dailyCaloriePercent<=1){
         Circle()
           .trim(from: 0, to: userData.dailyCaloriePercent)
           .stroke(
-                Color.green,
+            Color.orange,
                 style: StrokeStyle(
-                    lineWidth: 11,
+                    lineWidth: 8,
                     lineCap: .round
                 )
             )
@@ -114,7 +103,7 @@ struct CircularProgressView: View {
           .stroke(
                 Color.red,
                 style: StrokeStyle(
-                    lineWidth: 11,
+                    lineWidth: 8,
                     lineCap: .round
                 )
             )
@@ -131,6 +120,32 @@ struct ToyShape: Identifiable {
     var type: String
     var count: Double
     var id = UUID()
+}
+
+struct ProgressView: View {
+    var progress: CGFloat
+    var bgColor = Color.gray.opacity(0.6)
+    var filledColor = Color.blue
+
+    var body: some View {
+        GeometryReader { geometry in
+          let height = geometry.size.height/1.5
+            let width = geometry.size.width
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .foregroundColor(bgColor)
+                    .frame(width: width)
+                    .cornerRadius(height / 1.0)
+                    .frame(maxHeight: 10)
+                    
+                Rectangle()
+                    .foregroundColor(filledColor)
+                    .frame(maxWidth: width * self.progress)
+                    .frame(maxHeight: 10)
+                    .cornerRadius(height / 1.0)
+            }
+        }
+    }
 }
 
 struct MediumWidgetView: View {
@@ -169,7 +184,7 @@ struct MediumWidgetView: View {
             Circle()
               .trim(from: 0, to: userData.dailyCaloriePercent)
               .stroke(
-                Color.orange.gradient,
+                Color.orange,
                     style: StrokeStyle(
                         lineWidth: 8,
                         lineCap: .round
@@ -197,36 +212,59 @@ struct MediumWidgetView: View {
           VStack(alignment: .leading){
             Spacer()
             HStack{
-              Text("Carbohydrate")
+              Text("Carbs")
                 .font(.footnote)
               Spacer()
               Text("\(Int(userData.carbo)) /")
                 .font(.caption)
-              Text("\(Int(userData.dailyCarb))g")
-                .font(.caption)
-                .bold()
+              if !userData.hasCredit{
+                Image("Lock")
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+//                  .padding()
+                  .frame(width: 13,height: 13,alignment: .top)
+                Text("g")
+                  .font(.caption)
+                  .bold()
+              }else{
+                Text("\(Int(userData.dailyCarb))g")
+                  .font(.caption)
+                  .bold()
+              }
             }
-            
-            ProgressView( value: userData.carbo, total: userData.dailyCarb)
-              .scaleEffect(x: 1, y: 1.5, anchor: .center)
-              .tint(Color.red.gradient)
+
+            ProgressView(progress:userData.carbo/userData.dailyCarb,filledColor: Color.red)
               
+//              .scaleEffect(x: 1, y: 1.5, anchor: .center)
+//              .accentColor(Color.red)
+
             Spacer()
-           
+
             HStack{
               Text("Protein")
                 .font(.footnote)
               Spacer()
               Text("\(Int(userData.pro)) /")
                 .font(.caption)
-              Text("\(Int(userData.dailyPro))g")
-                .font(.caption)
-                .bold()
+              if !userData.hasCredit{
+                Image("Lock")
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+//                  .padding()
+                  .frame(width: 13,height: 13,alignment: .top)
+                Text("g")
+                  .font(.caption)
+                  .bold()
+              }else{
+                Text("\(Int(userData.dailyPro))g")
+                  .font(.caption)
+                  .bold()
+              }
             }
-            ProgressView( value:userData.pro , total: userData.dailyPro)
-              .scaleEffect(x: 1, y: 1.5, anchor: .center)
-              .tint(.green)
-           
+            ProgressView(progress:userData.pro/userData.dailyPro,filledColor: Color.green)
+//              .scaleEffect(x: 1, y: 1.5, anchor: .center)
+//              .accentColor(.green)
+
             Spacer()
             HStack(alignment: .firstTextBaseline){
               Text("Fat")
@@ -234,16 +272,27 @@ struct MediumWidgetView: View {
               Spacer()
               Text("\(Int(userData.fat)) /")
                 .font(.caption)
-              Text("\(Int(userData.DailyFat))g")
-                .font(.caption)
-                .bold()
+              if !userData.hasCredit{
+                Image("Lock")
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+//                  .padding()
+                  .frame(width: 13,height: 13,alignment: .top)
+                Text("g")
+                  .font(.caption)
+                  .bold()
+              }else{
+                Text("\(Int(userData.DailyFat))g")
+                  .font(.caption)
+                  .bold()
+              }
             }
-           
-            ProgressView( value: userData.fat, total: userData.DailyFat)
-              .scaleEffect(x: 1, y: 1.5, anchor: .center)
-              .tint(Color.blue.gradient)
+
+            ProgressView(progress:userData.fat/userData.DailyFat)
+//              .scaleEffect(x: 1, y: 1.5, anchor: .center)
+//              .accentColor(Color.blue)
             Spacer()
-            
+
           }.padding(.leading,20)
           
         }.padding(10)
@@ -266,7 +315,10 @@ struct LargeWidgetView: View {
                 .aspectRatio(contentMode: .fill)
                 .padding()
                 .frame(width: 30,height: 90)
-              Text("glass\n\(userData.drinkedWater,specifier: "%.1f") / \(userData.dailyWater,specifier: "%.1f")")
+              Text("glass")
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+              Text("\(userData.drinkedWater,specifier: "%.1f") / \(userData.dailyWater,specifier: "%.1f")")
                 .font(.footnote)
                 .multilineTextAlignment(.center)
 
@@ -279,9 +331,21 @@ struct LargeWidgetView: View {
                 .aspectRatio(contentMode: .fill)
                 .padding()
                 .frame(width: 30,height: 90)
-              Text("Diet Progress\n\(userData.dietProgress)%")
+              Text("Diet Progress")
                 .font(.footnote)
                 .multilineTextAlignment(.center)
+              if !userData.hasCredit{
+                Image("Lock")
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+//                  .padding()
+                  .frame(width: 13,height: 13,alignment: .top)
+               
+              }else{
+                Text("\(userData.dietProgress)%")
+                  .font(.footnote)
+                  .multilineTextAlignment(.center)
+              }
 
             }.frame(maxWidth: 200)
             Spacer()
@@ -290,8 +354,11 @@ struct LargeWidgetView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .padding()
-                .frame(width: 30,height: 90)
-              Text("pedometer\n\(userData.pedometer) / \(userData.dailyPedometer)")
+                .frame(width: 40,height: 90)
+              Text("pedometer")
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+              Text("\(userData.pedometer) / \(userData.dailyPedometer)")
                 .font(.footnote)
                 .multilineTextAlignment(.center)
               

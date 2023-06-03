@@ -30,7 +30,7 @@ RCT_EXPORT_METHOD(setData: (NSString *)key: (NSString * )data: (RCTResponseSende
   }
   
   [sharedDefaults setValue:data forKey:key];
-  if (@available(iOS 14, *)) {
+  if (@available(iOS 15, *)) {
     [WidgetKitHelper reloadAllTimelines];
   } else {
       // Fallback on earlier versions

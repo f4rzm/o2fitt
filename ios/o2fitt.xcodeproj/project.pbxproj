@@ -28,7 +28,6 @@
 		8A1C9EDA2A18C25200EA1031 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1C9ED92A18C25100EA1031 /* WidgetKit.framework */; };
 		8A1C9EDC2A18C25200EA1031 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1C9EDB2A18C25200EA1031 /* SwiftUI.framework */; };
 		8A1C9EDF2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EDE2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift */; };
-		8A1C9EE12A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE02A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift */; };
 		8A1C9EE62A18C25300EA1031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE52A18C25300EA1031 /* Assets.xcassets */; };
 		8A1C9EE82A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */; };
 		8A1C9EE92A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */; };
@@ -102,7 +101,6 @@
 		8A1C9ED92A18C25100EA1031 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		8A1C9EDB2A18C25200EA1031 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		8A1C9EDE2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDailyCalorieBundle.swift; sourceTree = "<group>"; };
-		8A1C9EE02A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDailyCalorieLiveActivity.swift; sourceTree = "<group>"; };
 		8A1C9EE22A18C25200EA1031 /* WidgetDailyCalorie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDailyCalorie.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = WidgetDailyCalorie.intentdefinition; sourceTree = "<group>"; };
 		8A1C9EE52A18C25300EA1031 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -248,7 +246,6 @@
 			isa = PBXGroup;
 			children = (
 				8A1C9EDE2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift */,
-				8A1C9EE02A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift */,
 				8A1C9EE22A18C25200EA1031 /* WidgetDailyCalorie.swift */,
 				8A1C9EE42A18C25200EA1031 /* WidgetDailyCalorie.intentdefinition */,
 				8A1C9EE52A18C25300EA1031 /* Assets.xcassets */,
@@ -710,7 +707,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A1C9EE12A18C25200EA1031 /* WidgetDailyCalorieLiveActivity.swift in Sources */,
 				8A163F622A1B660B00AF659B /* WidgetDailyCalorie.swift in Sources */,
 				8A1C9EDF2A18C25200EA1031 /* WidgetDailyCalorieBundle.swift in Sources */,
 				8A1C9EE82A18C25300EA1031 /* WidgetDailyCalorie.intentdefinition in Sources */,
@@ -994,7 +990,7 @@
 				INFOPLIST_FILE = WidgetDailyCalorie/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WidgetDailyCalorie;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1033,7 +1029,7 @@
 				INFOPLIST_FILE = WidgetDailyCalorie/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = WidgetDailyCalorie;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;

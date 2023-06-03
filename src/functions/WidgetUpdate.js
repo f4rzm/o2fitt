@@ -106,7 +106,6 @@ export const widgetUpdate = async ({ diet, hasCredit, profile, user, specificati
 
 
                 });
-
                 getWeekFoodForWidget = {
                     dailyPro: calDailyCalorie.targetPro,
                     dailyCarb: calDailyCalorie.targetCarbo,
@@ -164,5 +163,4 @@ export const widgetUpdate = async ({ diet, hasCredit, profile, user, specificati
             console.error(status);
         },
     );
-    console.warn('ssssss', parseInt(calDailyCalorie.targetCalorie), burnedCalorie);
 };

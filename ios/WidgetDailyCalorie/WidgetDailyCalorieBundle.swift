@@ -13,6 +13,6 @@ struct WidgetDailyCalorieBundle: WidgetBundle {
     var body: some Widget {
       
         WidgetDailyCalorie()
-        WidgetDailyCalorieLiveActivity()
+//        WidgetDailyCalorieLiveActivity()
     }
 }

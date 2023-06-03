@@ -7,7 +7,7 @@
 
 import WidgetKit
 
-@available(iOS 14, *)
+@available(iOS 15, *)
 @objcMembers final class WidgetKitHelper: NSObject {
   
   class func reloadAllTimelines() {

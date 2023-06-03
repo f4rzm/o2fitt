@@ -60,7 +60,7 @@ import { isSetRating, setVipTimer } from '../../redux/actions/starRating';
 import AppleHealthKit from 'react-native-health';
 import { calculateCalorie } from '../../functions/CalculateDailyCalorie';
 import stepBurnedCalorie from '../../utils/stepBurnedCalorie';
-import {  widgetUpdate } from '../../functions/WidgetUpdate';
+import { widgetUpdate } from '../../functions/WidgetUpdate';
 
 // const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
@@ -163,7 +163,7 @@ const HomeScreen = props => {
   }, []);
 
   React.useEffect(() => {
-    widgetUpdate({profile:profile,user:user,specification:specification,hasCredit:hasCredit,diet:diet});
+    widgetUpdate({ profile: profile, user: user, specification: specification, hasCredit: hasCredit, diet: diet });
     // setMeals([])
     // setUserWater(0)
     // setUserStep([])
@@ -211,7 +211,7 @@ const HomeScreen = props => {
       getAdvertises();
       getDates();
       getLatestData();
-      widgetUpdate({profile:profile,user:user,specification:specification,hasCredit:hasCredit,diet:diet});
+      widgetUpdate({ profile: profile, user: user, specification: specification, hasCredit: hasCredit, diet: diet });
     });
 
     return () => {
@@ -695,7 +695,7 @@ const HomeScreen = props => {
 
   };
 
-  
+
 
   const getMealFromDB = async (date, isSynced) => {
     const syncedDates = await AsyncStorage.getItem('syncedDates');
