@@ -12,6 +12,7 @@ import java.util.List;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.synclovis.RNWalkCounterPackage;
 
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =

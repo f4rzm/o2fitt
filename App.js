@@ -8,7 +8,7 @@
 // } from 'react-native';
 // import {createStore , applyMiddleware} from "redux"
 // import {Provider} from "react-redux"
-// import ReduxThunk from "redux-thunk"; 
+// import ReduxThunk from "redux-thunk";
 // import reducers from "./src/redux/reducers"
 // import {enableScreens} from "react-native-screens"
 // import MainRoute from "./src/navigation/MainRouter"
@@ -19,7 +19,6 @@
 // import PushNotification from "react-native-push-notification";
 // import { defaultTheme } from './src/constants/theme';
 // import Toast, {BaseToast} from 'react-native-toast-message';
-
 
 // enableScreens()
 
@@ -151,7 +150,7 @@
 
 //   return (
 //     <Provider store={store}>
-//       <StatusBar 
+//       <StatusBar
 //         barStyle={Platform.OS==="android"?"light-content":"dark-content"}
 //         backgroundColor={defaultTheme.primaryColor}
 //       />
@@ -167,7 +166,7 @@
 // };
 
 // export default App;
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -182,18 +181,18 @@ import {
   AppState,
   LogBox,
 } from 'react-native';
-import { createStore, applyMiddleware } from 'redux';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import {Provider, useDispatch, useSelector} from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import reducers from './src/redux/reducers';
-import { enableScreens } from 'react-native-screens';
+import {enableScreens} from 'react-native-screens';
 import MainRoute from './src/navigation/MainRouter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
-import { NetworkManager } from './src/classess/NetworkManager';
+import {NetworkManager} from './src/classess/NetworkManager';
 import PushNotification from 'react-native-push-notification';
-import { defaultTheme } from './src/constants/theme';
-import Toast, { BaseToast } from 'react-native-toast-message';
+import {defaultTheme} from './src/constants/theme';
+import Toast, {BaseToast} from 'react-native-toast-message';
 import {
   DefaultTheme,
   NavigationContainer,
@@ -202,26 +201,26 @@ import {
 // import Remove from './res/img/remove.svg';
 // import {BlurView} from '@react-native-community/blur';
 // import MarketMessage from './src/components/MarketMessage';
-import { setMarketMessageId } from './src/redux/actions/user';
+import {setMarketMessageId} from './src/redux/actions/user';
 // import {BlurContainer} from './src/components';
 // import {HomeScreen} from './src/screens';
 // import Orientation from 'react-native-orientation-locker';
 // import {app} from './src/redux/reducers/app/app';
 import linking from './src/linking';
-import 'react-native-gesture-handler'
-import { moderateScale } from 'react-native-size-matters';
+import 'react-native-gesture-handler';
+import {moderateScale} from 'react-native-size-matters';
 // import Orientation from 'react-native-orientation-locker';
-import { persistReducer, persistStore } from 'redux-persist'
-import { PersistGate } from 'redux-persist/integration/react'
+import {persistReducer, persistStore} from 'redux-persist';
+import {PersistGate} from 'redux-persist/integration/react';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+
 enableScreens();
 
 // Orientation.lockToPortrait()
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['pedometer', "diet", "starRating", "syncedDate","fastingDiet"],
-
+  whitelist: ['pedometer', 'diet', 'starRating', 'syncedDate', 'fastingDiet'],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
 
@@ -236,49 +235,50 @@ const persistor = persistStore(store);
 // barcodeNationalDB.destroy()
 // AsyncStorage..removeItem("LocalDatabaseVersion")
 const toastConfig = {
-  success: ({ props, ...rest }) => (
+  success: ({props, ...rest}) => (
     <BaseToast
       {...rest}
       leadingIcon={require('./res/img/add.png')}
-      trailingIcon={{ uri: 'null' }}
-      style={{ borderLeftColor: defaultTheme.green }}
-      contentContainerStyle={{ paddingHorizontal: 15 }}
-      text2Style={[{
-        fontSize: moderateScale(15),
-        color: "black",
-        textAlign: "left"
-      },
-      props.style
+      trailingIcon={{uri: 'null'}}
+      style={{borderLeftColor: defaultTheme.green}}
+      contentContainerStyle={{paddingHorizontal: 15}}
+      text2Style={[
+        {
+          fontSize: moderateScale(15),
+          color: 'black',
+          textAlign: 'left',
+        },
+        props.style,
       ]}
       text2={props.text2}
       text2NumberOfLines={2}
-
     />
   ),
-  error: ({ props, ...rest }) => (
+  error: ({props, ...rest}) => (
     <BaseToast
       {...rest}
       leadingIcon={require('./res/img/close.png')}
-      trailingIcon={{ uri: 'null' }}
-      style={{ borderLeftColor: defaultTheme.error }}
-      contentContainerStyle={{ paddingHorizontal: 15 }}
-      text2Style={[{
-        fontFamily: 'IRANYekanMobileFN',
-        fontSize: moderateScale(14),
-        color: 'black',
-        textAlign: "left"
-      },
-      props.style
+      trailingIcon={{uri: 'null'}}
+      style={{borderLeftColor: defaultTheme.error}}
+      contentContainerStyle={{paddingHorizontal: 15}}
+      text2Style={[
+        // eslint-disable-next-line react-native/no-inline-styles
+        {
+          fontFamily: 'IRANYekanMobileFN',
+          fontSize: moderateScale(14),
+          color: 'black',
+          textAlign: 'left',
+        },
+        props.style,
       ]}
       text2={props.text2}
       text2NumberOfLines={2}
       text1={props.text1}
-      text1Style={[props.style, { fontSize: moderateScale(15) }]}
+      text1Style={[props.style, {fontSize: moderateScale(15)}]}
     />
   ),
 };
 const App = () => {
-
   useEffect(() => {
     const type = 'notification';
     PushNotificationIOS.addEventListener(type, onRemoteNotification);
@@ -286,7 +286,7 @@ const App = () => {
       PushNotificationIOS.removeEventListener(type);
     };
   });
-  const onRemoteNotification = (notification) => {
+  const onRemoteNotification = notification => {
     const actionIdentifier = notification.getActionIdentifier();
 
     if (actionIdentifier === 'open') {
@@ -354,6 +354,13 @@ const App = () => {
       importance: 4, // (optional) default: 4. Int value of the Android notification importance
       vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
     });
+    PushNotification.createChannel({
+      channelId: 'Messages', // (required)
+      channelName: 'Messages', // (required)
+      soundName: 'remind', // (optional) See `soundName` parameter of `localNotification` function
+      importance: 4, // (optional) default: 4. Int value of the Android notification importance
+      vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+    });
   }, []);
 
   networkMonitoring = () => {
@@ -371,7 +378,7 @@ const App = () => {
 
     NM.addListener((isConnected, type) => {
       const currentState = store.getState().app;
-      console.error("currentState", isConnected, type)
+      console.error('currentState', isConnected, type);
       if (
         currentState.networkConnectivity != isConnected &&
         currentState.networkConnectionType != type
@@ -398,7 +405,6 @@ const App = () => {
   //   </SafeAreaView>)
   // }
 
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -409,7 +415,6 @@ const App = () => {
 };
 
 export default App;
-
 
 const Test = () => {
   const user = useSelector(state => state.user);
@@ -427,9 +432,14 @@ const Test = () => {
     },
   };
   const MyStatusBar = () => (
-    <View style={[styles.statusBar, { backgroundColor: defaultTheme.primaryColor }]}>
+    <View
+      style={[styles.statusBar, {backgroundColor: defaultTheme.primaryColor}]}>
       <SafeAreaView>
-        <StatusBar barStyle={"light-content"} translucent backgroundColor={defaultTheme.primaryColor} />
+        <StatusBar
+          barStyle={'light-content'}
+          translucent
+          backgroundColor={defaultTheme.primaryColor}
+        />
       </SafeAreaView>
     </View>
   );
@@ -439,23 +449,18 @@ const Test = () => {
       <StatusBar
         barStyle={Platform.OS === 'android' ? 'light-content' : 'dark-content'}
         backgroundColor={defaultTheme.primaryColor}
-
       />
       {/* <MyStatusBar /> */}
 
-
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <NavigationContainer linking={linking} theme={MyTheme}>
-
           <MainRoute />
           <Toast config={toastConfig} />
         </NavigationContainer>
       </SafeAreaView>
-
     </>
   );
 };
-
 
 const styles = StyleSheet.create({
   absolute: {

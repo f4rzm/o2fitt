@@ -26,7 +26,7 @@ import { setIsBuy } from '../../redux/actions/diet';
 import moment from 'moment';
 import { SpecificationDBController } from '../../classess/SpecificationDBController';
 import { getAndroidId, getApiLevel, getBrand, getFontScale, getIpAddress, getModel, getVersion, isEmulator, isTablet } from 'react-native-device-info';
-
+import analytics from '@react-native-firebase/analytics';
 
 const CODE_LENGTH = 5
 
@@ -128,8 +128,8 @@ const AuthCodeScreen = props => {
         market:"googlePlay",
         // market:"cafe bazar",
         // market:"web",
-        
       }
+      analytics().logEvent('startDiet',params)
       console.error(params);
       const header = {}
       console.log("url => ", url)

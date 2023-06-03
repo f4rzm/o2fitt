@@ -302,9 +302,11 @@ const RemindersDetailScreen = (props) => {
           channelId: 'Reminder',
           priority: 'max',
           soundName: 'remind',
-          when:new Date(Date.now())
+          when:new Date(Date.now()),
+          
           
         });
+        
 
         newDays[index] = {id: day.id, notificationId: notificationId};
 

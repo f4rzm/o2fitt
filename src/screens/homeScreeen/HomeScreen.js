@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -9,10 +9,10 @@ import {
   View,
   NativeEventEmitter,
   Text,
-  AppState
+  AppState,
 } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
-import { useSelector, useDispatch } from 'react-redux';
+import {moderateScale} from 'react-native-size-matters';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   TwoOptionModal,
   Calendar,
@@ -29,19 +29,19 @@ import {
   AdvertiseRow,
   MarketModal,
   DietCard,
-  Information
+  Information,
 } from '../../components';
 import moment from 'moment';
 import PouchDB from '../../../pouchdb';
 import pouchdbSearch from 'pouchdb-find';
-import { urls } from '../../utils/urls';
-import { RestController } from '../../classess/RestController';
-import { SyncPedoDB } from '../../classess/SyncPedoDB';
-import { SyncWaterDB } from '../../classess/SyncWaterDB';
-import { SyncSleepDB } from '../../classess/SyncSleepDB';
-import { SyncMealDB } from '../../classess/SyncMealDB';
-import { SyncActivityDB } from '../../classess/SyncActivityDB';
-import { SyncBulkData } from '../../classess/SyncBulkData';
+import {urls} from '../../utils/urls';
+import {RestController} from '../../classess/RestController';
+import {SyncPedoDB} from '../../classess/SyncPedoDB';
+import {SyncWaterDB} from '../../classess/SyncWaterDB';
+import {SyncSleepDB} from '../../classess/SyncSleepDB';
+import {SyncMealDB} from '../../classess/SyncMealDB';
+import {SyncActivityDB} from '../../classess/SyncActivityDB';
+import {SyncBulkData} from '../../classess/SyncBulkData';
 import {
   setStarRatingTimer,
   setUnreadMessageNumber,
@@ -53,37 +53,36 @@ import messaging from '@react-native-firebase/messaging';
 // import RNWalkCounter from 'react-native-walk-counter';
 
 import PushNotification from 'react-native-push-notification';
-import { isSetRating, setVipTimer } from '../../redux/actions/starRating';
-import { Button } from 'react-native-paper';
-import { openSettings } from 'react-native-send-intent';
-import { addDate } from '../../redux/actions/syncedDate';
+import {isSetRating, setVipTimer} from '../../redux/actions/starRating';
+import {Button} from 'react-native-paper';
+import {openSettings} from 'react-native-send-intent';
+import {addDate} from '../../redux/actions/syncedDate';
 // const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
 PouchDB.plugin(pouchdbSearch);
-const waterDB = new PouchDB('water', { adapter: 'react-native-sqlite' });
-const pedoDB = new PouchDB('pedo', { adapter: 'react-native-sqlite' });
-const sleepDB = new PouchDB('sleep', { adapter: 'react-native-sqlite' });
-const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
-const activityDB = new PouchDB('activity', { adapter: 'react-native-sqlite' });
+const waterDB = new PouchDB('water', {adapter: 'react-native-sqlite'});
+const pedoDB = new PouchDB('pedo', {adapter: 'react-native-sqlite'});
+const sleepDB = new PouchDB('sleep', {adapter: 'react-native-sqlite'});
+const mealDB = new PouchDB('meal', {adapter: 'react-native-sqlite'});
+const activityDB = new PouchDB('activity', {adapter: 'react-native-sqlite'});
 // const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
-const adDB = new PouchDB('ad', { adapter: 'react-native-sqlite' });
+const adDB = new PouchDB('ad', {adapter: 'react-native-sqlite'});
 // const reminderDB = new PouchDB('reminder', { adapter: 'react-native-sqlite' });
 // const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
-const HomeScreen = (props) => {
+const HomeScreen = props => {
+  const lang = useSelector(state => state.lang);
+  const auth = useSelector(state => state.auth);
+  const user = useSelector(state => state.user);
+  const app = useSelector(state => state.app);
+  const profile = useSelector(state => state.profile);
+  const pedometer = useSelector(state => state.pedometer);
+  const diet = useSelector(state => state.diet);
+  const starRating = useSelector(state => state.starRating);
+  const syncedDate = useSelector(state => state.syncedDate);
+  const fastingDiet = useSelector(state => state.fastingDiet);
 
-  const lang = useSelector((state) => state.lang);
-  const auth = useSelector((state) => state.auth);
-  const user = useSelector((state) => state.user);
-  const app = useSelector((state) => state.app);
-  const profile = useSelector((state) => state.profile);
-  const pedometer = useSelector((state) => state.pedometer);
-  const diet = useSelector((state) => state.diet)
-  const starRating = useSelector((state) => state.starRating)
-  const syncedDate = useSelector((state) => state.syncedDate)
-  const fastingDiet = useSelector((state) => state.fastingDiet)
-
-  const specification = useSelector((state) => state.specification);
+  const specification = useSelector(state => state.specification);
 
   const pkExpireDate = moment(profile.pkExpireDate, 'YYYY-MM-DDTHH:mm:ss');
   const today = moment();
@@ -94,8 +93,8 @@ const HomeScreen = (props) => {
   const [selectedDate, setDate] = React.useState(
     moment(new Date(), 'YYYY-MM-DD').format('YYYY-MM-DD'),
   );
-  const [errorVisible, setErrorVisible] = useState(false)
-  const [errorContext, setErrorContext] = useState('')
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [errorContext, setErrorContext] = useState('');
   const [userWater, setUserWater] = React.useState(0);
   const [userStep, setUserStep] = React.useState([]);
   const [meals, setMeals] = React.useState([]);
@@ -118,119 +117,146 @@ const HomeScreen = (props) => {
 
   const appState = useRef(AppState.currentState);
   useEffect(() => {
-
-    AppState.addEventListener("change", _handleAppStateChange);
+    AppState.addEventListener('change', _handleAppStateChange);
 
     // return () => {
     //   AppState.removeEventListener("change", _handleAppStateChange);
     // };
   }, []);
 
-  const _handleAppStateChange = (nextAppState) => {
+  const _handleAppStateChange = nextAppState => {
     if (
       appState.current.match(/inactive|background/) &&
-      nextAppState === "active"
+      nextAppState === 'active'
     ) {
       ////console.warn("work");
-      setDate(moment().format("YYYY-MM-DD"))
-      AsyncStorage.setItem("homeDate", moment().format("YYYY-MM-DD"))
-
+      setDate(moment().format('YYYY-MM-DD'));
+      AsyncStorage.setItem('homeDate', moment().format('YYYY-MM-DD'));
     }
 
     appState.current = nextAppState;
     // setAppStateVisible(appState.current);
-    console.log("AppState", appState.current);
+    console.log('AppState', appState.current);
   };
-
 
   // console.error(user.id);
   const getStepFromDB = async (date, serverResponse) => {
+    const url = urls.workoutBaseUrl + urls.userTrackSteps;
+    const RC = new RestController();
 
-    const url = urls.workoutBaseUrl + urls.userTrackSteps
-    const RC = new RestController()
-
-    const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
+    const header = {
+      headers: {
+        Authorization: 'Bearer ' + auth.access_token,
+        Language: lang.capitalName,
+      },
+    };
 
     let data;
     if (!stepBulkSync) {
       const reg = RegExp('^' + date, 'i');
       pedoDB
         .find({
-          selector: { insertDate: { $regex: reg } },
+          selector: {insertDate: {$regex: reg}},
         })
-        .then((records) => {
+        .then(records => {
           setUserStep(records.docs);
           let ServerPedoCounter = [];
           let DbPedometer = [];
           for (let i = 0; i < serverResponse.length; i++) {
             const element = serverResponse[i];
             if (element.isManual == false) {
-
-              ServerPedoCounter.push(element)
+              ServerPedoCounter.push(element);
             }
           }
           for (let i = 0; i < records.docs.length; i++) {
             const element1 = records.docs[i];
             if (element1.isManual == false) {
-              DbPedometer.push(element1)
+              DbPedometer.push(element1);
             }
           }
 
           if (app.networkConnectivity) {
-
             if (DbPedometer.length > 0) {
               if (serverResponse) {
                 //EDIT
                 if (ServerPedoCounter.length > 0) {
-
-                  if (parseInt(DbPedometer[0].stepsCount) > parseInt(ServerPedoCounter[ServerPedoCounter.length - 1].stepsCount)) {
-                    data = { ...ServerPedoCounter[0], stepsCount: DbPedometer[0].stepsCount, burnedCalories: DbPedometer[0].burnedCalories }
-                    RC.checkPrerequisites("put", url + "/id", data, header, (res) => onSuccessStep(res, params), onFailureStep, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
+                  if (
+                    parseInt(DbPedometer[0].stepsCount) >
+                    parseInt(
+                      ServerPedoCounter[ServerPedoCounter.length - 1]
+                        .stepsCount,
+                    )
+                  ) {
+                    data = {
+                      ...ServerPedoCounter[0],
+                      stepsCount: DbPedometer[0].stepsCount,
+                      burnedCalories: DbPedometer[0].burnedCalories,
+                    };
+                    RC.checkPrerequisites(
+                      'put',
+                      url + '/id',
+                      data,
+                      header,
+                      res => onSuccessStep(res, params),
+                      onFailureStep,
+                      auth,
+                      onRefreshTokenSuccess,
+                      onRefreshTokenFailure,
+                    );
                   }
-
-                }
-                else {
+                } else {
                   //console.warn("NEw");
                   data = {
                     id: 0,
                     _id: DbPedometer[0]._id,
-                    "userId": parseInt(user.id),
-                    "insertDate": DbPedometer[0].insertDate,
-                    "stepsCount": parseInt(DbPedometer[0].stepsCount),
-                    "duration": DbPedometer[0].duration,
-                    "userWeight": parseInt(DbPedometer[0].userWeight),
-                    "burnedCalories": parseInt(DbPedometer[0].burnedCalories),
-                  }
-                  RC.checkPrerequisites("post", url, data, header, (res) => onSuccessStep(res, params), onFailureStep, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
-
+                    userId: parseInt(user.id),
+                    insertDate: DbPedometer[0].insertDate,
+                    stepsCount: parseInt(DbPedometer[0].stepsCount),
+                    duration: DbPedometer[0].duration,
+                    userWeight: parseInt(DbPedometer[0].userWeight),
+                    burnedCalories: parseInt(DbPedometer[0].burnedCalories),
+                  };
+                  RC.checkPrerequisites(
+                    'post',
+                    url,
+                    data,
+                    header,
+                    res => onSuccessStep(res, params),
+                    onFailureStep,
+                    auth,
+                    onRefreshTokenSuccess,
+                    onRefreshTokenFailure,
+                  );
                 }
               }
             }
           }
         });
     }
-  }
+  };
   const onSuccessStep = () => {
-    console.error("Success");
-  }
-  const onFailureStep = (err) => {
+    console.error('Success');
+  };
+  const onFailureStep = err => {
     // console.error(err);
-  }
+  };
 
   React.useEffect(() => {
     //console.warn(starRating.starRatingTimer)
     if (starRating.starRatingTimer == undefined) {
-      dispatch(setStarRatingTimer(moment().add(7, "days").format("YYYY-MM-DDTHH:mm:ss")))
-      dispatch(isSetRating(false))
+      dispatch(
+        setStarRatingTimer(
+          moment().add(7, 'days').format('YYYY-MM-DDTHH:mm:ss'),
+        ),
+      );
+      dispatch(isSetRating(false));
     }
     if (starRating.vipTimer == undefined) {
-
-      dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
+      dispatch(setVipTimer(moment().add(3, 'days').format('YYYY-MM-DD')));
     }
 
     // getAdvertises();
     // getUnit();
-
 
     AsyncStorage.setItem('homeDate', selectedDate);
     // waterDB
@@ -250,8 +276,8 @@ const HomeScreen = (props) => {
     //   .on('change', activityChangeDetected);
   }, []);
 
-  const getWholeData = (date) => {
-    let time = date ? date : selectedDate
+  const getWholeData = date => {
+    let time = date ? date : selectedDate;
     //  console.warn(selectedDate);
     // getStepFromDB(selectedDate);
     // console.error(diet.weekDinner[0].id)
@@ -265,7 +291,6 @@ const HomeScreen = (props) => {
     syncSteps(time);
     getMealFromDB(time, false);
     if (app.networkConnectivity) {
-
       //syncedDays.indexOf(selectedDate) === -1
       // syncedDays.push(selectedDate)
       // syncMeal(time);
@@ -273,28 +298,27 @@ const HomeScreen = (props) => {
       // // syncSteps(selectedDate);
       syncSleep(time);
       syncActivities(time);
-
     } else {
       getWaterFromDB(time);
       getSleepFromDB(time);
       getActivityFromDB(time);
     }
-  }
+  };
 
   React.useEffect(() => {
-    getWholeData()
+    getWholeData();
   }, [selectedDate, app.networkConnectivity]);
 
   const changeDate = async () => {
-    const date = await AsyncStorage.getItem("homeDate")
-    setDate(date)
-    getWholeData(date)
-    const stepDate = await AsyncStorage.getItem("autoStepCounterDate")
-    const step = await AsyncStorage.getItem("Steps")
-    if (moment().format("YYYY-MM-DD") == stepDate) {
+    const date = await AsyncStorage.getItem('homeDate');
+    setDate(date);
+    getWholeData(date);
+    const stepDate = await AsyncStorage.getItem('autoStepCounterDate');
+    const step = await AsyncStorage.getItem('Steps');
+    if (moment().format('YYYY-MM-DD') == stepDate) {
       ////console.warn("stepDate changed");
     }
-  }
+  };
   React.useEffect(() => {
     const focusUnsubscribe = props.navigation.addListener('focus', () => {
       //   getAdvertises();
@@ -315,8 +339,7 @@ const HomeScreen = (props) => {
       //     getMealFromDB(selectedDate);
       //     getActivityFromDB(selectedDate);
       //   }
-      changeDate()
-
+      changeDate();
     });
 
     return () => {
@@ -333,22 +356,21 @@ const HomeScreen = (props) => {
   }, [app.networkConnectivity]);
 
   React.useEffect(() => {
-    Linking.getInitialURL().then((res) => {
+    Linking.getInitialURL().then(res => {
       checkUrl(res);
     });
 
-    Linking.addEventListener('url', (url) => checkUrl(url.url));
+    Linking.addEventListener('url', url => checkUrl(url.url));
 
     requestUserPermission();
   }, []);
-
 
   React.useEffect(() => {
     ////console.warn(app.unreadMessages)
     let backHandler = null;
     const focusUnsubscribe = props.navigation.addListener('focus', () => {
       backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-        BackHandler.exitApp()
+        BackHandler.exitApp();
       });
     });
 
@@ -384,7 +406,7 @@ const HomeScreen = (props) => {
     ////console.warn('this is notificatin', notificationServic);
     if (!notificationServic) {
       ////console.warn(notificationServic, 'works ');
-      PushNotification.cancelAllLocalNotifications()
+      PushNotification.cancelAllLocalNotifications();
       AsyncStorage.setItem('notifDisable', 'disabled');
     } else {
       ////console.warn('notif is set');
@@ -405,8 +427,8 @@ const HomeScreen = (props) => {
     }
   }
 
-  const checkUrl = (url) => {
-    console.error("this is url", url);
+  const checkUrl = url => {
+    console.error('this is url', url);
 
     ////console.warn(url);
     if (url && url.includes('https://bank.o2fitt.com/Home/BackApp?orderid')) {
@@ -414,34 +436,29 @@ const HomeScreen = (props) => {
       console.log('url', url);
       console.log('id', id);
 
-      props.navigation.navigate('PaymentResultScreen', { orderid: id });
-    } else if (url && url.includes("tatoken")) {
+      props.navigation.navigate('PaymentResultScreen', {orderid: id});
+    } else if (url && url.includes('tatoken')) {
       var regex = /[?&]([^=#]+)=([^&#]*)/g,
         params = {},
         match;
-      while (match = regex.exec(url)) {
+      while ((match = regex.exec(url))) {
         params[match[1]] = match[2];
       }
-      console.error("this is url", url);
-      console.error("this is params", params)
-      props.navigation.navigate('PackagesScreen',
-        {
-          utm_medium: params.utm_medium,
-          utm_campaign: params.utm_campaign,
-          utm_content: params.utm_content,
-          utm_source: params.utm_source,
-          tatoken: params.tatoken
-        });
-
+      console.error('this is url', url);
+      console.error('this is params', params);
+      props.navigation.navigate('PackagesScreen', {
+        utm_medium: params.utm_medium,
+        utm_campaign: params.utm_campaign,
+        utm_content: params.utm_content,
+        utm_source: params.utm_source,
+        tatoken: params.tatoken,
+      });
     }
   };
 
   const getMessageFromServer = () => {
     const url =
-      urls.socialBaseUrl +
-      urls.contactUs +
-      `GetByUserId?userId=${user.id}`
-      ;
+      urls.socialBaseUrl + urls.contactUs + `GetByUserId?userId=${user.id}`;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -468,11 +485,11 @@ const HomeScreen = (props) => {
     setDate(date);
   };
 
-  const getMessagesSuccess = (response) => {
+  const getMessagesSuccess = response => {
     ////console.warn('ssssssss', response.data.data);
     AsyncStorage.setItem('messages', JSON.stringify(response.data.data));
     let ur = 0;
-    response.data.data.map((item) => {
+    response.data.data.map(item => {
       ////console.warn(item.isReadAdmin);
       if (!item.toAdmin) {
         if (!item.isRead) {
@@ -484,42 +501,40 @@ const HomeScreen = (props) => {
     dispatch(setUnreadMessageNumber(ur));
   };
 
-  const getMessagesFailure = () => {
+  const getMessagesFailure = () => {};
 
-  };
+  const getMessagesLocaly = () => {};
 
-  const getMessagesLocaly = () => { };
-
-  const getWaterFromDB = (selectedDate) => {
+  const getWaterFromDB = selectedDate => {
     if (!waterBulkSync) {
       const reg = RegExp('^' + moment(selectedDate).format('YYYY-MM-DD'), 'i');
       waterDB
         .find({
-          selector: { insertDate: { $regex: reg } },
+          selector: {insertDate: {$regex: reg}},
           fields: ['_id', 'insertDate', 'value'],
         })
-        .then((records) => {
+        .then(records => {
           console.log('sssssssss', records);
           let water = 0;
-          records.docs.map((item) => (water = parseFloat(item.value)));
+          records.docs.map(item => (water = parseFloat(item.value)));
           setUserWater(water);
         });
     }
   };
 
-  const getSleepFromDB = (date) => {
+  const getSleepFromDB = date => {
     console.log('getSleepFromDB', date);
     const reg = RegExp('^' + date, 'i');
 
     sleepDB
       .find({
-        selector: { endDate: { $regex: reg } },
+        selector: {endDate: {$regex: reg}},
       })
-      .then((records) => {
+      .then(records => {
         console.log('rec', records);
         let totalDuration = 0;
         let totalBurnedCalories = 0;
-        records.docs.map((item) => {
+        records.docs.map(item => {
           totalBurnedCalories += parseFloat(item.burnedCalories);
           totalDuration += parseFloat(item.duration);
         });
@@ -547,54 +562,56 @@ const HomeScreen = (props) => {
   // );
   // }, [])
 
-
   const getMealFromDB = async (date, isSynced) => {
-    const syncedDates = await AsyncStorage.getItem("syncedDates")
+    const syncedDates = await AsyncStorage.getItem('syncedDates');
 
     let arrayOfDates;
 
     if (syncedDates) {
-      arrayOfDates = syncedDates.split(",")
+      arrayOfDates = syncedDates.split(',');
 
       if (arrayOfDates.indexOf(date) == -1) {
-        AsyncStorage.setItem("syncedDates", `${syncedDates},${date}`)
+        AsyncStorage.setItem('syncedDates', `${syncedDates},${date}`);
       }
-
     } else {
-      arrayOfDates = []
-      AsyncStorage.setItem("syncedDates", `${date}`)
+      arrayOfDates = [];
+      AsyncStorage.setItem('syncedDates', `${date}`);
     }
 
     const reg = RegExp('^' + date, 'i');
     console.warn('isSynced', isSynced);
     mealDB
       .find({
-        selector: { insertDate: { $regex: reg } },
+        selector: {insertDate: {$regex: reg}},
       })
-      .then((records) => {
+      .then(records => {
         // if(isSynced){
         //   setCalBtnDisabled(false);
         // }
-        if (records.docs.length == 0 && !isSynced && arrayOfDates.indexOf(date) == -1) {
+        if (
+          records.docs.length == 0 &&
+          !isSynced &&
+          arrayOfDates.indexOf(date) == -1
+        ) {
           // alert("get from server")
           // dispatch(addDate([...syncedDate.dates,date]))
-          syncMeal(date)
+          syncMeal(date);
         } else {
           console.warn('meal rec', records.docs.length);
-          setMeals(records.docs.map((item) => ({ ...item })));
+          setMeals(records.docs.map(item => ({...item})));
           setCalBtnDisabled(false);
         }
       });
   };
 
-  const getActivityFromDB = (date) => {
+  const getActivityFromDB = date => {
     const reg = RegExp('^' + date, 'i');
     console.log('RegExp', reg);
     activityDB
       .find({
-        selector: { insertDate: { $regex: reg } },
+        selector: {insertDate: {$regex: reg}},
       })
-      .then((rec) => {
+      .then(rec => {
         console.log('activityDB', rec.docs);
         const records = rec.docs;
         setActivities(records);
@@ -608,8 +625,8 @@ const HomeScreen = (props) => {
       selectedDate === '2021-03-21'
         ? '2021-03-22'
         : selectedDate === '2021-03-22'
-          ? '2021-03-23'
-          : moment(selectedDate, 'YYYY-MM-DD').add(1, 'day').format('YYYY-MM-DD');
+        ? '2021-03-23'
+        : moment(selectedDate, 'YYYY-MM-DD').add(1, 'day').format('YYYY-MM-DD');
     AsyncStorage.setItem('homeDate', nDay);
     // AsyncStorage.setItem("dailyDate", nDay)
     setDate(nDay);
@@ -623,8 +640,8 @@ const HomeScreen = (props) => {
       selectedDate === '2021-03-23'
         ? '2021-03-22'
         : selectedDate === '2021-03-22'
-          ? '2021-03-21'
-          : moment(selectedDate, 'YYYY-MM-DD')
+        ? '2021-03-21'
+        : moment(selectedDate, 'YYYY-MM-DD')
             .subtract(1, 'days')
             .format('YYYY-MM-DD');
     AsyncStorage.setItem('homeDate', pDay);
@@ -632,30 +649,30 @@ const HomeScreen = (props) => {
     setUserWater(0);
   };
 
-  const waterChangeDetected = async (record) => {
+  const waterChangeDetected = async record => {
     const date = await AsyncStorage.getItem('homeDate');
     getWaterFromDB(date);
   };
 
-  const pedoChangeDetected = async (record) => {
+  const pedoChangeDetected = async record => {
     if (!stepBulkSync) {
       const date = await AsyncStorage.getItem('homeDate');
       getStepFromDB(date);
     }
   };
 
-  const sleepChangeDetected = async (record) => {
+  const sleepChangeDetected = async record => {
     const date = await AsyncStorage.getItem('homeDate');
     getSleepFromDB(date);
   };
 
-  const mealChangeDetected = async (record) => {
+  const mealChangeDetected = async record => {
     console.log('mealChangeDetected');
     const date = await AsyncStorage.getItem('homeDate');
     getMealFromDB(date);
   };
 
-  const activityChangeDetected = async (record) => {
+  const activityChangeDetected = async record => {
     if (!activityBulkSync) {
       const date = await AsyncStorage.getItem('homeDate');
       console.log('activityChangeDetected date', date);
@@ -668,14 +685,14 @@ const HomeScreen = (props) => {
     setShowPicker(true);
   };
 
-  const onDateSelected = async (newDate) => {
+  const onDateSelected = async newDate => {
     setCalBtnDisabled(true);
     setDate(newDate);
     await AsyncStorage.setItem('homeDate', newDate);
     setShowPicker(false);
   };
 
-  const syncWater = (date) => {
+  const syncWater = date => {
     const url =
       urls.foodBaseUrl +
       urls.userTrackWater +
@@ -694,7 +711,7 @@ const HomeScreen = (props) => {
       url,
       params,
       header,
-      (res) => getWaterSuccess(res, date),
+      res => getWaterSuccess(res, date),
       getWaterFailure,
       auth,
       onRefreshTokenSuccess,
@@ -718,7 +735,7 @@ const HomeScreen = (props) => {
     getWaterFromDB(selectedDate);
   };
 
-  const syncSteps = (date) => {
+  const syncSteps = date => {
     const url =
       urls.workoutBaseUrl +
       urls.userTrackSteps +
@@ -737,7 +754,7 @@ const HomeScreen = (props) => {
       url,
       params,
       header,
-      (res) => getStepsSuccess(res, date),
+      res => getStepsSuccess(res, date),
       getStepsFailure,
       auth,
       onRefreshTokenSuccess,
@@ -747,7 +764,7 @@ const HomeScreen = (props) => {
 
   const getStepsSuccess = (response, selectedDate) => {
     const SP = new SyncPedoDB();
-    getStepFromDB(selectedDate, response.data.data)
+    getStepFromDB(selectedDate, response.data.data);
     // SP.syncStepsByLocal(
     //   pedoDB,
     //   response.data.data,
@@ -761,7 +778,7 @@ const HomeScreen = (props) => {
     getStepFromDB(selectedDate);
   };
 
-  const syncSleep = (date) => {
+  const syncSleep = date => {
     const url =
       urls.workoutBaseUrl +
       urls.userTrackSleep +
@@ -781,7 +798,7 @@ const HomeScreen = (props) => {
       url,
       params,
       header,
-      (res) => getSleepSuccess(res, date),
+      res => getSleepSuccess(res, date),
       getSleepFailure,
       auth,
       onRefreshTokenSuccess,
@@ -798,7 +815,7 @@ const HomeScreen = (props) => {
     getSleepFromDB(selectedDate);
   };
 
-  const syncMeal = (date) => {
+  const syncMeal = date => {
     // alert("asd")
     const url =
       urls.foodBaseUrl +
@@ -818,7 +835,7 @@ const HomeScreen = (props) => {
       url,
       params,
       header,
-      (res) => getMealsSuccess(res, date),
+      res => getMealsSuccess(res, date),
       getMealsFailure,
       auth,
       onRefreshTokenSuccess,
@@ -844,7 +861,7 @@ const HomeScreen = (props) => {
     getMealFromDB(selectedDate, true);
   };
 
-  const syncActivities = (date) => {
+  const syncActivities = date => {
     const url =
       urls.workoutBaseUrl +
       urls.userTrackWorkout +
@@ -863,7 +880,7 @@ const HomeScreen = (props) => {
       url,
       params,
       header,
-      (res) => getActivitySuccess(res, date),
+      res => getActivitySuccess(res, date),
       getActivityFailure,
       auth,
       onRefreshTokenSuccess,
@@ -882,11 +899,7 @@ const HomeScreen = (props) => {
     );
   };
 
-  const getActivityFailure = () => {
-
-  };
-
-
+  const getActivityFailure = () => {};
 
   // const getAdvertises = () => {
   //   const url =
@@ -1024,9 +1037,9 @@ const HomeScreen = (props) => {
   //   });
   // };
 
-  const onRefreshTokenSuccess = () => { };
+  const onRefreshTokenSuccess = () => {};
 
-  const onRefreshTokenFailure = () => { };
+  const onRefreshTokenFailure = () => {};
 
   const onBodyPressed = () => {
     if (
@@ -1051,12 +1064,11 @@ const HomeScreen = (props) => {
     ) {
       if (hasCredit) {
         props.navigation.navigate('BodyShapeScreen');
-
       } else {
-        goToPackages()
+        goToPackages();
       }
     } else {
-      props.navigation.navigate('BodyAnalyzeScreen', { hasCredit: hasCredit });
+      props.navigation.navigate('BodyAnalyzeScreen', {hasCredit: hasCredit});
     }
   };
 
@@ -1085,7 +1097,6 @@ const HomeScreen = (props) => {
       Platform.OS === 'ios' ? 500 : 50,
     );
   };
-
 
   //====================HASANI=======================\\
   // const getUnit = () => {
@@ -1158,43 +1169,41 @@ const HomeScreen = (props) => {
   };
 
   const onDietPressed = () => {
-
     if (diet.isActive == true && diet.isBuy == true) {
-
-      if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(selectedDate).format("YYYYMMDD"))
-        &&
-        (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment(selectedDate).format("YYYYMMDD")) : true)) {
-
-        props.navigation.navigate("FastingDietplan")
+      if (
+        parseInt(moment(fastingDiet.startDate).format('YYYYMMDD')) <=
+          parseInt(moment(selectedDate).format('YYYYMMDD')) &&
+        (fastingDiet.endDate
+          ? parseInt(moment(fastingDiet.endDate).format('YYYYMMDD')) >=
+            parseInt(moment(selectedDate).format('YYYYMMDD'))
+          : true)
+      ) {
+        props.navigation.navigate('FastingDietplan');
       } else {
-
-        props.navigation.navigate("DietPlanScreen")
+        props.navigation.navigate('DietPlanScreen');
       }
     } else if (diet.isActive == false && diet.isBuy == true) {
-      props.navigation.navigate("DietStartScreen")
+      props.navigation.navigate('DietStartScreen');
     } else if (diet.isActive == true && diet.isBuy == false) {
-      props.navigation.navigate("PackagesScreen")
+      props.navigation.navigate('PackagesScreen');
     } else {
-      props.navigation.navigate("DietStartScreen")
+      props.navigation.navigate('DietStartScreen');
     }
-
-  }
+  };
 
   const onRecipePresse = () => {
-    props.navigation.navigate("RecipeCatScreen")
-  }
-
+    props.navigation.navigate('RecipeCatScreen');
+  };
 
   const openBlogPressed = () => {
-    props.navigation.navigate("BlogCatScreen")
-  }
+    props.navigation.navigate('BlogCatScreen');
+  };
   async function timezone() {
-    var time = new Date()
-
+    var time = new Date();
   }
   useEffect(() => {
-    timezone()
-  }, [])
+    timezone();
+  }, []);
 
   // useEffect(() => {
   //     console.warn(fastingDiet.allDinner.length,fastingDiet.allSahar.length,fastingDiet.allSnack.length,fastingDiet.allEftar.length);
@@ -1231,9 +1240,7 @@ const HomeScreen = (props) => {
           alignItems: 'center',
           paddingBottom: moderateScale(15),
         }}
-        showsVerticalScrollIndicator={false}
-      >
-
+        showsVerticalScrollIndicator={false}>
         <NutritionCard
           lang={lang}
           hasCredit={hasCredit}
@@ -1250,13 +1257,12 @@ const HomeScreen = (props) => {
             props.navigation.navigate('NutritionDetailsScreen', {
               date: selectedDate,
               data: meals,
-              diet: diet
+              diet: diet,
             })
           }
           autoSteps={pedometer.AutoStepsCounter}
         />
-        {
-          user.countryId == 128 && lang.langName == "persian" &&
+        {user.countryId == 128 && lang.langName == 'persian' && (
           <DietCard
             lang={lang}
             profile={profile}
@@ -1264,8 +1270,7 @@ const HomeScreen = (props) => {
             diet={diet}
             onCardPressed={onDietPressed}
           />
-        }
-
+        )}
 
         {/* <View style={{ backgroundColor: "black" }}>
           <Text style={{ color: defaultTheme.white }}>dietPK:{profile.dietPkExpireDate}</Text>
@@ -1329,11 +1334,11 @@ const HomeScreen = (props) => {
         />
 
         {/* {
-          !hasCredit && 
+          !hasCredit &&
           <AdMobBanner
               adSize="smartBannerLandscape"
               adUnitID="ca-app-pub-3940256099942544/6300978111"
-              onAdFailedToLoad={error => false} 
+              onAdFailedToLoad={error => false}
               testDevices={[AdMobBanner.simulatorId]}
               />
             } */}
@@ -1362,7 +1367,7 @@ const HomeScreen = (props) => {
             onPress={setAdClick}
           />
         ))} */}
-        <View style={{ height: moderateScale(50) }} />
+        <View style={{height: moderateScale(50)}} />
 
         <TwoOptionModal
           lang={lang}
@@ -1413,9 +1418,8 @@ const HomeScreen = (props) => {
             blogIsLiked={blogIsLiked}
             onPress={() => onPressBlog(item)}
           />
-          
-        ))} */}
 
+        ))} */}
       </ScrollView>
 
       <Uploader app={app} auth={auth} />
@@ -1430,8 +1434,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'gold',
   },
-
-
 });
 
 export default HomeScreen;

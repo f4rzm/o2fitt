@@ -8,8 +8,10 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate;
 import android.os.Bundle;
 import com.synclovis.RNWalkCounterPackage;
 import org.devio.rn.splashscreen.SplashScreen; // here
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;  // <--- Import Package
 
 public class MainActivity extends ReactActivity {
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
       SplashScreen.show(this);  // here

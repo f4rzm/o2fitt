@@ -78,6 +78,7 @@ const FoodDetailScreen = (props) => {
   const [showTextEditor, setShowTextEditor] = React.useState(false);
   const [isEdited, setIsEdited] = React.useState(false);
   const [showDefautImage, setshowDefautImage] = React.useState(false);
+  
 
   const mealModel = React.useRef({
     id: 0,
@@ -1658,6 +1659,7 @@ const FoodDetailScreen = (props) => {
                 blurAmount={6}
                 reducedTransparencyFallbackColor="white"
               />
+
             </View>
           </TouchableWithoutFeedback>
         )}

@@ -358,47 +358,60 @@ const Tabs = (props) => {
           onPress={handleMarketDialogPressed}
         />
       } */}
+      {
+        diet.isForceUpdate ||
 
-      {/* {
-        diet.isForceUpdate == true && */}
-        <Modal
-          visible={diet.isForceUpdate}
-          style={{ alignItems: "center", justifyContent: "center" }}
-        >
-          <TouchableOpacity activeOpacity={1}>
-            {/* <BlurView
+          (Vip && user.countryId == 128 && starRating.vipShown) ||
+          (vpn && errorVisible == false)
+          ?
+          <BlurView
             style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-            }} blurType="dark" blurAmount={1}
-          /> */}
-            <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
-              <LottieView
-                source={require('../../res/animations/forceU.json')}
-                style={{ width: moderateScale(400), height: moderateScale(400) }}
-                autoPlay={true}
-                loop={true}
-              />
-              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText }}>{lang.forceUpdateTitle}</Text>
-              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, textAlign: "center", padding: 10, lineHeight: moderateScale(23) }}>{lang.forceUpdateText}</Text>
+            }}
+            blurType="light"
+            blurAmount={0}
+            blurRadius={4}
+          />
+          : null
+      }
 
-              <ConfirmButton
-                lang={lang}
-                title={lang.forceUpdateBtn}
-                style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
-                onPress={() => {
-                  // Linking.openURL("https://cafebazaar.ir/app/com.o2fitt")
-                  // Linking.openURL("https://o2fit.me/DownloadApp")
-                  Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
-                }}
-              />
-            </View>
-          </TouchableOpacity>
-        </Modal>
+      {/* {
+        diet.isForceUpdate == true && */}
+      <Modal
+        visible={diet.isForceUpdate}
+        style={{ alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0)" }}
+      >
+        <TouchableOpacity activeOpacity={1}>
+
+          <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
+            <LottieView
+              source={require('../../res/animations/forceU.json')}
+              style={{ width: moderateScale(400), height: moderateScale(400) }}
+              autoPlay={true}
+              loop={true}
+            />
+            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText }}>{lang.forceUpdateTitle}</Text>
+            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, textAlign: "center", padding: 10, lineHeight: moderateScale(23) }}>{lang.forceUpdateText}</Text>
+
+            <ConfirmButton
+              lang={lang}
+              title={lang.forceUpdateBtn}
+              style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
+              onPress={() => {
+                // Linking.openURL("https://cafebazaar.ir/app/com.o2fitt")
+                // Linking.openURL("https://o2fit.me/DownloadApp")
+                Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
       {/* } */}
+
 
       {premiumModal && user.countryId == 128 && starRating.vipShown ?
         <Animated.View style={{ transform: [{ translateY: translateY }], position: "absolute", backgroundColor: "rgba(0,0,0,0.3)", width: dimensions.WINDOW_WIDTH }}>
