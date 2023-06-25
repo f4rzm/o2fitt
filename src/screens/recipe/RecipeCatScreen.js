@@ -31,6 +31,11 @@ function RecipeCatScreen(props) {
     const [filteredRecipes, setFilteredRecipes] = useState([])
     const [searchText, setSearchText] = useState('')
     const [noResult, setNoResult] = useState(false)
+    const [filters, setFilters] = useState({
+        calorie: 0,
+        bakingTime: 0,
+        bakingType: 0
+    })
 
     const [selectedCat, setSelectedCat] = useState(1)
     const [loading, setLoading] = useState(true)
@@ -114,7 +119,7 @@ function RecipeCatScreen(props) {
                 var tags = item.name.search(text)
 
                 if (tags !== -1) {
-                    return {...item}
+                    return { ...item }
 
                 }
             })
@@ -135,8 +140,7 @@ function RecipeCatScreen(props) {
                     data.map((item) => {
                         return (
                             <TouchableOpacity onPress={() => {
-                                if(item.id!==selectedCat){
-
+                                if (item.id !== selectedCat) {
                                     setSelectedCat(item.id)
                                     setLoading(true)
                                     setSearchText(null)
@@ -148,20 +152,20 @@ function RecipeCatScreen(props) {
                                     source={item.image}
                                     style={{ width: moderateScale(30), height: moderateScale(30), tintColor: selectedCat == item.id ? defaultTheme.primaryColor : defaultTheme.gray, resizeMode: 'contain' }}
                                 />
-                                <Text style={{ fontFamily: lang.font, color: selectedCat == item.id ? defaultTheme.primaryColor : defaultTheme.gray,marginTop:moderateScale(8) }}>{item.title}</Text>
+                                <Text style={{ fontFamily: lang.font, color: selectedCat == item.id ? defaultTheme.primaryColor : defaultTheme.gray, marginTop: moderateScale(8) }}>{item.title}</Text>
                             </TouchableOpacity>
                         )
                     })
                 }
             </View>
             <View style={{ alignItems: 'center' }}>
-                <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, backgroundColor: defaultTheme.grayBackground, borderRadius: moderateScale(10),  paddingHorizontal: moderateScale(10), marginVertical: moderateScale(10),flexDirection:"row",alignItems:"center",paddingVertical:moderateScale(10) }}>
+                <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, backgroundColor: defaultTheme.grayBackground, borderRadius: moderateScale(10), paddingHorizontal: moderateScale(10), marginVertical: moderateScale(10), flexDirection: "row", alignItems: "center", paddingVertical: moderateScale(10) }}>
                     <Image
                         source={require("../../../res/img/search.png")}
-                        style={{width:moderateScale(25),height:moderateScale(25)}}
+                        style={{ width: moderateScale(25), height: moderateScale(25) }}
                     />
                     <TextInput
-                        style={{fontFamily: lang.font,width:"100%",marginHorizontal:moderateScale(5),textAlign:"right",fontSize:moderateScale(15)}}
+                        style={{ fontFamily: lang.font, width: "100%", marginHorizontal: moderateScale(5), textAlign: "right", fontSize: moderateScale(15) }}
                         placeholder={"اینجا جستجو کنین"}
                         onChangeText={onChangeText}
                         value={searchText}

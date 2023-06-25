@@ -61,6 +61,7 @@ import AppleHealthKit from 'react-native-health';
 import { calculateCalorie } from '../../functions/CalculateDailyCalorie';
 import stepBurnedCalorie from '../../utils/stepBurnedCalorie';
 import { widgetUpdate } from '../../functions/WidgetUpdate';
+import OutPlusBtn from '../../components/OutPlusBtn';
 
 // const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
@@ -174,7 +175,7 @@ const HomeScreen = props => {
       // syncedDays.push(selectedDate)
       // syncMeal(selectedDate);
       syncWater(selectedDate);
-      syncSteps(selectedDate);
+      // syncSteps(selectedDate);
       syncSleep(selectedDate);
       syncActivities(selectedDate);
     } else {
@@ -1391,7 +1392,7 @@ const HomeScreen = props => {
       <ScrollView
         contentContainerStyle={{
           alignItems: 'center',
-          paddingBottom: moderateScale(60),
+          paddingBottom: moderateScale(100),
         }}
         showsVerticalScrollIndicator={false}>
         <NutritionCard
@@ -1567,6 +1568,13 @@ const HomeScreen = props => {
 
         ))} */}
       </ScrollView>
+      <OutPlusBtn
+        onPressPlus={() => { }}
+        lang={lang}
+        navigation={props.navigation}
+        profile={profile}
+        selectedDate={selectedDate}
+      />
       <Uploader app={app} auth={auth} />
     </>
   );

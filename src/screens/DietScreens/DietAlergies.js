@@ -51,7 +51,9 @@ function DietAlergies(props) {
         props.navigation.navigate("DietDifficulty", {
             targetWeight: props.route.params.targetWeight,
             weight: props.route.params.weight,
-            activityRate: props.route.params.activityRate
+            activityRate: props.route.params.activityRate,
+            dietId:props.route.params.dietId,
+            alergiesId:alergiesId
         })
     }
 

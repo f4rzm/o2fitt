@@ -31,18 +31,28 @@ const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) =
                 name={lang.botton_menu_calender}
                 font={lang.font}
             />
-            <TabPlusButton
-                navigation={navigation}
-                lang={lang}
-                profile={profile}
-                fastingDiet={fastingDiet}
-            />
             <TabBarIcon
                 descriptors={descriptors}
                 state={state}
                 navigation={navigation}
                 route={state.routes[2]}
                 index={2}
+                image={require("../../res/img/daily.png")}
+                name={lang.PayDietName}
+                font={lang.font}
+            />
+            {/* <TabPlusButton
+                navigation={navigation}
+                lang={lang}
+                profile={profile}
+                fastingDiet={fastingDiet}
+            /> */}
+            <TabBarIcon
+                descriptors={descriptors}
+                state={state}
+                navigation={navigation}
+                route={state.routes[3]}
+                index={3}
                 image={require("../../res/img/goaltab.png")}
                 name={lang.botton_menu_gol}
                 font={lang.font}
@@ -53,8 +63,8 @@ const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) =
                         descriptors={descriptors}
                         state={state}
                         navigation={navigation}
-                        route={state.routes[3]}
-                        index={3}
+                        route={state.routes[4]}
+                        index={4}
                         image={require("../../res/img/profile.png")}
                         name={lang.botton_menu_profile}
                         font={lang.font}
@@ -63,8 +73,8 @@ const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) =
                         descriptors={descriptors}
                         state={state}
                         navigation={navigation}
-                        route={state.routes[3]}
-                        index={3}
+                        route={state.routes[4]}
+                        index={4}
                         image={require("../../res/img/ChiefHood.png")}
                         name={lang.chief}
                         font={lang.font}

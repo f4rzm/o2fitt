@@ -80,65 +80,65 @@ function DietPlan(props) {
         setAdvice(advices[Math.floor(Math.random() * 46)].description[lang.langName])
     }, [selectedDate])
 
-    const getData = () => {
-        const birthdayMoment = moment((profile.birthDate.split("/")).join("-"))
-        const nowMoment = moment()
-        const age = nowMoment.diff(birthdayMoment, "years")
-        const height = profile.heightSize
-        let targetWeight = profile.targetWeight;
-        const weight = specification[0].weightSize
-        const wrist = specification[0].wristSize
-        let activityRate = profile.dailyActivityRate;
-        let bmr = 1
-        let targetCalorie = 0
-        let weightChangeRate = profile.weightChangeRate;
-        // console.error(height, weight, targetWeight, activityRate, weightChangeRate)
+    // const getData = () => {
+    //     const birthdayMoment = moment((profile.birthDate.split("/")).join("-"))
+    //     const nowMoment = moment()
+    //     const age = nowMoment.diff(birthdayMoment, "years")
+    //     const height = profile.heightSize
+    //     let targetWeight = profile.targetWeight;
+    //     const weight = specification[0].weightSize
+    //     const wrist = specification[0].wristSize
+    //     let activityRate = profile.dailyActivityRate;
+    //     let bmr = 1
+    //     let targetCalorie = 0
+    //     let weightChangeRate = profile.weightChangeRate;
+    //     // console.error(height, weight, targetWeight, activityRate, weightChangeRate)
 
-        if (profile.gender == 1) {
-            bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5
+    //     if (profile.gender == 1) {
+    //         bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5
 
-        }
-        else {
-            bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161
+    //     }
+    //     else {
+    //         bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161
 
-        }
+    //     }
 
-        switch (activityRate) {
-            case 10:
-                targetCalorie = (bmr * 1)
-                break
-            case 20:
-                targetCalorie = (bmr * 1.2)
-                break
-            case 30:
-                targetCalorie = (bmr * 1.375)
-                break
-            case 40:
-                targetCalorie = (bmr * 1.465)
-                break
-            case 50:
-                targetCalorie = (bmr * 1.55)
-                break
-            case 60:
-                targetCalorie = (bmr * 1.725)
-                break
-            case 70:
-                targetCalorie = (bmr * 1.9)
-                break
-        }
+    //     switch (activityRate) {
+    //         case 10:
+    //             targetCalorie = (bmr * 1)
+    //             break
+    //         case 20:
+    //             targetCalorie = (bmr * 1.2)
+    //             break
+    //         case 30:
+    //             targetCalorie = (bmr * 1.375)
+    //             break
+    //         case 40:
+    //             targetCalorie = (bmr * 1.465)
+    //             break
+    //         case 50:
+    //             targetCalorie = (bmr * 1.55)
+    //             break
+    //         case 60:
+    //             targetCalorie = (bmr * 1.725)
+    //             break
+    //         case 70:
+    //             targetCalorie = (bmr * 1.9)
+    //             break
+    //     }
 
-        //console.log("targetCalorie", targetCalorie)
-        const targetCaloriPerDay = (7700 * weightChangeRate * 0.001) / 7
+    //     //console.log("targetCalorie", targetCalorie)
+    //     const targetCaloriPerDay = (7700 * weightChangeRate * 0.001) / 7
 
-        if (weight > targetWeight) {
-            targetCalorie -= targetCaloriPerDay
-        }
-        else if (weight < targetWeight) {
-            targetCalorie += targetCaloriPerDay
-        }
-        targetCalorie = parseInt(targetCalorie)
-        return targetCalorie
-    }
+    //     if (weight > targetWeight) {
+    //         targetCalorie -= targetCaloriPerDay
+    //     }
+    //     else if (weight < targetWeight) {
+    //         targetCalorie += targetCaloriPerDay
+    //     }
+    //     targetCalorie = parseInt(targetCalorie)
+    //     return targetCalorie
+    // }
 
 
     const goBack = () => {
@@ -151,109 +151,110 @@ function DietPlan(props) {
         return () => BackHandler.removeEventListener("hardwareBackPress", goBack);
     }, [isChange])
 
-    const getDiet = () => {
-        const data = require('../../utils/diet/dietPackage.json')
-        const targetCaloriePerDay = getData()
-        const lowRange = targetCaloriePerDay * 0.97
-        const hightRange = targetCaloriePerDay * 1.03
-        let breakfasts = [];
-        let lunches = [];
-        let dinners = [];
-        let snack = []
+    // const getDiet = () => {
+    //     const data = require('../../utils/diet/dietPackage.json')
+    //     const targetCaloriePerDay = getData()
+    //     const lowRange = targetCaloriePerDay * 0.97
+    //     const hightRange = targetCaloriePerDay * 1.03
+    //     let breakfasts = [];
+    //     let lunches = [];
+    //     let dinners = [];
+    //     let snack = []
 
-        data.filter((item, index) => {
-            if (item.foodMeal == 2) {
+    //     data.filter((item, index) => {
+    //         if (item.foodMeal == 2) {
 
-                if (item.caloriValue < (hightRange * 0.25) && item.caloriValue > (lowRange * 0.25)) {
-                    let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        // console.error(item.caloriValue);
-                        dinners = [...dinners, item]
-                    }
-                }
-            }
-            if (index == data.length - 1) {
-                if (diet.dinner.length <= 0) {
-                    dispatch(addAllDinner(dinners))
+    //             if (item.caloriValue < (hightRange * 0.25) && item.caloriValue > (lowRange * 0.25)) {
+    //                 let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     // console.error(item.caloriValue);
+    //                     dinners = [...dinners, item]
+    //                 }
+    //             }
+    //         }
+    //         if (index == data.length - 1) {
+    //             if (diet.dinner.length <= 0) {
+    //                 dispatch(addAllDinner(dinners))
 
-                }
-                if (diet.weekDinner.length <= 0) {
-                    chooseRandomDinners(dinners)
-                }
-            }
-        })
+    //             }
+    //             if (diet.weekDinner.length <= 0) {
+    //                 chooseRandomDinners(dinners)
+    //             }
+    //         }
+    //     })
 
-        data.filter((item, index) => {
-            if (item.foodMeal == 2) {
-                if (item.caloriValue < (hightRange * 0.35) && item.caloriValue > (lowRange * 0.35)) {
-                    let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        lunches = [...lunches, item]
-                    }
-                }
-            }
-            if (index == data.length - 1) {
-                if (diet.lunch.length <= 0) {
-                    dispatch(addAllLunch(lunches))
-                }
-                if (diet.weekLunch.length == 0) {
-                    chooseRandomlunches(lunches)
-                }
-            }
-        })
-        data.filter((item, index) => {
-            if (item.foodMeal == 5) {
-                if (item.caloriValue < (hightRange * 0.05) && item.caloriValue > (lowRange * 0.05)) {
-                    let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        snack = [...snack, item]
-                    }
+    //     data.filter((item, index) => {
+    //         if (item.foodMeal == 2) {
+    //             if (item.caloriValue < (hightRange * 0.35) && item.caloriValue > (lowRange * 0.35)) {
+    //                 let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     lunches = [...lunches, item]
+    //                 }
+    //             }
+    //         }
+    //         if (index == data.length - 1) {
+    //             if (diet.lunch.length <= 0) {
+    //                 dispatch(addAllLunch(lunches))
+    //             }
+    //             if (diet.weekLunch.length == 0) {
+    //                 chooseRandomlunches(lunches)
+    //             }
+    //         }
+    //     })
+    //     data.filter((item, index) => {
+    //         if (item.foodMeal == 5) {
+    //             if (item.caloriValue < (hightRange * 0.05) && item.caloriValue > (lowRange * 0.05)) {
+    //                 let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     snack = [...snack, item]
+    //                 }
 
-                }
-            }
-            if (index == data.length - 1) {
-                if (diet.snack.length <= 0) {
-                    dispatch(addAllSnack(snack))
-                }
-                if (diet.weekSnack.length <= 0) {
-                    //console.warn("this is snack", snack)
-                    chooseRandomSnack(snack).then(() => {
-                        chooseRandomSnack(snack).then(() => {
-                            chooseRandomSnack(snack).then(() => {
-                                setIsChange(!isChange)
-                            })
-                        })
-                    })
-                }
-            }
-        })
+    //             }
+    //         }
+    //         if (index == data.length - 1) {
+    //             if (diet.snack.length <= 0) {
+    //                 dispatch(addAllSnack(snack))
+    //             }
+    //             if (diet.weekSnack.length <= 0) {
+    //                 //console.warn("this is snack", snack)
+    //                 chooseRandomSnack(snack).then(() => {
+    //                     chooseRandomSnack(snack).then(() => {
+    //                         chooseRandomSnack(snack).then(() => {
+    //                             setIsChange(!isChange)
+    //                         })
+    //                     })
+    //                 })
+    //             }
+    //         }
+    //     })
 
-        const filterdietBreakFast = data.filter((item, index) => {
-            if (item.foodMeal == 1) {
-                if (item.caloriValue < (hightRange * 0.25) && item.caloriValue > (lowRange * 0.25)) {
-                    let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        breakfasts = [...breakfasts, item]
-                    }
-                }
-            }
-            if (index == data.length - 1) {
-                if (diet.breakfasts.length <= 0) {
-                    dispatch(addAllBreakFasts(breakfasts))
-                    // //console.warn(breakfasts);
-                }
-                if (diet.weekBreafkast.length <= 0) {
-                    chooseRandomBreakFast(breakfasts)
-                    // load(false)
-                }
+    //     const filterdietBreakFast = data.filter((item, index) => {
+    //         if (item.foodMeal == 1) {
+    //             if (item.caloriValue < (hightRange * 0.25) && item.caloriValue > (lowRange * 0.25)) {
+    //                 let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     breakfasts = [...breakfasts, item]
+    //                 }
+    //             }
+    //         }
+    //         if (index == data.length - 1) {
+    //             if (diet.breakfasts.length <= 0) {
+    //                 dispatch(addAllBreakFasts(breakfasts))
+    //                 // //console.warn(breakfasts);
+    //             }
+    //             if (diet.weekBreafkast.length <= 0) {
+    //                 chooseRandomBreakFast(breakfasts)
+    //                 // load(false)
+    //             }
 
-            }
-        })
-    }
+    //         }
+    //     })
+    // }
 
     useEffect(() => {
         if (diet.dinner.length <= 0 || diet.lunch.length <= 0 || diet.breakfasts.length <= 0 || diet.snack.length <= 0) {
-            getDiet()
+            // getDiet()
+            // chooseRandomBreakFast(diet.)
             analytics().logEvent('userGetDiet')
         }
     }, [])
@@ -558,7 +559,7 @@ function DietPlan(props) {
             userId: user.id,
             foodMeal: id,
             insertDate: selectedDate,
-            foodNutrientValue: nutrientValue,
+            foodNutrientValue: packages.nutrientValue,
             measureUnitId: packages.measureUnitId,
             measureUnitName: packages.measureUnitName,
             personalFoodId: '',

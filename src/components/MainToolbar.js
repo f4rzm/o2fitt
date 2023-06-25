@@ -48,16 +48,19 @@ const MainToolbar = props => {
                 </View>
 
                 <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.rightContainer}>
-                   <Menu
-                   width={moderateScale(23)}
-                   height={moderateScale(23)}
-                   />
+                    <Menu
+                        width={moderateScale(23)}
+                        height={moderateScale(23)}
+                    />
                 </TouchableOpacity>
 
             </View>
-            <View style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: "white", height: moderateScale(25), borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+            {
+                !props.disableCurve &&
+                <View style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: "white", height: moderateScale(25), borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
 
-            </View>
+                </View>
+            }
 
         </View>
     )

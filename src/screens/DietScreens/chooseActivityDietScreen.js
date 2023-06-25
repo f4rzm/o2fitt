@@ -47,7 +47,7 @@ function ChooseDietActivityScreen(props) {
                     <View style={{ borderWidth: 1, padding: moderateScale(4), borderRadius: 50, borderColor: defaultTheme.lightGray }}>
                         <View style={[styles.checkBox, { backgroundColor: TargetActivityARaet == item.item.id ? defaultTheme.primaryColor : defaultTheme.white }]} />
                     </View>
-                    <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), paddingHorizontal: moderateScale(5), paddingVertical:Platform.OS=="ios"?moderateScale(10): moderateScale(5), color: defaultTheme.darkText, textAlign: "left" }}>{item.item.title.split("*")[0]}</Text>
+                    <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), paddingHorizontal: moderateScale(5), paddingVertical: Platform.OS == "ios" ? moderateScale(10) : moderateScale(5), color: defaultTheme.darkText, textAlign: "left" }}>{item.item.title.split("*")[0]}</Text>
                 </View>
                 <Text style={{ fontFamily: lang.font, fontSize: moderateScale(14), paddingHorizontal: moderateScale(5), paddingBottom: moderateScale(6), color: defaultTheme.mainText, textAlign: "left" }}>{item.item.title.split("*")[1]}</Text>
             </TouchableOpacity>
@@ -88,7 +88,8 @@ function ChooseDietActivityScreen(props) {
                         props.navigation.navigate("DietAlergies", {
                             targetWeight: props.route.params.targetWeight,
                             weight: props.route.params.weight,
-                            activityRate: TargetActivityARaet
+                            activityRate: TargetActivityARaet,
+                            dietId: props.route.params.dietId
                         })
                     }
                     }

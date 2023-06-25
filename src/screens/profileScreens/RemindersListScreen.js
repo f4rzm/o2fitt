@@ -23,7 +23,6 @@ import PushNotification from 'react-native-push-notification';
 import PouchDB from '../../../pouchdb';
 import pouchdbSearch from 'pouchdb-find';
 import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 import { defaultReminders } from '../../utils/defaultReminders';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

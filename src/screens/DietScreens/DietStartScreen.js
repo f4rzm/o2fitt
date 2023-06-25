@@ -10,13 +10,16 @@ import BreakFast from '../../../res/img/breakfast.svg'
 import ChangePackage from '../../../res/img/changePackage.svg'
 import { Modal } from 'react-native-paper'
 import Info from '../../../res/img/info5.svg'
-import { saveOldData } from '../../redux/actions/diet'
+import { clearDiet, saveOldData } from '../../redux/actions/diet'
 import analytics from '@react-native-firebase/analytics';
 import axios from 'axios'
 import { BlurView } from '@react-native-community/blur'
+import { updateTarget } from '../../redux/actions'
 
 
 function DietStartScreen(props) {
+
+    const dietCategory = props.route.params
     const dispatch = useDispatch()
     const [showNoInternetModal, setShowNoInternetModal] = React.useState(false)
     const [errorVisible, setErrorVisible] = useState(false)
@@ -44,8 +47,8 @@ function DietStartScreen(props) {
             <View style={{ width: dimensions.WINDOW_WIDTH * 0.8, height: moderateScale(50), justifyContent: 'center', borderBottomWidth: item.index == 3 ? 0 : 1, borderColor: defaultTheme.border }}>
                 <View style={{ justifyContent: "space-between", width: "100%", flexDirection: "row", marginHorizontal: moderateScale(15) }}>
                     <View style={{}}>
-                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText,textAlign:"left" }}>{item.item.name}</Text>
-                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(12),textAlign:"left" }}>{item.item.measure}</Text>
+                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, textAlign: "left" }}>{item.item.name}</Text>
+                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(12), textAlign: "left" }}>{item.item.measure}</Text>
                     </View>
                     <Text style={{ fontFamily: lang.font, fontSize: moderateScale(18), paddingHorizontal: moderateScale(25), color: defaultTheme.mainText }}>{item.item.caloire}</Text>
                 </View>
@@ -105,7 +108,29 @@ function DietStartScreen(props) {
     const NoInternetCallback = () => {
         setShowNoInternetModal(false)
     }
+    const shutDownWholeDiet = async () => {
+        setTimeout(() => {
+            dispatch(
+                updateTarget(
+                    diet.oldData,
+                    auth,
+                    app,
+                    user,
+                    () => {
+                        dispatch(clearDiet())
+                        analytics().logEvent('get_new_diet')
+                        return true
 
+                    },
+                    (err) => {
+
+                    }
+
+                )
+            )
+        }, 700);
+
+    }
 
     return (
         <SafeAreaView>
@@ -135,12 +160,12 @@ function DietStartScreen(props) {
                     />
                 </View>
 
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.whatIsDiet}</Text>
-                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.whatIsDietDescribe}</Text>
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.dietAdvantages}</Text>
+                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{dietCategory.name[lang.langName]}</Text>
+                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{dietCategory.description[lang.langName]}</Text>
+                {/* <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.dietAdvantages}</Text>
                 <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.dietAdvantageDescribe}</Text>
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.exampleOfDiet}</Text>
-                <View style={{alignItems:"center"}}>
+                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.exampleOfDiet}</Text> */}
+                <View style={{ alignItems: "center" }}>
                     <FlatList
                         data={data}
                         // ListFooterComponent={renderFooter}
@@ -149,7 +174,7 @@ function DietStartScreen(props) {
                         renderItem={RenderItem}
                     />
                 </View>
-                <View style={{height:moderateScale(45)}}/>
+                <View style={{ height: moderateScale(45) }} />
             </ScrollView>
 
             <LinearGradient
@@ -181,7 +206,7 @@ function DietStartScreen(props) {
                         />
                         <Text style={{ fontFamily: lang.font, fontSize: moderateScale(20), color: defaultTheme.darkText }}> قبلش یادتون باشه </Text>
                     </View>
-                    <Text style={{ width: dimensions.WINDOW_WIDTH * 0.7, fontSize: moderateScale(17), marginVertical: moderateScale(16), fontFamily: lang.font, lineHeight: moderateScale(22), paddingBottom: moderateScale(18), color: defaultTheme.mainText,textAlign:"left" }}>با دریافت برنامه غذایی کالری هدف روزانه شما تغییر میکنه و از این به بعد با برنامه غذایی به پیشرفت ادامه میدین</Text>
+                    <Text style={{ width: dimensions.WINDOW_WIDTH * 0.7, fontSize: moderateScale(17), marginVertical: moderateScale(16), fontFamily: lang.font, lineHeight: moderateScale(22), paddingBottom: moderateScale(18), color: defaultTheme.mainText, textAlign: "left" }}>با دریافت برنامه غذایی کالری هدف روزانه شما تغییر میکنه و از این به بعد با برنامه غذایی به پیشرفت ادامه میدین</Text>
                     <ConfirmButton
                         lang={lang}
                         style={styles.button4}
@@ -195,8 +220,11 @@ function DietStartScreen(props) {
                                 },
                             };
                             // axios.get("https://identity.o2fitt.com/api/v1/Users/DayOfWeeks", header).then(() => {
-                                props.navigation.navigate("ChooseDietTargetScreen")
-                                setAutoFuces(false)
+                            shutDownWholeDiet().then(()=>{
+
+                                props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
+                            })
+                            setAutoFuces(false)
                             // }).catch((err) => {
                             //     setErrorVisible(true)
                             //     setErrorContext(lang.noInternet)
@@ -223,7 +251,7 @@ const styles = StyleSheet.create({
         marginHorizontal: moderateScale(20),
         marginVertical: moderateScale(14),
         color: defaultTheme.darkText,
-        textAlign:"left"
+        textAlign: "left"
     },
     text2: {
         width: dimensions.WINDOW_WIDTH * 0.90,
@@ -231,7 +259,7 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(15),
         lineHeight: moderateScale(25),
         color: defaultTheme.lightGray2,
-        textAlign:"left"
+        textAlign: "left"
 
     },
     packages: {

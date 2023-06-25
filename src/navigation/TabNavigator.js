@@ -28,6 +28,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import axios from "axios";
 import UpdateModal from "../components/modals/UpdateModal";
 import { getVersion } from "react-native-device-info";
+import DietMainScreen from "../screens/DietScreens/DietMainScreen";
 // import Source from 'react-native-vpn-detect'
 
 const Tab = createBottomTabNavigator();
@@ -362,6 +363,7 @@ const Tabs = (props) => {
         >
           <Tab.Screen name="HomeRouter" component={HomeRouter} />
           <Tab.Screen name="DailyRouter" component={DailyRouter} />
+          <Tab.Screen name="DietMainScreen" component={DietMainScreen} />
           <Tab.Screen name="GoalRouter" component={GoalRouter} />
           {
             lang.langName == "persian" ?
@@ -434,7 +436,7 @@ const Tabs = (props) => {
           :
           null
       }
-      {
+      {/* {
         updateModal &&
         <UpdateModal
           item={updateModal}
@@ -443,7 +445,7 @@ const Tabs = (props) => {
             setUpdateModal(false)
           }}
         />
-      }
+      } */}
       {
         parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3 &&
         <TimeZoneError

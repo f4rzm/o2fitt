@@ -11,6 +11,7 @@ import { Picker } from 'react-native-wheel-pick'
 
 
 function ChooseDietTargetScreen(props) {
+    console.warn(props.route.params);
     const lang = useSelector(state => state.lang)
 
     const profile = useSelector(state => state.profile)
@@ -156,7 +157,7 @@ function ChooseDietTargetScreen(props) {
                     style={styles.set}
                     title={lang.continuation}
                     leftImage={require('../../../res/img/done.png')}
-                    onPress={() => props.navigation.navigate("chooseActivityDietScreen", { targetWeight: `${selectedTergetKG}.${selectedTergetGR}`, weight: `${selectedKG}.${selectedGR}` })}
+                    onPress={() => props.navigation.navigate("chooseActivityDietScreen", { targetWeight: `${selectedTergetKG}.${selectedTergetGR}`, weight: `${selectedKG}.${selectedGR}`,dietId:props.route.params.dietId })}
                 />
             </View>
             <Modal
