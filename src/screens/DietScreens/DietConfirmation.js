@@ -6,13 +6,15 @@ import { defaultTheme } from '../../constants/theme'
 import { moderateScale } from 'react-native-size-matters'
 import { dimensions } from '../../constants/Dimensions'
 import { useDispatch } from 'react-redux'
-import { setIsActive, dietStartDate, addWeekBreakfast, addWeekSnack, addWeekLunch, addWeekDinner, addAllLunch, addAllSnack, addAllDinner, addAllBreakFasts } from '../../redux/actions/diet'
+import { setIsActive, dietStartDate, addWeekBreakfast, addWeekSnack, addWeekLunch, addWeekDinner, addAllLunch, addAllSnack, addAllDinner, addAllBreakFasts, setDietMeal, shutDownDiet, setOldDietFalse } from '../../redux/actions/dietNew'
 import moment from 'moment'
 import { updateTarget, updateSpecification } from '../../redux/actions'
 import SetTargetScreen from '../otherScreens/SetTargetScreen'
 import { RestController } from '../../classess/RestController'
 import { urls } from '../../utils/urls'
-import { calculateCalorie } from '../../functions/CalculateDailyCalorie'
+import { calculateCalorie, calculateCalorieForDietPackage } from '../../functions/CalculateDailyCalorie'
+import analytics from '@react-native-firebase/analytics';
+import { setActivaitonAndDeativation } from '../../redux/actions/fasting'
 
 
 function DietConfirmation(props) {
@@ -21,9 +23,19 @@ function DietConfirmation(props) {
     const dispatch = useDispatch()
     const getDiet = async (calorie) => {
         // const data = require('../../utils/diet/dietPackage.json')
-        const targetCaloriePerDay = calculateCalorie({ diet: diet, profile: profile, specification: specification, user: user })
+        const targetCaloriePerDay = calculateCalorieForDietPackage({
+            diet: diet,
+            profile: profile,
+            specification: specification,
+            user: user,
+            weightChangeRate: props.route.params.weightChangeRate,
+            weight: props.route.params.weight,
+            activityRate: props.route.params.activityRate,
+            targetWeight: props.route.params.targetWeight
+        })
+       
         const RC = new RestController()
-        let url = urls.foodBaseUrl + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=${targetCaloriePerDay.targetCalorie}`
+        let url = urls.baseDiet + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=${targetCaloriePerDay.targetCalorie}`
         if (alergies.length > 0) {
             alergies.map((item, index) => {
                 if (index == 0) {
@@ -41,114 +53,67 @@ function DietConfirmation(props) {
             },
         }
         RC.get(url, header, onSuccess, onFailure)
-
-
     }
+
     const onFailure = (err) => {
         console.error(err);
         setLoading(false)
     }
-    const onSuccess = async (res) => {
-        console.error('ok');
+
+    const randomGenerator = (data) => {
+        return data[Math.floor(Math.random() * data.length - 1)]
+    }
+
+    const onSuccess = (res) => {
+
         const data = res.data.data
-        console.warn(data);
-        let breakfasts = [];
-        let lunches = [];
+        let breakfast = [];
+        let lunch = [];
         let dinners = [];
         let snack = []
-        data.filter((item, index) => {
+
+        data.map((item, index) => {
             if (item.foodMeal == 3) {
                 dinners = [...dinners, item]
             }
-            if (index == data.length - 1) {
-                if (diet.dinner.length <= 0) {
-                    dispatch(addAllDinner(dinners))
-
-                }
-                if (diet.weekDinner.length <= 0) {
-                    chooseRandomDinners(dinners)
-                }
-            }
-        })
-
-        data.filter((item, index) => {
-            if (item.foodMeal == 1) {
-                lunches = [...lunches, item]
-            }
-            if (index == data.length - 1) {
-                if (diet.lunch.length <= 0) {
-                    dispatch(addAllLunch(lunches))
-                }
-                if (diet.weekLunch.length == 0) {
-                    chooseRandomlunches(lunches)
-                }
-            }
-        })
-        data.filter((item, index) => {
-            if (item.foodMeal == 5 || item.foodMeal == 2 || item.foodMeal == 4) {
-                snack = [...snack, item]
-
-            }
-            if (index == data.length - 1) {
-                if (diet.snack.length <= 0) {
-                    dispatch(addAllSnack(snack))
-                }
-                if (diet.weekSnack.length <= 0) {
-                    //console.warn("this is snack", snack)
-                    chooseRandomSnack(snack).then(() => {
-                        chooseRandomSnack(snack).then(() => {
-                            chooseRandomSnack(snack).then(() => {
-                                // setIsChange(!isChange)
-                            })
-                        })
-                    })
-                }
-            }
-        })
-
-        data.filter((item, index) => {
             if (item.foodMeal == 0) {
-                breakfasts = [...breakfasts, item]
+                breakfast = [...breakfast, item]
             }
-            if (index == data.length - 1) {
-                if (diet.breakfasts.length <= 0) {
-                    dispatch(addAllBreakFasts(breakfasts))
-                    // //console.warn(breakfasts);
-                }
-                if (diet.weekBreafkast.length <= 0) {
-                    chooseRandomBreakFast(breakfasts)
-                    // load(false)
-                }
-
+            if (item.foodMeal == 1) {
+                lunch = [...lunch, item]
+            }
+            if (item.foodMeal == 2) {
+                snack = [...snack, item]
             }
         })
+
+        const randomGenerators = {
+            [moment().format("YYYY-MM-DD")]: {
+                '0': { ...randomGenerator(breakfast), isAte: false },
+                "1": { ...randomGenerator(lunch), isAte: false },
+                "2": { ...randomGenerator(snack), isAte: false },
+                "3": { ...randomGenerator(dinners), isAte: false },
+                "4": { ...randomGenerator(snack), isAte: false },
+                "5": { ...randomGenerator(snack), isAte: false },
+            }
+        }
+        dispatch(setDietMeal(
+            {
+                [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+                allDinner: dinners,
+                allBreakfast: breakfast,
+                allSnack: snack,
+                allLunch: lunch,
+                isActive: true,
+                endDate: moment().add(31, 'days').format("YYYY-MM-DD")
+            }
+        ))
+        dispatch(setOldDietFalse())
         setTimeout(() => {
-            props.navigation.navigate("DietPlanScreen")
-        }, 1000);
-    }
-    const chooseRandomBreakFast = (data) => {
-        dispatch(addWeekBreakfast(data[Math.floor(Math.random() * data.length - 1)], moment().format("YYYY-MM-DD")))
-        // setIsChange(!isChange)
-        return true
+            props.navigation.navigate("MyDietTab")
+        }, 300);
 
     }
-    const chooseRandomSnack = async (data) => {
-        dispatch(addWeekSnack({ ...data[Math.floor(Math.random() * data.length - 1)], date: moment().format("YYYY-MM-DD"), isAte: false, generatedId: Math.floor(Math.random() * 900000000000) }))
-        return true
-    }
-
-
-    const chooseRandomlunches = async (data) => {
-        dispatch(addWeekLunch(data[Math.floor(Math.random() * data.length - 1)], moment().format("YYYY-MM-DD")))
-
-        return true
-    }
-    const chooseRandomDinners = (data) => {
-        dispatch(addWeekDinner(data[Math.floor(Math.random() * data.length - 1)], moment().format("YYYY-MM-DD")))
-
-        return true
-    }
-    console.warn(props.route.params.weightChangeRate);
 
     const lang = useSelector(state => state.lang)
     const user = useSelector(state => state.user)
@@ -173,9 +138,6 @@ function DietConfirmation(props) {
         { id: 983, name: "سیر" },
         { id: 752, name: "کیوی" },
     ]
-
-    // console.warn(profile)
-    // let activityRate=profile.dailyActivityRate==20?
     useEffect(() => {
         switch (props.route.params.activityRate) {
             case 10: {
@@ -250,6 +212,7 @@ function DietConfirmation(props) {
         }
 
     }, [])
+
     useEffect(() => {
         if (parseFloat(props.route.params.weight) < parseFloat(props.route.params.targetWeight)) {
             setTarget("افزایش وزن")
@@ -259,6 +222,7 @@ function DietConfirmation(props) {
             setTarget("ثبات وزن")
         }
     }, [])
+
     const confirmationData = [
         { title: "نوع برنامه غذایی", describe: target },
         { title: "وزن فعلی", describe: `${props.route.params.weight} کیلوگرم` },
@@ -266,12 +230,13 @@ function DietConfirmation(props) {
         { title: "میزان فعالیت هفتگی", describe: activityRate },
         { title: "درجه سختی رژیم", describe: hardShip },
     ]
-    console.warn(parseInt(props.route.params.targetWeight), parseInt(props.route.params.activityRate), parseInt(props.route.params.weightChangeRate), parseFloat(props.route.params.weight).toFixed(1),);
+
     const onConfirm = () => {
         if (fastingDiet.isActive) {
             setLoading(true)
             dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
             dispatch(setIsActive(true))
+            dispatch(setActivaitonAndDeativation(true))
             setTimeout(() => {
                 dispatch(
                     updateTarget(
@@ -292,7 +257,7 @@ function DietConfirmation(props) {
                                 weightSize: parseFloat(props.route.params.weight).toFixed(1),
                             }, auth, app, user, () => {
 
-                                props.navigation.navigate("FastingDietplan")
+                                props.navigation.navigate("MyDietTab")
                             }, () => { }))
                             analytics().logEvent('set_fastingDiet')
                         },
@@ -300,7 +265,6 @@ function DietConfirmation(props) {
                             setLoading(false)
                             console.error(err);
                         }
-
                     )
                 )
             }, 800);
@@ -329,7 +293,7 @@ function DietConfirmation(props) {
                                 weightSize: parseFloat(props.route.params.weight).toFixed(1),
                             }, auth, app, user, () => {
                                 getDiet().then(res => {
-                                    props.navigation.navigate("DietPlanScreen")
+                                    // props.navigation.navigate("DietPlanScreen")
                                 })
 
                             }, () => { }))

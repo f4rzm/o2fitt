@@ -317,14 +317,6 @@ const Tabs = (props) => {
   const [updateModal, setUpdateModal] = useState(false)
 
   React.useEffect(() => {
-    console.warn(user.id);
-    // dispatch(clearDiet())
-    console.error(diet.oldData);
-    for (let i = 0; i < diet.weekSnack.length - 1; i++) {
-      if (diet.weekSnack[i].id == undefined || diet.weekSnack[i].id == null) {
-        console.error(diet.weekSnack[i])
-      }
-    }
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,

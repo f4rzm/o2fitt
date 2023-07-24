@@ -75,6 +75,7 @@ import BodyAnalyzeScreen from '../screens/homeScreeen/BodyAnalyzeScreen'
 import DrawerNavigator from "./DrawerNavigator";
 import FastingDietplan from "../screens/FastingDiet/FastingDietplan";
 import { createStackNavigator } from "@react-navigation/stack";
+import RecipeFilterScreen from "../screens/recipe/RecipeFilterScreen";
 
 
 const MainRoute = props => {
@@ -195,6 +196,7 @@ const MainRoute = props => {
                                 <Stack.Screen name="BlogCatScreen" component={BlogCatScreen} options={options} />
                                 <Stack.Screen name="SetRefferalCode" component={SetRefferalCode} options={options} />
                                 <Stack.Screen name="FastingDietplan" component={FastingDietplan} options={options} />
+                                <Stack.Screen name="RecipeFilterScreen" component={RecipeFilterScreen} options={options} />
 
                             </> :
                             <Stack.Screen name="WelcomeRouter" component={WelcomeRouter} options={options} /> :

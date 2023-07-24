@@ -220,7 +220,7 @@ enableScreens();
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['pedometer', "diet", "starRating", "syncedDate","fastingDiet"],
+  whitelist: ['pedometer', "diet", "starRating", "syncedDate","fastingDiet","dietNew"],
 
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -252,7 +252,6 @@ const toastConfig = {
       ]}
       text2={props.text2}
       text2NumberOfLines={2}
-
     />
   ),
   error: ({ props, ...rest }) => (
@@ -443,16 +442,12 @@ const Test = () => {
 
       /> */}
       <MyStatusBar />
-
-
       <SafeAreaView style={{ flex: 1 }}>
         <NavigationContainer  linking={linking} theme={MyTheme}>
-
           <MainRoute />
           <Toast config={toastConfig} />
         </NavigationContainer>
       </SafeAreaView>
-
     </>
   );
 };

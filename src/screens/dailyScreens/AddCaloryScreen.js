@@ -21,6 +21,7 @@ import { urls } from "../../utils/urls"
 import pouchdbSearch from 'pouchdb-find'
 import analytics from '@react-native-firebase/analytics';
 import { mealsName } from '../../utils/interfaces/mealsInterface';
+import { nutritions } from '../../utils/nutritions';
 
 PouchDB.plugin(pouchdbSearch)
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' })
@@ -255,7 +256,27 @@ const AddCaloryScreen = props => {
     let protein = (!isNaN(parseFloat(nutritionValue[9])) && parseFloat(nutritionValue[9]) > 0) ? parseFloat(nutritionValue[9]) : 0
     let fat = (!isNaN(parseFloat(nutritionValue[0])) && parseFloat(nutritionValue[0]) > 0) ? parseFloat(nutritionValue[0]) : 0
     let carbo = (!isNaN(parseFloat(nutritionValue[31])) && parseFloat(nutritionValue[31]) > 0) ? parseFloat(nutritionValue[31]) : 0
+    const onDataChanged = (index, text) => {
+        if (text.length > 0) {
+            if (!isNaN(parseFloat(text))) {
+                const f = typeof (meal.foodNutrientValue) === "string" ? meal.foodNutrientValue.split(",") : meal.foodNutrientValue
+                f[index] = parseFloat(text)
+                setMeal({
+                    ...meal,
+                    foodNutrientValue: f
+                })
+            }
+        }
+        else {
+            const f = typeof (meal.foodNutrientValue) === "string" ? meal.foodNutrientValue.split(",") : meal.foodNutrientValue
+            f[index] = 0
+            setMeal({
+                ...meal,
+                foodNutrientValue: f
+            })
+        }
 
+    }
     return (
         <>
             <FoodToolbar
@@ -469,6 +490,35 @@ const AddCaloryScreen = props => {
                         keyboardType="decimal-pad"
                     />
                 </RowSpaceBetween>
+                {
+                    nutritions.map((item, index) => {
+                        if (item.id == 1 || item.id == 10 || item.id == 32|| item.id == 24) {
+                            
+                        }else{
+                            return (
+                                <>
+
+                                    <RowSpaceBetween style={styles.rowStyle}>
+                                        <Text style={[styles.text1, { fontFamily: lang.font }]} allowFontScaling={false}>
+                                            {
+                                                item.persian + " (" + item.unit + ")"
+                                            }
+                                        </Text>
+                                        <TextInput
+                                            style={[styles.nameInput, { fontFamily: lang.font }]}
+                                            placeholder={lang.optional}
+                                            placeholderTextColor={defaultTheme.lightGray}
+                                            value={meal.foodNutrientValue[item.id - 1]==0?'':meal.foodNutrientValue[item.id - 1].toString()}
+                                            onChangeText={(text) => { onDataChanged(item.id - 1, text) }}
+                                            keyboardType="decimal-pad"
+                                        />
+                                    </RowSpaceBetween>
+                                </>
+                            )
+                        }
+
+                    })
+                }
 
                 <ConfirmButton
                     lang={lang}

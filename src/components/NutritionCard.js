@@ -182,7 +182,8 @@ const NutritionCard = props => {
       parseInt(
         !props.diet.isActive || props.diet.isBuy == false
           ? targetCalorie
-          : targetCalorie * 1.03,
+          : targetCalorie ,
+          // : targetCalorie * 1.03,
       ),
     );
     setTargetCarbo(parseInt(carbo / 4));

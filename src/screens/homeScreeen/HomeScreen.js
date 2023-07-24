@@ -29,9 +29,7 @@ import {
   Uploader,
   BlogRow,
   AdvertiseRow,
-  MarketModal,
-  DietCard,
-  Information,
+
 } from '../../components';
 import moment from 'moment';
 import PouchDB from '../../../pouchdb';
@@ -164,12 +162,14 @@ const HomeScreen = props => {
   }, []);
 
   React.useEffect(() => {
+
     widgetUpdate({ profile: profile, user: user, specification: specification, hasCredit: hasCredit, diet: diet });
     // setMeals([])
     // setUserWater(0)
     // setUserStep([])
     // setActivities([])
     getMealFromDB(selectedDate);
+    getStepFromDB(selectedDate);
     if (app.networkConnectivity) {
       //syncedDays.indexOf(selectedDate) === -1
       // syncedDays.push(selectedDate)
@@ -180,7 +180,7 @@ const HomeScreen = props => {
       syncActivities(selectedDate);
     } else {
       getWaterFromDB(selectedDate);
-      getStepFromDB(selectedDate);
+
       getSleepFromDB(selectedDate);
 
       getActivityFromDB(selectedDate);
@@ -188,9 +188,10 @@ const HomeScreen = props => {
   }, [selectedDate, app.networkConnectivity]);
 
   const getLatestData = async () => {
+
     const date = await AsyncStorage.getItem('homeDate');
     await getMealFromDB(date);
-    getStepFromDB(date);
+    // getStepFromDB(date);
     if (app.networkConnectivity) {
       //syncedDays.indexOf(selectedDate) === -1
       // syncedDays.push(selectedDate)
@@ -208,7 +209,8 @@ const HomeScreen = props => {
   };
 
   React.useEffect(() => {
-    const focusUnsubscribe = props.navigation.addListener('focus', () => {
+    const focusUnsubscribe = props.navigation.addListener('focus', (ew) => {
+      console.warn('this is ew', ew);
       getAdvertises();
       getDates();
       getLatestData();
@@ -239,7 +241,6 @@ const HomeScreen = props => {
   }, []);
 
   React.useEffect(() => {
-    // console.warn(app.unreadMessages)
     let backHandler = null;
     const focusUnsubscribe = props.navigation.addListener('focus', () => {
       backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -277,6 +278,7 @@ const HomeScreen = props => {
   //===============================Step Conter================================\\
 
   const getStepFromDB = async () => {
+
     const date = await AsyncStorage.getItem('homeDate');
     if (!stepBulkSync) {
       const reg = RegExp('^' + date, 'i');
@@ -297,6 +299,7 @@ const HomeScreen = props => {
   };
 
   const getSteps = async (stepDbData, date) => {
+
     let DbPedometer = [];
     for (let i = 0; i < stepDbData.length; i++) {
       const element = stepDbData[i];
@@ -316,11 +319,9 @@ const HomeScreen = props => {
     if (permission == 'granted') {
       AppleHealthKit.initHealthKit(healthPermissions, error => {
         /* Called after we receive a response from the system */
-
         if (error) {
           console.log('[ERROR] Cannot grant permissions!');
         }
-
         /* Can now read or write to HealthKit */
         let options = {
           date: new Date(date).toISOString(), // optional; default now
@@ -330,7 +331,7 @@ const HomeScreen = props => {
           if (results) {
             if (results.value > 0) {
               sendAppleHealthKitStepsToDatabase(
-                results.value,
+                parseInt(results.value),
                 DbPedometer,
                 date,
               );
@@ -425,6 +426,7 @@ const HomeScreen = props => {
   };
 
   const saveStepToSever = (data, stepDbData) => {
+    Alert.alert('saving step')
     const url = urls.workoutBaseUrl + urls.userTrackSteps;
     const header = {
       headers: {
@@ -612,6 +614,7 @@ const HomeScreen = props => {
       onRefreshTokenFailure,
     );
   };
+  
   const getDates = async () => {
     let date = await AsyncStorage.getItem('homeDate');
     setDate(date);
@@ -1327,12 +1330,6 @@ const HomeScreen = props => {
   };
 
   React.useEffect(() => {
-    // dispatch(clearDiet())
-    for (let i = 0; i < diet.weekSnack.length - 1; i++) {
-      if (diet.weekSnack[i].id == undefined || diet.weekSnack[i].id == null) {
-        console.error(diet.weekSnack[i]);
-      }
-    }
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -1416,7 +1413,7 @@ const HomeScreen = props => {
           }
           autoSteps={pedometer.AutoStepsCounter}
         />
-        {user.countryId !== 128 || lang.langName !== 'persian' ? null : (
+        {/* {user.countryId !== 128 || lang.langName !== 'persian' ? null : (
           <DietCard
             lang={lang}
             profile={profile}
@@ -1424,12 +1421,14 @@ const HomeScreen = props => {
             diet={diet}
             onCardPressed={onDietPressed}
           />
-        )}
+        )} */}
 
-        {/* <View style={{ backgroundColor: "black" }}>
+        {/* 
+        <View style={{ backgroundColor: "black" }}>
           <Text style={{ color: defaultTheme.white }}>dietPK:{profile.dietPkExpireDate}</Text>
           <Text style={{ color: defaultTheme.white }}>pkExpireDate:{profile.pkExpireDate}</Text>
-        </View> */}
+        </View> 
+        */}
 
         {/* <GoalCard
           lang={lang}
@@ -1446,7 +1445,6 @@ const HomeScreen = props => {
           onPress={onBodyPressed}
           onCardPressed={onBodyPressed}
         />
-
         <StepCard
           lang={lang}
           profile={profile}

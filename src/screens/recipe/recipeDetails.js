@@ -12,6 +12,10 @@ import { allMeasureUnits } from '../../utils/measureUnits';
 import { nutritions } from '../../utils/nutritions'
 import FastImage from 'react-native-fast-image';
 import { StyleSheet } from 'react-native';
+import CustomTopTabNavigator from '../../components/CustomTopTabNavigator';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import RecipeSteps from '../../components/Recipe/RecipeSteps';
+import GoalActivityScreen from '../goalScreens/GoalActivityScreen';
 
 function RecipeDetails(props) {
 
@@ -96,11 +100,7 @@ function RecipeDetails(props) {
 
 
     const lang = useSelector((state) => state.lang);
-    const auth = useSelector((state) => state.auth);
-    const user = useSelector((state) => state.user);
-    const app = useSelector((state) => state.app);
-    const profile = useSelector((state) => state.profile);
-    const [serverData, setServerData] = useState([])
+    // const [serverData, setServerData] = useState([])
     const [selectedTab, setSelectedTab] = useState(2)
     const [measureunit, setMeasureunit] = useState(allMeasureUnits.find((measure) => measure.id == 36))
     const [ingredient, setIngredient] = useState(props.route.params.items.nutrientValue)
@@ -112,40 +112,39 @@ function RecipeDetails(props) {
         { id: 2, source: require('../../../res/animations/time.json'), text: props.route.params.items.bakingTime },
     ])
 
+    // const getServer = () => {
+    //     const url = urls.foodBaseUrl + `Food?foodId=${recipe.id}`
+    //     const header = {
+    //         headers: {
+    //             Authorization: 'Bearer ' + auth.access_token,
+    //             Language: lang.capitalName,
+    //         },
+    //     };
+    //     axios.get(url, header).then((response) => {
+    //         const res = response.data.data
+    //         console.warn(res);
+    //         setServerData(res)
 
-    let recipe = props.route.params.items
-
-    const getServer = () => {
-        const url = urls.foodBaseUrl + `Food?foodId=${recipe.id}`
-        const header = {
-            headers: {
-                Authorization: 'Bearer ' + auth.access_token,
-                Language: lang.capitalName,
-            },
-        };
-        axios.get(url, header).then((response) => {
-            const res = response.data.data
-            console.warn(res);
-            setServerData(res)
-
-            console.error(response.data.data.ingredients);
-            setIngredient(response.data.data.nutrientValue)
-            setHeaderRow()
-        }).catch((err) => {
-            console.error(err);
-        })
+    //         console.error(response.data.data.ingredients);
+    //         setIngredient(response.data.data.nutrientValue)
+    //         setHeaderRow()
+    //     }).catch((err) => {
+    //         console.error(err);
+    //     })
 
 
-    }
+    // }
     useEffect(() => {
         // getServer()
     }, [])
 
     const tabs = [
-        { id: 1, neme: "مواد لازم" },
-        { id: 2, neme: "دستور پخت" },
-        { id: 3, neme: "ارزش غذایی" },
+        { id: 1, name: "مواد لازم" },
+        { id: 2, name: "دستور پخت" },
+        { id: 3, name: "ارزش غذایی" },
     ]
+    const Tabs = createMaterialTopTabNavigator();
+
     return (
         <>
             {
@@ -154,7 +153,7 @@ function RecipeDetails(props) {
                         <ActivityIndicator size={"large"} color={defaultTheme.primaryColor} />
                     </View>
                 ) :
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                    <ScrollView stickyHeaderIndices={[3]} showsVerticalScrollIndicator={false}>
                         <View>
                             <FastImage
                                 source={props.route.params.items.imageThumb
@@ -182,8 +181,7 @@ function RecipeDetails(props) {
                         <View style={styles.foodName} >
                             <Text style={[styles.foodNameText, { fontFamily: lang.font, }]}>{props.route.params.items.name}</Text>
                         </View>
-                        <View style={{ flexDirection: "row", justifyContent: "space-evenly", paddingVertical: moderateScale(20) }}>
-
+                        <View style={{ flexDirection: "row", justifyContent: "space-evenly", paddingTop: moderateScale(20) }}>
                             {
                                 headerRow.map((item) => (
                                     <View style={{ alignItems: "center" }}>
@@ -198,10 +196,10 @@ function RecipeDetails(props) {
                                 ))
                             }
                         </View>
-                        <View
-                            style={{}}
-                        >
-                            <View style={styles.pagerContainer}>
+                        {/* <ScrollView
+                        // style={{ height:dimensions.WINDOW_HEIGTH }}
+                        > */}
+                        {/* <View style={styles.pagerContainer}>
                                 {
                                     tabs.map((item, index) => {
                                         return (
@@ -212,15 +210,53 @@ function RecipeDetails(props) {
                                                 }}
                                                 style={{ zIndex: 10, borderRadius: moderateScale(10), padding: moderateScale(10), paddingVertical: Platform.OS == "ios" ? moderateScale(10) : moderateScale(5), width: dimensions.WINDOW_WIDTH * 0.3 }}
                                             >
-                                                <Text style={{ fontSize: moderateScale(17), color: item.id === selectedTab ? defaultTheme.white : defaultTheme.mainText, fontFamily: lang.font, alignSelf: "center" }}>{item.neme}</Text>
+                                                <Text style={{ fontSize: moderateScale(17), color: item.id === selectedTab ? defaultTheme.white : defaultTheme.mainText, fontFamily: lang.font, alignSelf: "center" }}>{item.name}</Text>
                                             </TouchableOpacity>
                                         )
                                     })
 
                                 }
                                 <Animated.View style={{ position: "absolute", width: dimensions.WINDOW_WIDTH * 0.3, height: "100%", backgroundColor: defaultTheme.primaryColor, transform: [{ translateX: scrollX }], borderRadius: moderateScale(10) }} />
-                            </View>
-                        </View>
+                            </View> */}
+
+
+                        {/* <Tabs.Screen name="Settings" component={() => <View style={{ width: dimensions.WINDOW_WIDTH, alignSelf: "center" }}>
+                                    <Text style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: defaultTheme.grayBackground, fontFamily: lang.font, color: defaultTheme.darkText, fontSize: moderateScale(15), padding: moderateScale(5), paddingHorizontal: moderateScale(10), marginVertical: moderateScale(20), borderTopWidth: 1, borderBottomWidth: 1, borderColor: defaultTheme.border, textAlign: "left" }}>{lang.nutritionalValue100}</Text>
+                                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, alignSelf: "center" }}>
+                                        {
+                                            nutritions.map((item, index) => {
+                                                const Unit = ((parseFloat(ingredient[parseInt(item.id) - 1]) * parseFloat(measureunit.value) * 100) / 100)
+
+                                                return (
+                                                    <View style={{ borderBottomWidth: 1, borderColor: defaultTheme.border, flexDirection: "row", justifyContent: "space-between", paddingVertical: 15 }}>
+                                                        <Text
+                                                            style={{ paddingHorizontal: moderateScale(15), fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText }}
+                                                        >
+                                                            {item[lang.langName]}
+                                                        </Text>
+                                                        <Text style={{ color: defaultTheme.darkText, fontFamily: lang.font, fontSize: moderateScale(15) }}>{Unit.toFixed(2)}  {item.unit}</Text>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                </View>} /> */}
+                        <CustomTopTabNavigator
+                            items={tabs}
+                            lang={lang}
+                            containerStyle={{ backgroundColor: defaultTheme.grayBackground, width: dimensions.WINDOW_WIDTH * 0.93, height: moderateScale(45), marginTop: moderateScale(10) }}
+                            cardsWidth={dimensions.WINDOW_WIDTH * 0.93 / 3}
+                            floatViewStyle={{ backgroundColor: defaultTheme.primaryColor, borderRadius: moderateScale(10), height: moderateScale(35), width: dimensions.WINDOW_WIDTH * 0.28 }}
+                            activeTextColor={defaultTheme.white}
+                            deactiveTextColor={defaultTheme.darkText}
+                            onSelectPage={(id) => {
+                                // setTimeout(() => {
+                                // console.warn('oo');
+                                setSelectedTab(id)
+                                // }, 3000);
+                            }}
+                        />
+                        {/* </ScrollView> */}
                         {
                             selectedTab == 2 ?
                                 <>
@@ -287,10 +323,6 @@ function RecipeDetails(props) {
                                         </View>
                                     </View>
                         }
-
-
-
-
                     </ScrollView>
             }
         </>
@@ -298,7 +330,6 @@ function RecipeDetails(props) {
 }
 const styles = StyleSheet.create({
     pagerContainer: {
-
         width: dimensions.WINDOW_WIDTH * 0.95,
         borderRadius: 13,
         alignItems: "center",

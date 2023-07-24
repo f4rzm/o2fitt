@@ -16,7 +16,7 @@ import { Modal } from 'react-native-paper';
 import { moderateScale } from 'react-native-size-matters';
 import { BlurView } from '@react-native-community/blur';
 import { ConfirmButton } from '../components';
-import { clearDiet } from '../redux/actions/diet';
+import { clearDiet, shutDownDiet } from '../redux/actions/dietNew';
 import analytics from '@react-native-firebase/analytics';
 import { urls } from '../utils/urls';
 import { RestController } from '../classess/RestController';
@@ -192,6 +192,7 @@ const DrawerNavigator = (props) => {
                                 analytics().logEvent('ramadan_switch_True')
                                 if (diet.isActive) {
                                     dispatch(clearFastingDiet())
+                                    dispatch(shutDownDiet())
                                     dispatch(clearDiet())
                                 }
                                 dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true, endDate: null }))
@@ -234,6 +235,7 @@ const DrawerNavigator = (props) => {
                                 setFastingServerActivationFasle()
                                 if (diet.isActive) {
                                     dispatch(clearFastingDiet())
+                                    dispatch(shutDownDiet())
                                     dispatch(clearDiet())
                                 }
                                 dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))

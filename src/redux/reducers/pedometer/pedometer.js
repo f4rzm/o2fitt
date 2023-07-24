@@ -35,6 +35,11 @@ export const pedometer = (state = INITIAL_STATE, action) => {
             return {
                 ...state, id: action.payload
             }
+            case types.SET_STEP_COUNTER:{
+                return{
+                    ...state,AutoStepsCounter:action.payload
+                }
+            }
         default:
             return state
 

@@ -34,3 +34,9 @@ export const setId=(id)=>{
         payload:id
     }
 }
+export const setPedometerCounter=(counter)=>{
+    return{
+        type:actions.SET_STEP_COUNTER,
+        payload:counter
+    }
+}

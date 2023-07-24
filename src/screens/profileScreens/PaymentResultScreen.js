@@ -20,7 +20,7 @@ import { updateProfileLocaly } from '../../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dimensions } from '../../constants/Dimensions';
 import { firebase } from '@react-native-firebase/analytics';
-import { setIsBuy } from '../../redux/actions/diet';
+import { setIsBuy } from '../../redux/actions/dietNew';
 import moment from 'moment';
 
 
@@ -79,7 +79,7 @@ const PaymentResultScreen = props => {
   }
 
   const getProfile = () => {
-    const url = urls.userBaseUrl + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + user.id
+    const url = urls.userTrackBase + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + user.id
     const header = {}
     const params = {}
     const RC = new RestController()

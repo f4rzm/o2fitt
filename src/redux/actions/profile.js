@@ -9,8 +9,6 @@ import pouchdbSearch from 'pouchdb-find'
 PouchDB.plugin(pouchdbSearch)
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' })
 
-
-
 export const updateProfileLocaly = (profileData) =>{
   
   AsyncStorage.setItem("profile" , JSON.stringify({...profileData})).catch(()=>alert())
@@ -30,7 +28,6 @@ export const updateTarget = (data , auth , app , user , onSuccess , onFailure) =
       ...data,
       _id:Date.now().toString()
     }
-    console.error(params);
     const header = {}
     // console.log("params => " , params)
     if(app.networkConnectivity){

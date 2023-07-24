@@ -116,7 +116,7 @@ function DietDifficulty(props) {
             ?
             weightLostData.filter((item) => (item.calCalrie > 1200 && item.calCalrie < 2500))
             :
-            weightLostData.filter((item) => item.calCalrie > 1020)
+            weightLostData.filter((item) => item.calCalrie > 1200)
 
     const filteretWeightGain =
         parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
@@ -125,7 +125,7 @@ function DietDifficulty(props) {
             ?
             weigthGainData.filter((item) => (item.calCalrie < 2500 && item.calCalrie > 1200))
             :
-            weigthGainData.filter((item) => item.calCalrie < 3100)
+            weigthGainData.filter((item) => item.calCalrie < 3000)
 
 
     useEffect(() => {
@@ -229,27 +229,26 @@ function DietDifficulty(props) {
                                         hardshipdata.map((item) => {
                                             return (
                                                 <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                                    if (item.calCalrie >= 1050 && item.calCalrie <= 3050) {
+                                                    if (item.calCalrie >= 1200 && item.calCalrie <= 3000) {
                                                         console.warn(item.calCalrie)
                                                         setWeightChangeRateId(item.id)
                                                     } else {
                                                         null
                                                     }
 
-                                                }} style={[styles.difficultyCards, { backgroundColor: item.calCalrie >= 1050 && item.calCalrie <= 3050 ? defaultTheme.lightBackground : defaultTheme.grayBackground, }]}>
+                                                }} style={[styles.difficultyCards, { backgroundColor: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.lightBackground : defaultTheme.grayBackground, }]}>
                                                     <View style={{ flexDirection: "row", alignItems: "center", padding: moderateScale(12), paddingBottom: moderateScale(2) }}>
                                                         <View style={{ borderWidth: 1, padding: moderateScale(2.5), borderRadius: 50, borderColor: defaultTheme.lightGray }}>
                                                             <View style={[styles.checkBox, { backgroundColor: weightChangeRateId == item.id ? defaultTheme.primaryColor : defaultTheme.white }]} />
                                                         </View>
-                                                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), marginHorizontal: moderateScale(5), color: item.calCalrie >= 1050 && item.calCalrie <= 3050 ? defaultTheme.darkText : defaultTheme.lightGray }}>{item.name}</Text>
+                                                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), marginHorizontal: moderateScale(5), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.darkText : defaultTheme.lightGray }}>{item.name}</Text>
                                                     </View>
-                                                    <Text style={{ fontFamily: lang.font, paddingHorizontal: moderateScale(13), paddingBottom: moderateScale(15), color: item.calCalrie >= 1050 && item.calCalrie <= 3050 ? defaultTheme.mainText : defaultTheme.lightGray, textAlign: "left", marginTop: moderateScale(5) }}>{item.title}</Text>
+                                                    <Text style={{ fontFamily: lang.font, paddingHorizontal: moderateScale(13), paddingBottom: moderateScale(15), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.mainText : defaultTheme.lightGray, textAlign: "left", marginTop: moderateScale(5) }}>{item.title}</Text>
                                                 </TouchableOpacity>
                                             )
                                         })
                                 }</>
                     }
-
                 </View>
             </ScrollView>
 

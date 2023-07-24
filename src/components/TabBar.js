@@ -37,7 +37,7 @@ const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) =
                 navigation={navigation}
                 route={state.routes[2]}
                 index={2}
-                image={require("../../res/img/daily.png")}
+                image={require("../../res/img/plan-icon.png")}
                 name={lang.PayDietName}
                 font={lang.font}
             />

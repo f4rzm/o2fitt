@@ -23,13 +23,10 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
     const onChangeText = (text) => {
         // console.warn(FilterFoods[0].tag.split(""))
         setText(text)
-
         let filteredData = item.filter((item) => {
             var tags = item.name.search(text)
-
             if (tags !== -1) {
                 return item
-
             }
         })
         setFilterFoods(filteredData)
@@ -37,7 +34,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
     const dietPackPressed = (item) => {
         setSelectedPackageData(item)
         Animated.spring(translateY, {
-            toValue: -100,
+            toValue: 0,
             useNativeDriver: true
         }).start()
         setFocused(true)
@@ -63,7 +60,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
     return (
         <KeyboardAvoidingView behavior='height'>
             <Animated.View style={[{ transform: [{ translateY: translateY }] }, styles.AnimatedModal]}>
-                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.95, textAlign: "center", marginVertical: moderateScale(5) }}>{selectedMealName}</Text>
+                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText, textAlign: "center", marginVertical: moderateScale(5),paddingVertical:moderateScale(3)}}>{selectedMealName}</Text>
                 <View style={{ borderRadius: 15, width: dimensions.WINDOW_WIDTH * 0.8, borderColor: defaultTheme.lightGray, borderWidth: 1, flexDirection: "row", alignItems: "center", paddingHorizontal: moderateScale(10), backgroundColor: "white", marginBottom: moderateScale(15) }}>
                     <Image
                         source={require("../../res/img/search.png")}
@@ -98,7 +95,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                             renderItem={renderItem}
                         />
                 }
-                <View style={{ height: moderateScale(110) }} />
+                {/* <View style={{ height: moderateScale(110) }} /> */}
 
             </Animated.View>
             <Modal
@@ -106,7 +103,6 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                 contentContainerStyle={{ position: 'absolute', bottom: 0 }}
                 onDismiss={() => {
                     setFocused(false)
-
                 }}
             >
                 <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH, marginBottom: 0 }}>
@@ -194,13 +190,13 @@ const styles = StyleSheet.create({
     AnimatedModal: {
         width: dimensions.WINDOW_WIDTH * 0.95,
         backgroundColor: "white",
-        top: 100,
+        // top: 100,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
         alignItems: "center",
-        paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
-        height: dimensions.WINDOW_HEIGTH * 0.9
+        // paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
+        height: dimensions.WINDOW_HEIGTH * 0.6,
     },
     confirmButton: {
         backgroundColor: defaultTheme.green,

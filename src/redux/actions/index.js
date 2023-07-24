@@ -35,6 +35,7 @@ export {
     setActiveCounter,
     isEdit,
     setId,
+    setPedometerCounter
 } from './pedometer'
 export {
     setAlergy,
@@ -49,7 +50,7 @@ export {
     exchangeLunch,
     exchangeDinner,
     changeData,
-} from './diet'
+} from './dietOld'
 
 export {
     setStarRatingTimer,

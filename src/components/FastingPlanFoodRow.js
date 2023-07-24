@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { dimensions } from '../constants/Dimensions'
 import { allMeasureUnits } from '../utils/measureUnits'
@@ -10,7 +10,7 @@ import analytics from '@react-native-firebase/analytics';
 import { urls } from '../utils/urls'
 import { setFastingMeal } from '../redux/actions/fasting'
 import { useDispatch } from 'react-redux';
-import { calculatePercent } from '../redux/actions/diet'
+import { calculatePercent } from '../redux/actions/dietNew'
 import ChangePackage from '../../res/img/changePackage.svg'
 import PouchDB from '../../pouchdb'
 import pouchdbSearch from 'pouchdb-find';
@@ -96,6 +96,7 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
             dispatch(setFastingMeal(changeIsAte))
 
             let percent = diet.percent + 0.55
+            
             setTimeout(() => {
                 dispatch(calculatePercent(percent))
                 setLoading(false)
@@ -156,7 +157,6 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
     }
 
     const removeMealDB = (element, index) => {
-
         let removedmealFromServer = fastingDiet
         removedmealFromServer[selectedDate][meal].isAte = false
         if (pack.dietPackFoods.length - 1 == index) {
@@ -167,7 +167,6 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
                 setLoading(false)
             }, 1000);
         }
-
         mealDB.find({
             selector: { _id: element.serverId }
         }).then(rec => {
@@ -213,7 +212,6 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
                                 title={"لغو"}
                                 style={{ width: dimensions.WINDOW_WIDTH * 0.5, backgroundColor: defaultTheme.white, borderWidth: 1, borderColor: defaultTheme.error}}
                                 textStyle={{ fontSize: moderateScale(15), color: defaultTheme.error }}
-
                                 onPress={removeFromServer}
                             />
                         </View>

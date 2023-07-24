@@ -33,9 +33,10 @@ export default MainToolbarWithTopCurve
 const styles = StyleSheet.create({
     scrolContainer: {
         backgroundColor: defaultTheme.white,
-        borderRadius: 20,
         overflow: "hidden",
         flexGrow: 1,
         paddingVertical: moderateScale(15),
+        borderTopRightRadius: moderateScale(20),
+        borderTopLeftRadius: moderateScale(20)
     }
 })

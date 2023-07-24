@@ -21,6 +21,7 @@ export const defaultTheme = {
     mainText : "#5D5D5D",
     gold : "#FF900D",
     lightGrayBackground : "#FBFBFB",
-    white:"#fff"
+    white:"#fff",
+    dialogGray:"#efefef"
 
 }

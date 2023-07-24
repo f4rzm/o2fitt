@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from 'react-native'
+import { View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView, Alert } from 'react-native'
 import { ConfirmButton, Toolbar, DietCaloriePayment, Information } from '../../components'
 import { useSelector, useDispatch } from 'react-redux'
 import { defaultTheme } from '../../constants/theme'
@@ -10,16 +10,20 @@ import BreakFast from '../../../res/img/breakfast.svg'
 import ChangePackage from '../../../res/img/changePackage.svg'
 import { Modal } from 'react-native-paper'
 import Info from '../../../res/img/info5.svg'
-import { clearDiet, saveOldData } from '../../redux/actions/diet'
+import {  saveOldData, shutDownDiet } from '../../redux/actions/dietNew'
+import { clearDiet } from '../../redux/actions/dietOld'
+
 import analytics from '@react-native-firebase/analytics';
 import axios from 'axios'
 import { BlurView } from '@react-native-community/blur'
 import { updateTarget } from '../../redux/actions'
-
+import { setFastingActivation, shutDownFastingDiet, setActivaitonAndDeativation } from '../../redux/actions/fasting'
+import moment from 'moment'
 
 function DietStartScreen(props) {
 
     const dietCategory = props.route.params
+    console.warn(dietCategory);
     const dispatch = useDispatch()
     const [showNoInternetModal, setShowNoInternetModal] = React.useState(false)
     const [errorVisible, setErrorVisible] = useState(false)
@@ -30,9 +34,9 @@ function DietStartScreen(props) {
     const auth = useSelector(state => state.auth)
     const diet = useSelector(state => state.diet)
     const profile = useSelector(state => state.profile)
+    const fastingDiet = useSelector(state => state.fastingDiet)
     const [autoFuces, setAutoFuces] = useState(false)
     const translateY = useRef(new Animated.Value(100)).current
-
 
     const data = [
         { id: 0, name: lang.walnut, measure: lang.twoMedium, caloire: 65 },
@@ -95,7 +99,7 @@ function DietStartScreen(props) {
         } else {
             dispatch(saveOldData(profile))
             Animated.spring(translateY, {
-                toValue: -100,
+                toValue: 0,
                 useNativeDriver: true
             }).start()
             setAutoFuces(true)
@@ -109,27 +113,21 @@ function DietStartScreen(props) {
         setShowNoInternetModal(false)
     }
     const shutDownWholeDiet = async () => {
-        setTimeout(() => {
-            dispatch(
-                updateTarget(
-                    diet.oldData,
-                    auth,
-                    app,
-                    user,
-                    () => {
-                        dispatch(clearDiet())
-                        analytics().logEvent('get_new_diet')
-                        return true
+        dispatch(shutDownDiet())
+        dispatch(clearDiet())
+        if (dietCategory) {
+            dispatch(shutDownFastingDiet(false))
+            dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))
 
-                    },
-                    (err) => {
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
+        }
+        else {
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 7 })
+        }
+        // dispatch(shutDownFastingDiet())
+        analytics().logEvent('get_new_diet')
 
-                    }
-
-                )
-            )
-        }, 700);
-
+        setAutoFuces(false)
     }
 
     return (
@@ -152,20 +150,23 @@ function DietStartScreen(props) {
                 lang={lang}
                 onBack={() => props.navigation.popToTop()}
             />
-            <ScrollView style={{ flexGrow: 1, }} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1, height: dimensions.WINDOW_HEIGTH }} showsVerticalScrollIndicator={false}>
                 <View style={{ backgroundColor: defaultTheme.primaryColor }}>
                     <Image
-                        source={require("../../../res/img/foods.jpg")}
+                        source={dietCategory ? { uri: dietCategory.image } : require("../../../res/img/foods.jpg")}
                         style={{ borderTopRightRadius: 30, borderTopLeftRadius: 30, width: "100%", height: moderateScale(150) }}
                     />
                 </View>
 
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{dietCategory.name[lang.langName]}</Text>
-                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{dietCategory.description[lang.langName]}</Text>
-                {/* <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.dietAdvantages}</Text>
-                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.dietAdvantageDescribe}</Text>
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.exampleOfDiet}</Text> */}
-                <View style={{ alignItems: "center" }}>
+                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{dietCategory ? dietCategory.name[lang.langName] : lang.whatIsDiet}</Text>
+                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{dietCategory ? dietCategory.description[lang.langName] : lang.whatIsDietDescribe}</Text>
+                {dietCategory == null && <>
+                    <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.dietAdvantages}</Text>
+                    <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.dietAdvantageDescribe}</Text>
+                    {/* <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.exampleOfDiet}</Text> */}
+                </>
+                }
+                {/* <View style={{ alignItems: "center" }}>
                     <FlatList
                         data={data}
                         // ListFooterComponent={renderFooter}
@@ -173,10 +174,9 @@ function DietStartScreen(props) {
                         ListHeaderComponent={renderHeader}
                         renderItem={RenderItem}
                     />
-                </View>
+                </View> */}
                 <View style={{ height: moderateScale(45) }} />
             </ScrollView>
-
             <LinearGradient
                 colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
                 style={styles.buttonGradient}>
@@ -213,25 +213,7 @@ function DietStartScreen(props) {
                         title={lang.okLetsGo}
                         leftImage={require('../../../res/img/done.png')}
                         onPress={() => {
-                            const header = {
-                                headers: {
-                                    Authorization: 'Bearer ' + auth.access_token,
-                                    Language: lang.capitalName,
-                                },
-                            };
-                            // axios.get("https://identity.o2fitt.com/api/v1/Users/DayOfWeeks", header).then(() => {
-                            shutDownWholeDiet().then(()=>{
-
-                                props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
-                            })
-                            setAutoFuces(false)
-                            // }).catch((err) => {
-                            //     setErrorVisible(true)
-                            //     setErrorContext(lang.noInternet)
-                            //     setAutoFuces(false)
-
-                            // })
-
+                            shutDownWholeDiet()
                         }}
                     />
                 </Animated.View>
@@ -307,7 +289,7 @@ const styles = StyleSheet.create({
     AnimatedModal: {
         width: dimensions.WINDOW_WIDTH * 0.95,
         backgroundColor: "white",
-        top: 100,
+        // top: 100,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,

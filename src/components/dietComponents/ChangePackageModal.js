@@ -9,7 +9,7 @@ import BreakFast from '../../../res/img/breakfast.svg'
 import { useDispatch } from 'react-redux'
 import { exchangeBreakFast, exchangeDinner, exchangeLunch } from '../../redux/actions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { exchangeSnack } from '../../redux/actions/diet'
+import { exchangeSnack } from '../../redux/actions/dietNew'
 import LottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 
@@ -42,7 +42,7 @@ function ChangePackageModal(props) {
         console.error(item.id)
         setSelectedPackageData(item)
         Animated.spring(translateY, {
-            toValue: -100,
+            toValue: 0,
             useNativeDriver: true
         }).start()
         setFocused(true)
@@ -234,8 +234,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
         alignItems: "center",
-        paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
-        height: dimensions.WINDOW_HEIGTH * 0.9
+        // paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
+        height: dimensions.WINDOW_HEIGTH * 0.8
     },
     confirmButton: {
         backgroundColor: defaultTheme.green,

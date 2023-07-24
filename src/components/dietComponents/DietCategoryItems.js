@@ -4,10 +4,10 @@ import { dimensions } from '../../constants/Dimensions'
 import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
 import { useNavigation } from '@react-navigation/native'
+import FastImage from 'react-native-fast-image'
 
 const DietCategoryItems = ({ lang, item }) => {
     const navigation = useNavigation()
-    console.warn(item);
 
     const onPressCategory = () => {
         navigation.navigate("DietStartScreen", item)
@@ -15,11 +15,13 @@ const DietCategoryItems = ({ lang, item }) => {
 
     return (
         <TouchableOpacity onPress={onPressCategory} style={[styles.container]}>
-            <Image
-                source={{ uri: item.image }}
-                style={{ width: moderateScale(100), height: moderateScale(100), resizeMode: "center" }}
+            <View style={{height:moderateScale(100)}}>
+                <FastImage
+                    source={{ uri: item.image }}
+                    style={{ width: '100%', height: moderateScale(100), resizeMode: "center",borderRadius:moderateScale(8) }}
 
-            />
+                />
+            </View>
             <Text style={[styles.text, { fontFamily: lang.font }]}>{item.name[lang.langName]}</Text>
         </TouchableOpacity>
     )
@@ -31,17 +33,23 @@ const styles = StyleSheet.create({
     container: {
         width: dimensions.WINDOW_WIDTH * 0.4,
         shadowColor: "black",
-        padding: moderateScale(10),
+        // padding: moderateScale(10),
         shadowOpacity: 0.4,
         shadowRadius: 5,
         shadowOffset: { height: 3, width: 0 },
         backgroundColor: defaultTheme.white,
-        marginVertical: moderateScale(10),
+        margin: moderateScale(10),
         borderRadius: moderateScale(10),
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        overflow:"hidden",
+        borderWidth:1,
+        borderColor:defaultTheme.border,
+        padding:moderateScale(10)
     },
     text: {
         fontSize: moderateScale(15),
-        color: defaultTheme.darkText
+        color: defaultTheme.darkText,
+        textAlign: "left",
+        paddingTop:moderateScale(10)
     }
 })

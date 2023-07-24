@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, FlatList, Platform, TextInput } from 'react-native'
+import { View, Text, Image, TouchableOpacity, FlatList, Platform, TextInput, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ConfirmButton, MainToolbar, Toolbar } from '../../components';
 import { useSelector } from 'react-redux';
@@ -53,10 +53,6 @@ function RecipeCatScreen(props) {
         { id: 7, image: require("../../../res/img/sweet.png"), title: "شیرینی" },
 
     ]
-    const onDietPressed = () => {
-
-
-    }
 
     const getRecipes = async (recipe) => {
         setnoInternetLoad(true)
@@ -67,8 +63,6 @@ function RecipeCatScreen(props) {
                 Language: lang.capitalName,
             },
         };
-
-
         await recipe.forEach(async (items, index) => {
             let DB = foodDB;
             await DB.get(`${items.name}_${items.id}`)
@@ -117,10 +111,8 @@ function RecipeCatScreen(props) {
         } else {
             let filteredData = recipesCat.filter((item) => {
                 var tags = item.name.search(text)
-
                 if (tags !== -1) {
                     return { ...item }
-
                 }
             })
             filteredData.length == 0 ? setNoResult(true) : setNoResult(false)
@@ -159,7 +151,12 @@ function RecipeCatScreen(props) {
                 }
             </View>
             <View style={{ alignItems: 'center' }}>
-                <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, backgroundColor: defaultTheme.grayBackground, borderRadius: moderateScale(10), paddingHorizontal: moderateScale(10), marginVertical: moderateScale(10), flexDirection: "row", alignItems: "center", paddingVertical: moderateScale(10) }}>
+                <View
+                    style={styles.searchBar}
+                    // onPress={() => {
+                    //     props.navigation.navigate("RecipeFilterScreen")
+                    // }}
+                >
                     <Image
                         source={require("../../../res/img/search.png")}
                         style={{ width: moderateScale(25), height: moderateScale(25) }}
@@ -170,6 +167,7 @@ function RecipeCatScreen(props) {
                         onChangeText={onChangeText}
                         value={searchText}
                         placeholderTextColor={defaultTheme.gray}
+
                     >
 
                     </TextInput>
@@ -244,3 +242,15 @@ function RecipeCatScreen(props) {
 }
 
 export default RecipeCatScreen;
+const styles = StyleSheet.create({
+    searchBar: {
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        backgroundColor: defaultTheme.grayBackground,
+        borderRadius: moderateScale(10),
+        paddingHorizontal: moderateScale(10),
+        marginVertical: moderateScale(10),
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: moderateScale(10)
+    }
+})

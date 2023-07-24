@@ -20,7 +20,7 @@ import NativeSplashScreen from 'react-native-splash-screen'
 import { BlurView } from '@react-native-community/blur';
 import Toast from 'react-native-toast-message'
 import DeviceInfo from 'react-native-device-info'
-import { isForceUpdate, setIsBuy, clearDiet } from '../../redux/actions/diet';
+import { isForceUpdate, setIsBuy, clearDiet } from '../../redux/actions/dietNew';
 import moment from 'moment'
 import { vipShown } from '../../redux/actions/starRating';
 
@@ -71,7 +71,7 @@ const SplashScreen = props => {
 
   const getProfile = async () => {
     // if(app.networkConnectivity){
-    const url = urls.userBaseUrl + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + userId
+    const url = urls.userTrackBase + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + userId
     const header = {}
     const params = {}
     const RC = new RestController()

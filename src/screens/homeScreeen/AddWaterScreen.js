@@ -79,7 +79,7 @@ const AddWaterScreen = props => {
   }
 
   const getFromServer = () => {
-    const url = urls.foodBaseUrl + urls.userTrackWater + `?StartDate=${selectedDate}&EndDate=${selectedDate}&userId=${user.id}`
+    const url = urls.baseUserTrack + urls.userTrackWater + `?StartDate=${selectedDate}&EndDate=${selectedDate}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -200,9 +200,10 @@ const AddWaterScreen = props => {
   }
 
   const saveServer = (data) => {
-    const url = urls.foodBaseUrl + urls.userTrackWater
+    const url = urls.baseUserTrack + urls.userTrackWater
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = { ...data }
+    console.warn(params);
 
     if (app.networkConnectivity) {
       const RC = new RestController()
@@ -217,7 +218,8 @@ const AddWaterScreen = props => {
     saveDB(response.data.data)
   }
 
-  const onFailure = () => {
+  const onFailure = (err) => {
+    console.error(err);
 
   }
 
@@ -247,7 +249,7 @@ const AddWaterScreen = props => {
         offlineDB.post({
           method: "post",
           type: "water",
-          url: urls.foodBaseUrl + urls.userTrackWater,
+          url: urls.baseUserTrack + urls.userTrackWater,
           params: data,
           header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
         }).then(res => {

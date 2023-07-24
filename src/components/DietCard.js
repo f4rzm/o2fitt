@@ -1,13 +1,14 @@
 import React, { memo } from "react"
-import { View, Text, Image, StyleSheet,  TouchableOpacity } from "react-native"
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from "react-native"
 import { moderateScale } from "react-native-size-matters"
 import { defaultTheme } from "../constants/theme"
 import AnimatedLottieView from "lottie-react-native";
 
+
 const DietCard = props => {
 
     return (
-        <TouchableOpacity style={styles.mainContainer} activeOpacity={1} onPress={props.onCardPressed}>
+        <TouchableOpacity style={styles.mainContainer} activeOpacity={0.1} onPress={props.onCardPressed}>
             {
                 props.diet.isActive == true ?
                     <View style={styles.leftContainer}>
@@ -22,12 +23,12 @@ const DietCard = props => {
                         <View style={styles.leftContainer}>
                             <Text style={[styles.text, { fontFamily: props.lang.titleFont, marginHorizontal: moderateScale(16) }]} allowFontScaling={false}>
                                 هدف برنامه غذایی
-                        </Text>
+                            </Text>
                             <Text style={[styles.text2, { fontFamily: props.lang.font, lineHeight: moderateScale(25) }]}>
                                 برنامه غذایی فعالی ندارین!
                             </Text>
                             {
-                                props.diet.isBuy == false ? <Text style={{ fontSize: moderateScale(14), color: "gray", fontFamily: props.lang.font, marginHorizontal: moderateScale(20), lineHeight: moderateScale(18), paddingTop: moderateScale(14),textAlign:"left" }}>اگر میخواین با برنامه غذایی به وزن دلخواه برسین <Text style={{ color: defaultTheme.green }}>اینجا کلیک</Text> کنین</Text> : null
+                                props.diet.isBuy == false ? <Text style={{ fontSize: moderateScale(14), color: "gray", fontFamily: props.lang.font, marginHorizontal: moderateScale(20), lineHeight: moderateScale(18), paddingTop: moderateScale(14), textAlign: "left" }}>اگر میخواین با برنامه غذایی به وزن دلخواه برسین <Text style={{ color: defaultTheme.green }}>اینجا کلیک</Text> کنین</Text> : null
 
                             }
 
@@ -71,13 +72,13 @@ const DietCard = props => {
 const styles = StyleSheet.create({
     mainContainer: {
         flexDirection: "row",
-       
+
         width: "92%",
         justifyContent: "space-between",
         alignItems: "flex-start",
         borderWidth: 0,
         backgroundColor: defaultTheme.white,
-       
+
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -116,22 +117,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: defaultTheme.darkText,
         marginHorizontal: moderateScale(18),
-        textAlign:"left",
-        marginBottom:moderateScale(6)
-        
+        textAlign: "left",
+        marginBottom: moderateScale(6)
+
     },
-    text2: {
-        fontSize: moderateScale(15),
-        color: defaultTheme.mainText,
-        marginHorizontal: moderateScale(20),
-        textAlign:"left"
-    },
+
     text3: {
         fontSize: moderateScale(18),
         maxWidth: moderateScale(75),
         textAlign: "center",
         color: defaultTheme.darkText,
-        textAlign:"left"
+        textAlign: "left"
     },
     button: {
         width: moderateScale(95),
@@ -146,7 +142,7 @@ const styles = StyleSheet.create({
     textStyle: {
         color: defaultTheme.darkText,
         fontSize: moderateScale(16),
-        textAlign:"left"
+        textAlign: "left"
     },
     btnContainer: {
         backgroundColor: defaultTheme.green,

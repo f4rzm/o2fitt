@@ -29,12 +29,13 @@ import Breakfast from '../../../res/img/breakfast.svg'
 import Dinner from '../../../res/img/dinner.svg'
 import Toast from 'react-native-toast-message'
 import { BlurView } from '@react-native-community/blur';
-import { setIsBuy, clearDiet } from '../../redux/actions/diet'
+import { setIsBuy, clearDiet } from '../../redux/actions/dietNew'
 import axios from 'axios';
 import StarRatingModal from '../../components/starRatingModal';
 import VIP from '../../components/VIP';
 import { addDate } from '../../redux/actions/syncedDate';
 import { widgetUpdate } from '../../functions/WidgetUpdate';
+import OutPlusBtn from '../../components/OutPlusBtn';
 
 
 
@@ -1012,13 +1013,14 @@ const DailyScreen = props => {
 
       <ScrollView
         contentContainerStyle={{
-          alignItems: "center"
+          alignItems: "center",
+          paddingBottom:moderateScale(60)
         }}
         showsVerticalScrollIndicator={false}
       >
 
         <View style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(20) }} />
-        {
+        {/* {
           user.countryId !== 128 || !diet.isActive || lang.name == "persian" ? null :
             <DietCard
               lang={lang}
@@ -1027,7 +1029,7 @@ const DailyScreen = props => {
               diet={diet}
               onCardPressed={onDietPressed}
             />
-        }
+        } */}
         {
           parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment(selectedDate).format("YYYYMMDD"))
             &&
@@ -1167,6 +1169,13 @@ const DailyScreen = props => {
         <View style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(50) }} />
 
       </ScrollView>
+      <OutPlusBtn
+        onPressPlus={() => { }}
+        lang={lang}
+        navigation={props.navigation}
+        profile={profile}
+        selectedDate={selectedDate}
+      />
       <Information
         visible={errorVisible}
         context={errorContext}

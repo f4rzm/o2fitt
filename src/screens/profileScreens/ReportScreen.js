@@ -226,7 +226,7 @@ const ReportScreen = props => {
 
   const getWaterReports = () => {
 
-    const url = urls.foodBaseUrl + urls.userTrackWater + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
+    const url = urls.baseUserTrack + urls.userTrackWater + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
