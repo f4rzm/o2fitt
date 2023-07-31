@@ -397,7 +397,7 @@ const PedometerScreen = (props) => {
 
   const getFromServer = () => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSteps +
       `?dateTime=${selectedDate}&userId=${user.id}`;
     const header = {
@@ -511,7 +511,7 @@ const PedometerScreen = (props) => {
   };
 
   const saveServer = (data) => {
-    const url = urls.workoutBaseUrl + urls.userTrackSteps
+    const url = urls.baseWorkout + urls.userTrackSteps
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = { ...data }
     const RC = new RestController()
@@ -545,7 +545,7 @@ const PedometerScreen = (props) => {
         .post({
           method: 'put',
           type: 'pedo',
-          url: urls.workoutBaseUrl + urls.userTrackSteps + '/id',
+          url: urls.baseWorkout + urls.userTrackSteps + '/id',
           header: {
             headers: {
               Authorization: 'Bearer ' + auth.access_token,
@@ -563,7 +563,7 @@ const PedometerScreen = (props) => {
         .post({
           method: 'post',
           type: 'pedo',
-          url: urls.workoutBaseUrl + urls.userTrackSteps,
+          url: urls.baseWorkout + urls.userTrackSteps,
           header: {
             headers: {
               Authorization: 'Bearer ' + auth.access_token,
@@ -641,7 +641,7 @@ const PedometerScreen = (props) => {
         offlineDB.post({
           method: "post",
           type: "pedo",
-          url: urls.workoutBaseUrl + urls.userTrackSteps,
+          url: urls.baseWorkout + urls.userTrackSteps,
           header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
           params: data
         }).then(res => {

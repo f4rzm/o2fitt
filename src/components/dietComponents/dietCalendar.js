@@ -17,7 +17,7 @@ const Calendar = props => {
             nextIsEnabled = true
         }
     }
-    if (moment(props.selectedDate).subtract(1, "days").isBefore(props.diet.dietStartDate)) {
+    if (moment(props.selectedDate).subtract(1, "days").isBefore(props.diet.startDate)) {
         prevIsEnabled = false
     }
 

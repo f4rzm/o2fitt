@@ -759,7 +759,7 @@ const FoodDetailScreen = (props) => {
   };
 
   const saveServer = (meal) => {
-    const url = urls.foodBaseUrl + urls.userTrackFood;
+    const url = urls.baseFoodTrack + urls.userTrackFood;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -832,7 +832,7 @@ const FoodDetailScreen = (props) => {
       .post({
         method: f.meal.insertDate ? 'put' : 'post',
         type: 'meal',
-        url: urls.foodBaseUrl + urls.userTrackFood,
+        url: urls.baseFoodTrack + urls.userTrackFood,
         header: {
           headers: {
             Authorization: 'Bearer ' + auth.access_token,
@@ -1106,7 +1106,7 @@ const FoodDetailScreen = (props) => {
               offlineDB.post({
                 method: props.route.params.meal.insertDate ? 'put' : 'post',
                 type: 'meal',
-                url: props.route.params.meal.insertDate ? urls.foodBaseUrl2 + urls.userTrackFood : urls.foodBaseUrl + urls.userTrackFood,
+                url: props.route.params.meal.insertDate ? urls.baseFoodTrack2 + urls.userTrackFood : urls.baseFoodTrack + urls.userTrackFood,
                 header: {
                   headers: {
                     Authorization: 'Bearer ' + auth.access_token,

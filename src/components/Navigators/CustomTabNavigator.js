@@ -36,7 +36,7 @@ const MyCustomTabBar = ({ state, descriptors, navigation, position, cardsWidth, 
     })
 
     return (
-        <View style={{ flexDirection: 'row', height:moderateScale(45),backgroundColor: defaultTheme.grayBackground, margin: dimensions.WINDOW_WIDTH * 0.03, borderRadius: moderateScale(10),alignItems:"center" }}>
+        <View style={{ flexDirection: 'row', height: moderateScale(45), backgroundColor: defaultTheme.grayBackground, margin: dimensions.WINDOW_WIDTH * 0.03, borderRadius: moderateScale(10), alignItems: "center" }}>
 
             <Animated.View style={[styles.animatedViewContaienr, { transform: [{ translateX: animatedViewTranslationx }], width: cardWidth, marginVertical: moderateScale(3) }, animatedViewStyle]} >
                 <View style={[{ width: cardWidth * 0.9, borderBottomColor: defaultTheme.primaryColor, borderBottomWidth: 1, backgroundColor: defaultTheme.primaryColor, flex: 1, borderRadius: moderateScale(10) }, floatViewStyle]}>
@@ -99,8 +99,13 @@ const MyCustomTabBar = ({ state, descriptors, navigation, position, cardsWidth, 
 
                     >
                         <Animated.Text style={{
-                            opacity, fontFamily: lang.font, fontSize: moderateScale(15
-                            )
+                            opacity: 1, fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, position: "absolute"
+
+                        }}>
+                            {label}
+                        </Animated.Text>
+                        <Animated.Text style={{
+                            opacity, fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.white
                         }}>
                             {label}
                         </Animated.Text>

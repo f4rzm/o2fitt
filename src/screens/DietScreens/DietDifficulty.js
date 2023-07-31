@@ -135,14 +135,14 @@ function DietDifficulty(props) {
             if (filteretWeightGain.length > 0) {
 
                 setWeightChangeRateId(filteretWeightGain[0].id)
-            }else{
+            } else {
                 setNoResult(true)
             }
         } else if (parseFloat(props.route.params.weight) > parseFloat(props.route.params.targetWeight)) {
             setHardshipdata(weightLostData)
             if (filteredCalCalorie.length > 0) {
                 setWeightChangeRateId(filteredCalCalorie[0].id)
-            }else{
+            } else {
                 setNoResult(true)
             }
         } else {
@@ -156,8 +156,8 @@ function DietDifficulty(props) {
             weight: props.route.params.weight,
             targetWeight: props.route.params.targetWeight,
             weightChangeRate: weightChangeRateId,
-            dietId:props.route.params.dietId,
-            alergiesId:props.route.params.alergiesId
+            dietId: props.route.params.dietId,
+            alergiesId: props.route.params.alergiesId
         })
 
     }
@@ -193,7 +193,7 @@ function DietDifficulty(props) {
                 </View>
 
                 <View style={{ paddingBottom: moderateScale(60) }}>
-                    {
+                    {/* {
                         parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
                             &&
                             (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
@@ -223,32 +223,33 @@ function DietDifficulty(props) {
                                         })
                                 }
                             </> :
-                            <>
-                                {
-                                    hardshipdata.length <= 0 ? null :
-                                        hardshipdata.map((item) => {
-                                            return (
-                                                <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                                    if (item.calCalrie >= 1200 && item.calCalrie <= 3000) {
-                                                        console.warn(item.calCalrie)
-                                                        setWeightChangeRateId(item.id)
-                                                    } else {
-                                                        null
-                                                    }
+                            <>*/}
+                    {
+                        hardshipdata.length <= 0 ? null :
+                            hardshipdata.map((item) => {
+                                return (
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                        if (item.calCalrie >= 1200 && item.calCalrie <= 3045) {
+                                            console.warn(item.calCalrie)
+                                            setWeightChangeRateId(item.id)
+                                        } else {
+                                            null
+                                        }
 
-                                                }} style={[styles.difficultyCards, { backgroundColor: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.lightBackground : defaultTheme.grayBackground, }]}>
-                                                    <View style={{ flexDirection: "row", alignItems: "center", padding: moderateScale(12), paddingBottom: moderateScale(2) }}>
-                                                        <View style={{ borderWidth: 1, padding: moderateScale(2.5), borderRadius: 50, borderColor: defaultTheme.lightGray }}>
-                                                            <View style={[styles.checkBox, { backgroundColor: weightChangeRateId == item.id ? defaultTheme.primaryColor : defaultTheme.white }]} />
-                                                        </View>
-                                                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), marginHorizontal: moderateScale(5), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.darkText : defaultTheme.lightGray }}>{item.name}</Text>
-                                                    </View>
-                                                    <Text style={{ fontFamily: lang.font, paddingHorizontal: moderateScale(13), paddingBottom: moderateScale(15), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.mainText : defaultTheme.lightGray, textAlign: "left", marginTop: moderateScale(5) }}>{item.title}</Text>
-                                                </TouchableOpacity>
-                                            )
-                                        })
-                                }</>
+                                    }} style={[styles.difficultyCards, { backgroundColor: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.lightBackground : defaultTheme.grayBackground, }]}>
+                                        <View style={{ flexDirection: "row", alignItems: "center", padding: moderateScale(12), paddingBottom: moderateScale(2) }}>
+                                            <View style={{ borderWidth: 1, padding: moderateScale(2.5), borderRadius: 50, borderColor: defaultTheme.lightGray }}>
+                                                <View style={[styles.checkBox, { backgroundColor: weightChangeRateId == item.id ? defaultTheme.primaryColor : defaultTheme.white }]} />
+                                            </View>
+                                            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), marginHorizontal: moderateScale(5), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.darkText : defaultTheme.lightGray }}>{item.name}</Text>
+                                        </View>
+                                        <Text style={{ fontFamily: lang.font, paddingHorizontal: moderateScale(13), paddingBottom: moderateScale(15), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.mainText : defaultTheme.lightGray, textAlign: "left", marginTop: moderateScale(5) }}>{item.title}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
                     }
+                    {/* </>
+                    } */}
                 </View>
             </ScrollView>
 
@@ -278,7 +279,7 @@ function DietDifficulty(props) {
                     />
                 </BlurView>
                 : null
-            } 
+            }
         </>
     )
 }

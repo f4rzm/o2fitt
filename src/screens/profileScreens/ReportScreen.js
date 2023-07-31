@@ -226,7 +226,7 @@ const ReportScreen = props => {
 
   const getWaterReports = () => {
 
-    const url = urls.baseUserTrack + urls.userTrackWater + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
+    const url = urls.baseFoodTrack + urls.userTrackWater + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -255,7 +255,7 @@ const ReportScreen = props => {
   }
 
   const getStepReports = () => {
-    const url = urls.workoutBaseUrl + urls.userTrackSteps + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
+    const url = urls.baseWorkout + urls.userTrackSteps + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -288,7 +288,7 @@ const ReportScreen = props => {
   }
 
   const getWorkoutReports = () => {
-    const url = urls.workoutBaseUrl + urls.userTrackWorkout + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
+    const url = urls.baseWorkout + urls.userTrackWorkout + "/" + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -320,7 +320,7 @@ const ReportScreen = props => {
 
   const getSleepReports = () => {
 
-    const url = urls.workoutBaseUrl + urls.userTrackSleep + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
+    const url = urls.baseWorkout + urls.userTrackSleep + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -353,7 +353,7 @@ const ReportScreen = props => {
 
   const getNutritionReport = () => {
 
-    const url = urls.foodBaseUrl + urls.userTrackFood + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
+    const url = urls.baseFoodTrack + urls.userTrackFood + urls.userHistory + `?days=${duration.id}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 

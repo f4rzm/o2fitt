@@ -115,14 +115,15 @@ function DietStartScreen(props) {
     const shutDownWholeDiet = async () => {
         dispatch(shutDownDiet())
         dispatch(clearDiet())
-        if (dietCategory) {
+        if (dietCategory.id!==66) {
             dispatch(shutDownFastingDiet(false))
             dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))
 
             props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
         }
         else {
-            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 7 })
+            dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true, endDate: null }))
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 66 })
         }
         // dispatch(shutDownFastingDiet())
         analytics().logEvent('get_new_diet')

@@ -65,7 +65,7 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
             offlineDB.post({
                 method: 'post',
                 type: 'meal',
-                url: urls.foodBaseUrl + urls.userTrackFood,
+                url: urls.baseFoodTrack2 + urls.userTrackFood,
                 header: {
                     headers: {
                         Authorization: 'Bearer ' + auth.access_token,
@@ -141,7 +141,7 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
                 offlineDB.post({
                     method: "delete",
                     type: "meal",
-                    url: urls.foodBaseUrl2 + urls.userTrackFood + `?_id=${element.serverId}`,
+                    url: urls.baseFoodTrack2 + urls.userTrackFood + `?_id=${element.serverId}`,
                     header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
                     params: { ...element },
                     index: records.total_rows

@@ -132,7 +132,7 @@ const LoginScreen = (props) => {
         setErrorContext(lang.doesNotExist);
         setErrorVisible(true);
       }
-    }else{
+    } else {
       if (userName != '') {
         if (pass != '') {
           if (
@@ -219,7 +219,7 @@ const LoginScreen = (props) => {
   const getProfile = () => {
     console.log('LoginScreen => user => ', userId);
     const url =
-      urls.userTrackBase + urls.userProfiles + urls.getUserTrackSpecification +
+      urls.baseUserTrack + urls.userProfiles + urls.getUserTrackSpecification +
       '?userId=' +
       userId;
     const header = {};
@@ -313,7 +313,7 @@ const LoginScreen = (props) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS=="ios"?'position':"none"}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS == "ios" ? 'position' : "none"}>
       <SafeAreaView>
         <Toolbar
           lang={lang}

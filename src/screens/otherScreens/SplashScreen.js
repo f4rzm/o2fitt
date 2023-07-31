@@ -71,7 +71,7 @@ const SplashScreen = props => {
 
   const getProfile = async () => {
     // if(app.networkConnectivity){
-    const url = urls.userTrackBase + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + userId
+    const url = urls.baseUserTrack + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + userId
     const header = {}
     const params = {}
     const RC = new RestController()
@@ -96,7 +96,6 @@ const SplashScreen = props => {
     pkExpireDate.diff(today, "seconds") > 0 ? dispatch(setIsBuy(true)) : dispatch(setIsBuy(false))
     pkExpireDate.diff(today, "seconds") > 0 ? dispatch(vipShown(false)) : dispatch(vipShown(true))
 
-    console.error(response.data.data)
     let appVersions = response.data.data.forceUpdateVersions.split(",")
     let index = appVersions.indexOf(DeviceInfo.getVersion())
     if (index !== -1) {

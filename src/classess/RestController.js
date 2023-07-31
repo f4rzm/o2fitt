@@ -1,6 +1,7 @@
 import axios from "axios"
 import { TokenController } from "./TokenController"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Alert } from "react-native"
 
 
 export class RestController {
@@ -66,6 +67,8 @@ export class RestController {
             // if(error.response.status === 401){
             //     AsyncStorage.clear()
             // }
+            // Alert.alert(url)
+            console.log('request error with params',url)
             onFailure(error)
         })
     }
@@ -88,6 +91,7 @@ export class RestController {
             // if(error.response && error.response.status === 401){
             //     AsyncStorage.clear()
             // }
+            console.log('request error with params post',url,params)
             onFailure(error)
         })
     }
@@ -110,6 +114,8 @@ export class RestController {
             // if(error.response && error.response.status === 401){
             //     AsyncStorage.clear()
             // }
+            // Alert.alert(url)
+            console.log('request error with params put',url,params)
             onFailure(error)
         })
 
@@ -126,6 +132,7 @@ export class RestController {
             // if(error.response && error.response.status === 401){
             //     AsyncStorage.clear()
             // }
+            console.log('request error with params delete',url,params)
             onFailure(error)
         })
     }

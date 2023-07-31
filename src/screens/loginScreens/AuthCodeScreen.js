@@ -168,7 +168,7 @@ const AuthCodeScreen = props => {
   const getProfile = (userId, token) => {
     console.log('LoginScreen => user => ', userId);
     const url =
-      urls.userTrackBase + urls.userProfiles + urls.getUserTrackSpecification +
+      urls.baseUserTrack + urls.userProfiles + urls.getUserTrackSpecification +
       '?userId=' +
       userId;
     const header = {};

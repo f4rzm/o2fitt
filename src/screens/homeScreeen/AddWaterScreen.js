@@ -79,7 +79,7 @@ const AddWaterScreen = props => {
   }
 
   const getFromServer = () => {
-    const url = urls.baseUserTrack + urls.userTrackWater + `?StartDate=${selectedDate}&EndDate=${selectedDate}&userId=${user.id}`
+    const url = urls.baseFoodTrack + urls.userTrackWater + `?StartDate=${selectedDate}&EndDate=${selectedDate}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -112,7 +112,7 @@ const AddWaterScreen = props => {
   }
 
   const syncMeal = (date) => {
-    const url = urls.foodBaseUrl + urls.userTrackFood + `UserMealsByDate?dateTime=${date}&userId=${user.id}`
+    const url = urls.baseFoodTrack + urls.userTrackFood + `UserMealsByDate?dateTime=${date}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -200,7 +200,7 @@ const AddWaterScreen = props => {
   }
 
   const saveServer = (data) => {
-    const url = urls.baseUserTrack + urls.userTrackWater
+    const url = urls.baseFoodTrack + urls.userTrackWater
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = { ...data }
     console.warn(params);
@@ -249,7 +249,7 @@ const AddWaterScreen = props => {
         offlineDB.post({
           method: "post",
           type: "water",
-          url: urls.baseUserTrack + urls.userTrackWater,
+          url: urls.baseFoodTrack + urls.userTrackWater,
           params: data,
           header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
         }).then(res => {

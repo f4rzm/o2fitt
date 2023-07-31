@@ -371,7 +371,7 @@ const HomeScreen = props => {
           .post({
             method: 'post',
             type: 'pedo',
-            url: urls.workoutBaseUrl + urls.userTrackSteps,
+            url: urls.baseWorkout + urls.userTrackSteps,
             header: {
               headers: {
                 Authorization: 'Bearer ' + auth.access_token,
@@ -408,7 +408,7 @@ const HomeScreen = props => {
           .post({
             method: 'put',
             type: 'pedo',
-            url: urls.workoutBaseUrl + urls.userTrackSteps,
+            url: urls.baseWorkout + urls.userTrackSteps,
             header: {
               headers: {
                 Authorization: 'Bearer ' + auth.access_token,
@@ -427,7 +427,7 @@ const HomeScreen = props => {
 
   const saveStepToSever = (data, stepDbData) => {
     Alert.alert('saving step')
-    const url = urls.workoutBaseUrl + urls.userTrackSteps;
+    const url = urls.baseWorkout + urls.userTrackSteps;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -831,7 +831,7 @@ const HomeScreen = props => {
 
   const syncWater = date => {
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackWater +
       `?StartDate=${date}&EndDate=${date}&userId=${user.id}`;
     const header = {
@@ -874,7 +874,7 @@ const HomeScreen = props => {
 
   const syncSteps = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSteps +
       `?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -916,7 +916,7 @@ const HomeScreen = props => {
 
   const syncSleep = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSleep +
       urls.getByDate +
       `?userId=${user.id}&dateTime=${date}`;
@@ -953,7 +953,7 @@ const HomeScreen = props => {
 
   const syncMeal = date => {
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackFood +
       `UserMealsByDate?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -998,7 +998,7 @@ const HomeScreen = props => {
 
   const syncActivities = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackWorkout +
       `/GetByDate?dateTime=${date}&userId=${user.id}`;
     const header = {

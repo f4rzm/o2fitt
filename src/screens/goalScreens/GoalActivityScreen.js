@@ -148,7 +148,7 @@ const GoalActivityScreen = props => {
     }, Platform.OS === "ios" ? 500 : 50)
   }
   const viewReport = (days) => {
-    const url = `${urls.workoutBaseUrl}${urls.userTrackSteps}/${urls.userHistory}?userId=${profile.userId}&&days=${days}`;
+    const url = `${urls.baseWorkout}${urls.userTrackSteps}/${urls.userHistory}?userId=${profile.userId}&&days=${days}`;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,

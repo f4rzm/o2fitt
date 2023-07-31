@@ -187,7 +187,7 @@ const AddCaloryScreen = props => {
                 offlineDB.post({
                     method: "post",
                     type: "meal",
-                    url: urls.foodBaseUrl + urls.userTrackFood,
+                    url: urls.baseFoodTrack + urls.userTrackFood,
                     header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
                     params: { ...m }
                 }).then(res => {
@@ -219,7 +219,7 @@ const AddCaloryScreen = props => {
     }
 
     const saveServer = (meal) => {
-        const url = urls.foodBaseUrl + urls.userTrackFood + urls.calorie
+        const url = urls.baseFoodTrack + urls.userTrackFood + urls.calorie
         const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
         const params = { ...meal }
 

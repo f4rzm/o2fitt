@@ -10,15 +10,18 @@ const DietCategoryItems = ({ lang, item }) => {
     const navigation = useNavigation()
 
     const onPressCategory = () => {
+        navigation.navigate("MyDietTab")
         navigation.navigate("DietStartScreen", item)
+        // setTimeout(() => {
+        // }, 1);
     }
 
     return (
         <TouchableOpacity onPress={onPressCategory} style={[styles.container]}>
-            <View style={{height:moderateScale(100)}}>
+            <View style={{ height: moderateScale(100) }}>
                 <FastImage
                     source={{ uri: item.image }}
-                    style={{ width: '100%', height: moderateScale(100), resizeMode: "center",borderRadius:moderateScale(8) }}
+                    style={{ width: '100%', height: moderateScale(100), resizeMode: "center", borderRadius: moderateScale(8) }}
 
                 />
             </View>
@@ -41,15 +44,15 @@ const styles = StyleSheet.create({
         margin: moderateScale(10),
         borderRadius: moderateScale(10),
         justifyContent: "space-around",
-        overflow:"hidden",
-        borderWidth:1,
-        borderColor:defaultTheme.border,
-        padding:moderateScale(10)
+        overflow: "hidden",
+        borderWidth: 1,
+        borderColor: defaultTheme.border,
+        padding: moderateScale(10)
     },
     text: {
         fontSize: moderateScale(15),
         color: defaultTheme.darkText,
         textAlign: "left",
-        paddingTop:moderateScale(10)
+        paddingTop: moderateScale(10)
     }
 })

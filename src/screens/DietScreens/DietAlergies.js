@@ -29,13 +29,14 @@ function DietAlergies(props) {
     const dispatch = useDispatch()
 
     const foodAlegies = [
-        { id: 2403, name: "سویا", icon: <Soy /> },
-        { id: 975, name: "بادمجان", icon: <EggPlant /> },
-        { id: 122, name: "شیر", icon: <Milk /> },
-        { id: 2226, name: "مغز گردو", icon: <Walnut /> },
-        { id: 1101, name: "کدو سبز", icon: <Courgette /> },
-        { id: 983, name: "سیر", icon: <Garlic /> },
-        { id: 752, name: "کیوی", icon: <Kiwi /> },
+        { id: 1, name: "سویا", icon: <Soy /> },
+        { id: 2, name: "بادمجان", icon: <EggPlant /> },
+        { id: 3, name: "شیر", icon: <Milk /> },
+        { id: 4, name: "مغز گردو", icon: <Walnut /> },
+        { id: 5, name: "کدو سبز", icon: <Courgette /> },
+        { id: 6, name: "سیر", icon: <Garlic /> },
+        { id: 7, name: "کیوی", icon: <Kiwi /> },
+        { id: 8, name: "شیر سویا", icon: <Kiwi /> }
     ]
     const foodAlergiesPressesd = (id, name, icon) => {
         var index = alergiesId.findIndex(item => item == id)
@@ -52,8 +53,8 @@ function DietAlergies(props) {
             targetWeight: props.route.params.targetWeight,
             weight: props.route.params.weight,
             activityRate: props.route.params.activityRate,
-            dietId:props.route.params.dietId,
-            alergiesId:alergiesId
+            dietId: props.route.params.dietId,
+            alergiesId: alergiesId
         })
     }
 
@@ -99,7 +100,7 @@ function DietAlergies(props) {
                     />
                     <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.green2 }}>نکته مهم</Text>
                 </View>
-                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), lineHeight: 25,textAlign:"left",color:defaultTheme.lightGray2 }}>انتخاب هر گزینه باعث محدودیت های بیشتری در برنامه غذایی میشه </Text>
+                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), lineHeight: 25, textAlign: "left", color: defaultTheme.lightGray2 }}>انتخاب هر گزینه باعث محدودیت های بیشتری در برنامه غذایی میشه </Text>
             </View>
             <View style={{ alignSelf: "center", position: "absolute", bottom: moderateScale(20) }}>
                 <ConfirmButton

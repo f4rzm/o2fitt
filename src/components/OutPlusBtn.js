@@ -286,22 +286,27 @@ const OutPlusBtn = ({ lang, navigation, profile, selectedDate }) => {
                             outputRange: [0, 1]
                         })
                         return (
-                            <Pressable onPress={item.onPressCard}>
-                                <Animated.View style={[
-                                    styles.animateditems,
-                                    {
-                                        opacity,
-                                        transform:
-                                            [
-                                                { translateX: iconsTranslationX },
-                                                { translateY: iconsTranslationY },
-                                                { scale: scaleItems }
-                                            ],
-                                    }]}>
-                                    {item.icon}
-                                    <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15) }} key={index.toString()}>{item.name}</Text>
-                                </Animated.View>
-                            </Pressable>
+                            <Animated.View style={[
+                                // styles.animateditems,
+                                {
+                                    opacity,
+                                    transform:
+                                        [
+                                            { translateX: iconsTranslationX },
+                                            { translateY: iconsTranslationY },
+                                            { scale: scaleItems }
+                                        ],
+                                }]}>
+                                <Pressable onPress={item.onPressCard}
+                                    style={styles.animateditems}
+                                >
+                                    <>
+                                        {item.icon}
+                                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15) }} key={index.toString()}>{item.name}</Text>
+                                    </>
+                                </Pressable>
+                            </Animated.View>
+
                         )
                     })
                 }

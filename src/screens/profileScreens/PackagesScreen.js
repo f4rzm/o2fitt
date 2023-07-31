@@ -96,7 +96,7 @@ function PackagesScreen(props) {
 
     }
     const getProfile = () => {
-        const url = urls.userTrackBase + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + user.id
+        const url = urls.baseUserTrack + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + user.id
         const header = {}
         const params = {}
         const RC = new RestController()

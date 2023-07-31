@@ -74,7 +74,7 @@ import ChooseDietTargetScreen from "../screens/DietScreens/ChooseDietTargetScree
 import BodyAnalyzeScreen from '../screens/homeScreeen/BodyAnalyzeScreen'
 import DrawerNavigator from "./DrawerNavigator";
 import FastingDietplan from "../screens/FastingDiet/FastingDietplan";
-import { createStackNavigator } from "@react-navigation/stack";
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 import RecipeFilterScreen from "../screens/recipe/RecipeFilterScreen";
 
 
@@ -100,9 +100,9 @@ const MainRoute = props => {
             screenOptions={{
                 headerShown: false,
                 animationEnabled: true,
-
+                // cardStyleInterpolator:CardStyleInterpolators.forFadeFromCenter
             }}
-            // initialRouteName={"FastingDietplan"}
+        // initialRouteName={"FastingDietplan"}
         >
             {
                 app.appIsLoading ?
@@ -110,7 +110,10 @@ const MainRoute = props => {
                     auth.access_token ?
                         profile.id && profile.id > 0 && parseInt(specification.weightSize) > 0 ?
                             <>
-                                <Stack.Screen
+                                
+                                 <Stack.Group screenOptions={{ presentation: "modal",headerShown:false,cardStyleInterpolator:CardStyleInterpolators.forRevealFromBottomAndroid }}>
+                                    <Stack.Screen name="SetRefferalCode1" component={SetRefferalCode} options={options} />
+                                    <Stack.Screen
                                     initialParams={{
                                         lang: lang,
                                         profile: profile,
@@ -121,6 +124,7 @@ const MainRoute = props => {
                                     name="Drawer"
                                     component={DrawerNavigator}
                                 />
+                                </Stack.Group>
                                 {/* <Stack.Screen
                                     name="Tabs"
                                     component={Tabs}
@@ -197,6 +201,7 @@ const MainRoute = props => {
                                 <Stack.Screen name="SetRefferalCode" component={SetRefferalCode} options={options} />
                                 <Stack.Screen name="FastingDietplan" component={FastingDietplan} options={options} />
                                 <Stack.Screen name="RecipeFilterScreen" component={RecipeFilterScreen} options={options} />
+                               
 
                             </> :
                             <Stack.Screen name="WelcomeRouter" component={WelcomeRouter} options={options} /> :

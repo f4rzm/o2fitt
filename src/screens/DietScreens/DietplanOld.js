@@ -379,7 +379,7 @@ function DietPlan(props) {
                 offlineDB.post({
                     method: "delete",
                     type: "meal",
-                    url: urls.foodBaseUrl2 + urls.userTrackFood + `?_id=${element.serverId}`,
+                    url: urls.baseFoodTrack2 + urls.userTrackFood + `?_id=${element.serverId}`,
                     header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
                     params: { ...element },
                     index: records.total_rows
@@ -570,7 +570,7 @@ function DietPlan(props) {
             offlineDB.post({
                 method: 'post',
                 type: 'meal',
-                url: urls.foodBaseUrl + urls.userTrackFood,
+                url: urls.baseFoodTrack + urls.userTrackFood,
                 header: {
                     headers: {
                         Authorization: 'Bearer ' + auth.access_token,
@@ -647,7 +647,7 @@ function DietPlan(props) {
             .post({
                 method: 'post',
                 type: 'meal',
-                url: urls.foodBaseUrl + urls.userTrackFood,
+                url: urls.baseFoodTrack + urls.userTrackFood,
                 header: {
                     headers: {
                         Authorization: 'Bearer ' + auth.access_token,

@@ -24,7 +24,7 @@ export const updateSpecification = (data , auth , app , user , callback=()=>true
         console.log("updateSpecification",data)
         AsyncStorage.setItem("specification",JSON.stringify(data))
 
-        const url = urls.userBaseUrl + urls.userProfiles + urls.updateUserTrackSpecification + "?userId="+user.id
+        const url = urls.baseUserTrack + urls.userProfiles + urls.updateUserTrackSpecification + "?userId="+user.id
         const header = {headers : {Authorization : "Bearer " + auth.access_token}}
         let params = {...data,_id : Date.now().toString(),id:0}
 

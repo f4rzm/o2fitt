@@ -14,11 +14,13 @@ import { RestController } from '../../classess/RestController'
 import { urls } from '../../utils/urls'
 import { calculateCalorie, calculateCalorieForDietPackage } from '../../functions/CalculateDailyCalorie'
 import analytics from '@react-native-firebase/analytics';
-import { setActivaitonAndDeativation } from '../../redux/actions/fasting'
+import { setActivaitonAndDeativation, setFastingMeal } from '../../redux/actions/fasting'
+import InformationModal from '../../components/modals/InformationModal'
+import { useNavigation } from '@react-navigation/native'
 
 
 function DietConfirmation(props) {
-
+    const navigation = useNavigation()
     const alergies = props.route.params.alergiesId
     const dispatch = useDispatch()
     const getDiet = async (calorie) => {
@@ -33,9 +35,10 @@ function DietConfirmation(props) {
             activityRate: props.route.params.activityRate,
             targetWeight: props.route.params.targetWeight
         })
-       
+
         const RC = new RestController()
         let url = urls.baseDiet + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=${targetCaloriePerDay.targetCalorie}`
+        // let url = urls.baseDiet + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=1200`
         if (alergies.length > 0) {
             alergies.map((item, index) => {
                 if (index == 0) {
@@ -58,60 +61,154 @@ function DietConfirmation(props) {
     const onFailure = (err) => {
         console.error(err);
         setLoading(false)
+        setErrorVisible(true)
+        setErrorContext(lang.serverError)
     }
 
     const randomGenerator = (data) => {
-        return data[Math.floor(Math.random() * data.length - 1)]
+        return data[Math.floor(Math.random() * (data.length - 1))]
     }
 
     const onSuccess = (res) => {
 
-        const data = res.data.data
-        let breakfast = [];
-        let lunch = [];
-        let dinners = [];
-        let snack = []
 
-        data.map((item, index) => {
-            if (item.foodMeal == 3) {
-                dinners = [...dinners, item]
-            }
-            if (item.foodMeal == 0) {
-                breakfast = [...breakfast, item]
-            }
-            if (item.foodMeal == 1) {
-                lunch = [...lunch, item]
-            }
-            if (item.foodMeal == 2) {
-                snack = [...snack, item]
-            }
-        })
+        if (props.route.params.dietId == 66) {
+            const foodMeals = [
+                { id: 0, name: "صبحانه" },
+                { id: 1, name: "نهار" },
+                { id: 2, name: "میان وعده صبح" },
+                { id: 3, name: "شام" },
+                { id: 4, name: "میان وعده ظهر" },
+                { id: 5, name: "میان وعده شب" },
+                { id: 6, name: "افطار" },
+                { id: 7, name: "میان وعده اول" },
+                { id: 8, name: "میان وعده دوم" },
+                { id: 9, name: "سحری" },
+            ]
+            const data = res.data.data
+            let sahars = [];
+            let eftars = [];
+            let dinners = [];
+            let snack1 = []
+            let snack2 = []
 
-        const randomGenerators = {
-            [moment().format("YYYY-MM-DD")]: {
-                '0': { ...randomGenerator(breakfast), isAte: false },
-                "1": { ...randomGenerator(lunch), isAte: false },
-                "2": { ...randomGenerator(snack), isAte: false },
-                "3": { ...randomGenerator(dinners), isAte: false },
-                "4": { ...randomGenerator(snack), isAte: false },
-                "5": { ...randomGenerator(snack), isAte: false },
+            data.map((item, index) => {
+                if (item.foodMeal == 6) {
+                    eftars = [...eftars, item]
+                }
+                else if (item.foodMeal == 9) {
+                    sahars = [...sahars, item]
+                }
+                if (item.foodMeal == 3) {
+                    dinners = [...dinners, item]
+                }
+                else if (item.foodMeal == 7) {
+                    snack1 = [...snack1, item]
+                }
+                else if (item.foodMeal == 8) {
+                    snack2 = [...snack2, item]
+                }
+            })
+
+
+            const randomGenerators = {
+                [moment().format("YYYY-MM-DD")]: {
+                    '9': randomGenerator(sahars),
+                    "6": randomGenerator(eftars),
+                    "7": randomGenerator(snack1),
+                    "3": randomGenerator(dinners),
+                    "8": randomGenerator(snack2),
+                }
             }
-        }
-        dispatch(setDietMeal(
-            {
-                [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+            dispatch(setFastingMeal(
+                {
+                    [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+                    allDinner: dinners,
+                    allSahar: sahars,
+                    allSnack1: snack1,
+                    allSnack2: snack2,
+                    allEftar: eftars,
+                    startDate:moment().format("YYYY-MM-DD")
+                }
+            ))
+            console.warn({
+                // [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
                 allDinner: dinners,
-                allBreakfast: breakfast,
-                allSnack: snack,
-                allLunch: lunch,
-                isActive: true,
-                endDate: moment().add(31, 'days').format("YYYY-MM-DD")
+                allSahar: sahars,
+                allSnack1: snack1,
+                allSnack2: snack2,
+                allEftar: eftars
+            });
+            dispatch(setOldDietFalse())
+            setTimeout(() => {
+                // navigation.popToTop()
+                navigation.navigate("Drawer", { activationDiet: true })
+            }, 300);
+        } else {
+            Alert.alert('not fasting')
+            const data = res.data.data
+            let breakfast = [];
+            let lunch = [];
+            let dinners = [];
+            let snack1 = []
+            let snack2 = []
+            let snack3 = []
+
+            data.map((item, index) => {
+                if (item.foodMeal == 3) {
+                    dinners = [...dinners, item]
+                }
+                if (item.foodMeal == 0) {
+                    breakfast = [...breakfast, item]
+                }
+                if (item.foodMeal == 1) {
+                    lunch = [...lunch, item]
+                }
+                if (item.foodMeal == 2) {
+                    snack1 = [...snack1, item]
+                }
+                if (item.foodMeal == 4) {
+                    snack2 = [...snack2, item]
+                }
+                if (item.foodMeal == 5) {
+                    snack3 = [...snack3, item]
+                }
+            })
+
+            const randomGenerators = {
+                [moment().format("YYYY-MM-DD")]: {
+                    '0': { ...randomGenerator(breakfast), isAte: false },
+                    "1": { ...randomGenerator(lunch), isAte: false },
+                    "2": { ...randomGenerator(snack1), isAte: false },
+                    "3": { ...randomGenerator(dinners), isAte: false },
+                    "4": { ...randomGenerator(snack2), isAte: false },
+                    "5": { ...randomGenerator(snack3), isAte: false },
+                }
             }
-        ))
-        dispatch(setOldDietFalse())
-        setTimeout(() => {
-            props.navigation.navigate("MyDietTab")
-        }, 300);
+            dispatch(setDietMeal(
+                {
+                    [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+                    allDinner: dinners,
+                    allBreakfast: breakfast,
+                    allSnack1: snack1,
+                    allSnack2: snack2,
+                    allSnack3: snack3,
+                    allLunch: lunch,
+                    isActive: true,
+                    endDate: moment().add(31, 'days').format("YYYY-MM-DD"),
+                    startDate:moment().format("YYYY-MM-DD")
+                }
+            ))
+            dispatch(setOldDietFalse())
+            // dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
+            dispatch(setIsActive(true))
+            setTimeout(() => {
+                // navigation.popToTop()
+                navigation.navigate("Drawer", { activationDiet: true })
+
+            }, 300);
+        }
+
 
     }
 
@@ -127,6 +224,8 @@ function DietConfirmation(props) {
     const [hardShip, setHardShip] = useState("")
     const [loading, setLoading] = useState(false)
     const [target, setTarget] = useState('')
+    const [errorVisible, setErrorVisible] = useState(false)
+    const [errorContext, setErrorContext] = useState('')
     // console.warn(profile)
 
     const foodAlegies = [
@@ -256,8 +355,9 @@ function DietConfirmation(props) {
                                 insertDate: moment().format("YYYY-MM-DD"),
                                 weightSize: parseFloat(props.route.params.weight).toFixed(1),
                             }, auth, app, user, () => {
-
-                                props.navigation.navigate("MyDietTab")
+                                getDiet().then(res => {
+                                    // props.navigation.navigate("DietPlanScreen")
+                                })
                             }, () => { }))
                             analytics().logEvent('set_fastingDiet')
                         },
@@ -271,8 +371,6 @@ function DietConfirmation(props) {
         }
         else {
             setLoading(true)
-            dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
-            dispatch(setIsActive(true))
             setTimeout(() => {
                 dispatch(
                     updateTarget(
@@ -350,7 +448,12 @@ function DietConfirmation(props) {
                 }
             </View>
 
-
+            <Information
+                visible={errorVisible}
+                context={errorContext}
+                onRequestClose={() => setErrorVisible(false)}
+                lang={lang}
+            />
 
         </>
     )

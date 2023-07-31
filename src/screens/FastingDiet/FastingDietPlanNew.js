@@ -30,7 +30,7 @@ const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
-const FastingDietplan = (props) => {
+const FastingDietplanNew = (props) => {
 
     const lang = useSelector(state => state.lang)
     const user = useSelector(state => state.user)
@@ -128,124 +128,127 @@ const FastingDietplan = (props) => {
         return targetCalorie
     }
 
-    const setDiet = () => {
-        // const data = require('../../utils/diet/dietPackage.json')
-        // const fastingData = require("../../utils/diet/fastingPack.json")
+    // const setDiet = () => {
+    //     // const data = require('../../utils/diet/dietPackage.json')
+    //     // const fastingData = require("../../utils/diet/fastingPack.json")
 
-        const targetCaloriePerDay = getData()
-        const lowRange = targetCaloriePerDay * 0.97
-        const hightRange = targetCaloriePerDay * 1.03
-        let sahar = [];
-        let eftar = [];
-        let dinners = [];
-        let snack = []
+    //     const targetCaloriePerDay = getData()
+    //     const lowRange = targetCaloriePerDay * 0.97
+    //     const hightRange = targetCaloriePerDay * 1.03
+    //     let sahar = [];
+    //     let eftar = [];
+    //     let dinners = [];
+    //     let snack = []
 
-        data.filter((item, index) => {
-            if (item.foodMeal == 2) {
+    //     data.filter((item, index) => {
+    //         if (item.foodMeal == 2) {
 
-                if (item.caloriValue < (hightRange * 0.35) && item.caloriValue > (lowRange * 0.35)) {
-                    let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        console.error(item.caloriValue);
-                        dinners = [...dinners, item]
-                    }
-                }
-            }
-        })
+    //             if (item.caloriValue < (hightRange * 0.35) && item.caloriValue > (lowRange * 0.35)) {
+    //                 let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     console.error(item.caloriValue);
+    //                     dinners = [...dinners, item]
+    //                 }
+    //             }
+    //         }
+    //     })
 
-        fastingData.filter((item, index) => {
-            if (item.foodMeal == 6) {
-                if (item.caloriValue < (hightRange * 0.30) && item.caloriValue > (lowRange * 0.30)) {
-                    let ar = item.ingredientAllergyIds.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        eftar = [...eftar, item]
-                    }
-                }
-            }
-        })
-        data.filter((item, index) => {
-            if (item.foodMeal == 5) {
-                if (item.caloriValue < (hightRange * 0.05) && item.caloriValue > (lowRange * 0.05)) {
-                    let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        snack = [...snack, item]
-                    }
+    //     fastingData.filter((item, index) => {
+    //         if (item.foodMeal == 6) {
+    //             if (item.caloriValue < (hightRange * 0.30) && item.caloriValue > (lowRange * 0.30)) {
+    //                 let ar = item.ingredientAllergyIds.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     eftar = [...eftar, item]
+    //                 }
+    //             }
+    //         }
+    //     })
+    //     data.filter((item, index) => {
+    //         if (item.foodMeal == 5) {
+    //             if (item.caloriValue < (hightRange * 0.05) && item.caloriValue > (lowRange * 0.05)) {
+    //                 let ar = item.dietPackAlerges.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     snack = [...snack, item]
+    //                 }
 
-                }
-            }
-        })
+    //             }
+    //         }
+    //     })
 
-        fastingData.filter((item, index) => {
-            if (item.foodMeal == 9) {
-                if (item.caloriValue < (hightRange * 0.25) && item.caloriValue > (lowRange * 0.25)) {
-                    let ar = item.ingredientAllergyIds.filter(item => diet.foodAlergies.includes(item))
-                    if (ar.length <= 0) {
-                        sahar = [...sahar, item]
-                    }
-                }
-            }
-        })
-        const randomGenerators = {
-            [moment(selectedDate).format("YYYY-MM-DD")]: {
-                '9': randomGenerator(sahar),
-                "6": randomGenerator(eftar),
-                "7": randomGenerator(snack),
-                "3": randomGenerator(dinners),
-                "8": randomGenerator(snack),
-            }
-        }
-        dispatch(setFastingMeal(
-            {
-                [moment(selectedDate).format("YYYY-MM-DD")]: randomGenerators[moment(selectedDate).format("YYYY-MM-DD")],
-                allDinner: dinners,
-                allSahar: sahar,
-                allSnack: snack,
-                allEftar: eftar
-            }
-        ))
-        dispatch(setActivaitonAndDeativation(true))
+    //     fastingData.filter((item, index) => {
+    //         if (item.foodMeal == 9) {
+    //             if (item.caloriValue < (hightRange * 0.25) && item.caloriValue > (lowRange * 0.25)) {
+    //                 let ar = item.ingredientAllergyIds.filter(item => diet.foodAlergies.includes(item))
+    //                 if (ar.length <= 0) {
+    //                     sahar = [...sahar, item]
+    //                 }
+    //             }
+    //         }
+    //     })
+    //     const randomGenerators = {
+    //         [moment(selectedDate).format("YYYY-MM-DD")]: {
+    //             '9': randomGenerator(sahar),
+    //             "6": randomGenerator(eftar),
+    //             "7": randomGenerator(snack),
+    //             "3": randomGenerator(dinners),
+    //             "8": randomGenerator(snack),
+    //         }
+    //     }
+    //     dispatch(setFastingMeal(
+    //         {
+    //             [moment(selectedDate).format("YYYY-MM-DD")]: randomGenerators[moment(selectedDate).format("YYYY-MM-DD")],
+    //             allDinner: dinners,
+    //             allSahar: sahar,
+    //             allSnack: snack,
+    //             allEftar: eftar
+    //         }
+    //     ))
+    //     dispatch(setActivaitonAndDeativation(true))
 
-        setFastingPlan(randomGenerators[selectedDate])
-
-
-        const foodMeals = [
-            { id: 0, name: "صبحانه" },
-            { id: 1, name: "نهار" },
-            { id: 2, name: "میان وعده صبح" },
-            { id: 3, name: "شام" },
-            { id: 4, name: "میان وعده ظهر" },
-            { id: 5, name: "میان وعده شب" },
-            { id: 6, name: "افطار" },
-            { id: 7, name: "میان وعده اول" },
-            { id: 8, name: "میان وعده دوم" },
-            { id: 9, name: "سحری" },
-        ]
+    //     setFastingPlan(randomGenerators[selectedDate])
 
 
-    }
+    //     const foodMeals = [
+    //         { id: 0, name: "صبحانه" },
+    //         { id: 1, name: "نهار" },
+    //         { id: 2, name: "میان وعده صبح" },
+    //         { id: 3, name: "شام" },
+    //         { id: 4, name: "میان وعده ظهر" },
+    //         { id: 5, name: "میان وعده شب" },
+    //         { id: 6, name: "افطار" },
+    //         { id: 7, name: "میان وعده اول" },
+    //         { id: 8, name: "میان وعده دوم" },
+    //         { id: 9, name: "سحری" },
+    //     ]
+
+
+    // }
 
     const randomGenerator = (data) => {
-        return data[Math.floor(Math.random() * data.length - 1)]
+        return data[Math.floor(Math.random() * (data.length - 1))]
     }
 
     useEffect(() => {
-
+       
         // console.warn(randomGenerators.selectedDate);
         if (fastingDiet[selectedDate]) {
             setFastingPlan(fastingDiet[selectedDate])
-        } else {
-            if (fastingDiet.allDinner.length > 1 &&
-                fastingDiet.allSahar.length > 1 &&
-                fastingDiet.allSnack.length > 1 &&
-                fastingDiet.allEftar.length > 1
+        }
+         else {
+            if (fastingDiet.allDinner.length > 0 &&
+                fastingDiet.allSahar.length > 0 &&
+                fastingDiet.allSnack1.length > 0 &&
+                fastingDiet.allSnack2.length > 0 &&
+                fastingDiet.allEftar.length > 0
             ) {
+                
                 const randomPack = {
                     [moment(selectedDate).format("YYYY-MM-DD")]: {
                         '9': { ...randomGenerator(fastingDiet.allSahar), isAte: false },
                         "6": { ...randomGenerator(fastingDiet.allEftar), isAte: false },
-                        "7": { ...randomGenerator(fastingDiet.allSnack), isAte: false },
+                        "7": { ...randomGenerator(fastingDiet.allSnack1), isAte: false },
                         "3": { ...randomGenerator(fastingDiet.allDinner), isAte: false },
-                        "8": { ...randomGenerator(fastingDiet.allSnack), isAte: false },
+                        "8": { ...randomGenerator(fastingDiet.allSnack2), isAte: false },
                     }
                 }
                 dispatch(setFastingMeal(
@@ -255,7 +258,9 @@ const FastingDietplan = (props) => {
                 ))
                 setFastingPlan(randomPack[selectedDate])
             } else {
-                setDiet()
+            Alert.alert("ok")
+
+                // setDiet()
 
             }
         }
@@ -383,7 +388,7 @@ const FastingDietplan = (props) => {
 
                         />
                         <FastingPlanFoodRow
-                            title={lang.snack}
+                            title={lang.snack1}
                             pack={fastingDiet[selectedDate]["7"]}
                             foodDB={foodDB}
                             lang={lang}
@@ -394,7 +399,7 @@ const FastingDietplan = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allSnack)
+                                setSelectedpackageForChange(fastingDiet.allSnack1)
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.snack1)
                                 Animated.spring(translateY, {
@@ -432,7 +437,7 @@ const FastingDietplan = (props) => {
                             icon={require("../../../res/img/dinner-icon.png")}
                         />
                         <FastingPlanFoodRow
-                            title={lang.snack}
+                            title={lang.snack2}
                             pack={fastingDiet[selectedDate]["8"]}
                             foodDB={foodDB}
                             lang={lang}
@@ -443,7 +448,7 @@ const FastingDietplan = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allSnack)
+                                setSelectedpackageForChange(fastingDiet.allSnack2)
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.snack2)
                                 Animated.spring(translateY, {
@@ -538,7 +543,7 @@ const FastingDietplan = (props) => {
     )
 }
 
-export default FastingDietplan
+export default FastingDietplanNew
 
 const styles = StyleSheet.create({
 

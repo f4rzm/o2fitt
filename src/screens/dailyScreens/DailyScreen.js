@@ -522,7 +522,7 @@ const DailyScreen = props => {
       offlineDB.post({
         method: "delete",
         type: "meal",
-        url: urls.foodBaseUrl2 + urls.userTrackFood + `?_id=${item._id}`,
+        url: urls.baseFoodTrack2 + urls.userTrackFood + `?_id=${item._id}`,
         header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
         params: { ...item },
         index: records.total_rows
@@ -577,7 +577,7 @@ const DailyScreen = props => {
   const deleteActivity = (item) => {
     if (item.stepsCount) {
       if (app.networkConnectivity) {
-        const url = urls.workoutBaseUrl + urls.userTrackSteps + `?userTrackStepsId=${item.id}`
+        const url = urls.baseWorkout + urls.userTrackSteps + `?userTrackStepsId=${item.id}`
         const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
         const params = {}
 
@@ -588,7 +588,7 @@ const DailyScreen = props => {
         offlineDB.post({
           method: "delete",
           type: "pedo",
-          url: urls.workoutBaseUrl + urls.userTrackSteps + `?userTrackStepsId=${item.id}`,
+          url: urls.baseWorkout + urls.userTrackSteps + `?userTrackStepsId=${item.id}`,
           header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
           params: item
         }).then(res => {
@@ -601,7 +601,7 @@ const DailyScreen = props => {
     }
     else {
       if (app.networkConnectivity) {
-        const url = urls.workoutBaseUrl + urls.userTrackWorkout + `?userTrackWorkoutId=${item.id}`
+        const url = urls.baseWorkout + urls.userTrackWorkout + `?userTrackWorkoutId=${item.id}`
         const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
         const params = {}
 
@@ -612,7 +612,7 @@ const DailyScreen = props => {
         offlineDB.post({
           method: "delete",
           type: "activity",
-          url: urls.workoutBaseUrl + urls.userTrackWorkout + `?userTrackWorkoutId=${item.id}`,
+          url: urls.baseWorkout + urls.userTrackWorkout + `?userTrackWorkoutId=${item.id}`,
           header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
           params: item
         }).then(res => {
@@ -666,7 +666,7 @@ const DailyScreen = props => {
   }
 
   const syncMeal = (date) => {
-    const url = urls.foodBaseUrl + urls.userTrackFood + `UserMealsByDate?dateTime=${date}&userId=${user.id}`
+    const url = urls.baseFoodTrack2 + urls.userTrackFood + `UserMealsByDate?dateTime=${date}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -686,7 +686,7 @@ const DailyScreen = props => {
   }
 
   const getPedoFromServer = (date) => {
-    const url = urls.workoutBaseUrl + urls.userTrackSteps + `?dateTime=${date}&userId=${user.id}`
+    const url = urls.baseWorkout + urls.userTrackSteps + `?dateTime=${date}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 
@@ -704,7 +704,7 @@ const DailyScreen = props => {
   }
 
   const syncActivities = (date) => {
-    const url = urls.workoutBaseUrl + urls.userTrackWorkout + `/GetByDate?dateTime=${date}&userId=${user.id}`
+    const url = urls.baseWorkout + urls.userTrackWorkout + `/GetByDate?dateTime=${date}&userId=${user.id}`
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = {}
 

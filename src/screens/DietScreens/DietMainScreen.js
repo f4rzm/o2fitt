@@ -11,125 +11,34 @@ import { RestController } from '../../classess/RestController'
 import DietCategoryItems from '../../components/dietComponents/DietCategoryItems'
 import { dimensions } from '../../constants/Dimensions'
 import DietBanner from '../../components/dietComponents/DietBanner'
-// import CustomTopTabNavigator from '../../components/CustomTopTabNavigator'
 import MainToolbarWithTopCurveView from '../../components/ScreentTemplate/MainToolbarWithTopCurveView'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import MyCustomTabBar from '../../components/Navigators/CustomTabNavigator'
-import CustomTopTabNavigator from '../../components/CustomTopTabNavigator'
+// import CustomTopTabNavigator from '../../components/CustomTopTabNavigator'
 import MyDietScreen from './MyDietScreen'
+import DietCategoryScreen from './DietCategoryScreen'
+import { useNavigation } from '@react-navigation/native'
 
-const DietMainScreen = () => {
+const DietMainScreen = (props) => {
+    const dietNew = useSelector(state => state.dietNew)
     const diet = useSelector(state => state.diet)
     const lang = useSelector(state => state.lang)
+    const app = useSelector(state => state.app)
     const auth = useSelector(state => state.auth)
-    const [dietCategory, setDietCategory] = useState([])
-    const [parents, setParents] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [serverError, setServerError] = useState(false)
-
-    const getDietCategory = () => {
-
-        setLoading(true)
-        const url = urls.baseDiet + urls.dietCategory + "getallactive?page=1&pageSize=20"
-        const RC = new RestController()
-        const header = {
-            headers:
-            {
-                Authorization: "Bearer " + auth.access_token,
-                Language: lang.capitalName
-            }
-        }
-
-        RC.get(url, header, onSuccessDietCat, onFailureDietCat)
-
-    }
-
-    useEffect(() => {
-        getDietCategory()
-    }, [])
-
-    const onSuccessDietCat = (res) => {
-        setLoading(false)
-        setServerError(false)
-        let dietParent = []
-        res.data.data.filter((item) => item.parentId == 0)
-            .map((item) => {
-                let index = dietParent.indexOf(item.id)
-                if (index == -1) {
-                    dietParent.push(item.id)
-                }
-            })
-        setDietCategory(res.data.data);
-        setParents(dietParent);
-
-    }
-
-    const onFailureDietCat = (err) => {
-        // Alert.alert("get category")
-        setServerError(true)
-    }
-
-    const DietPageone = () => {
-        return (
-            <ScrollView
-                contentContainerStyle={{ flexGrow: 1, alignItems: "center", paddingBottom: moderateScale(150), justifyContent: "center" }}
-                style={{ width: dimensions.WINDOW_WIDTH }}
-            >
-                {
-                    loading ?
-                        <ActivityIndicator size={'large'} color={defaultTheme.primaryColor} />
-                        :
-                        serverError ? (
-                            <>
-                                <Text style={[{ fontFamily: lang.font }, styles.errorText]}>{lang.serverError}</Text>
-                                <ConfirmButton
-                                    title={"تلاش مجدد"}
-                                    lang={lang}
-                                    onPress={getDietCategory}
-                                    style={styles.tryAgain}
-                                    textStyle={styles.Ebtn}
-                                />
-                            </>
-                        ) :
-                            dietCategory.find(el => el.isPromote == true) &&
-                            <View style={{ alignItems: "baseline" }}>
-                                <Text style={[styles.subCatText, { fontFamily: lang.font }]}>رژیم پیشنهادی</Text>
-                                <DietBanner
-                                    lang={lang}
-                                    item={dietCategory.find(el => el.isPromote == true)}
-                                />
-                            </View>
-                }
-                {
-                    parents.map((item) => {
-                        return (
-                            <View style={{ alignItems: "baseline" }}>
-                                <Text style={[styles.subCatText, { fontFamily: lang.font }]}>{dietCategory.find(el => el.id == item).name[lang.langName]}</Text>
-                                <View style={styles.itemContainer}>
-                                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                        {
-                                            dietCategory.filter(element => element.parentId == item)
-                                                .map((res) => {
-                                                    return (
-                                                        <DietCategoryItems
-                                                            lang={lang}
-                                                            item={res}
-                                                        />
-                                                    )
-                                                })
-                                        }
-                                    </ScrollView>
-                                </View>
-                            </View>
-                        )
-                    })
-                }
-            </ScrollView>
-        )
-    }
     const Tabs = createMaterialTopTabNavigator()
+    const navigation=useNavigation()
+    useEffect(() => {
+        navigation.navigate("SetRefferalCode1")
+    
+      return () => {
+        
+      }
+    }, [])
+    
     return (
         <MainToolbarWithTopCurveView
+            onMessagePressed={() => props.navigation.navigate('MessagesScreen')}
+            unreadNum={app.unreadMessages}
             lang={lang}
             contentScrollViewStyle={styles.containerContent}
         >
@@ -141,10 +50,14 @@ const DietMainScreen = () => {
             <Tabs.Navigator
                 tabBar={(props) => <MyCustomTabBar {...props} cardWidth={dimensions.WINDOW_WIDTH * 0.97 / 2} lang={lang} />}
                 needsOffscreenAlphaCompositing={true}
-                screenOptions={{}}
+                screenOptions={{
+                    // swipeEnabled: false
+                    
+                }}
+                initialRouteName={dietNew.isActive || diet.isActive ? 'MyDietTab' : "DietCategoryTab"}
             >
-                <Tabs.Screen options={{ title: lang.diets, }} name='DietCategoryTab' children={() => <DietPageone />} />
                 <Tabs.Screen options={{ title: lang.myDiets }} name='MyDietTab' children={() => <MyDietScreen />} />
+                <Tabs.Screen options={{ title: lang.diets, }} name='DietCategoryTab' children={() => <DietCategoryScreen />} />
             </Tabs.Navigator>
         </MainToolbarWithTopCurveView>
     )
@@ -153,33 +66,5 @@ const DietMainScreen = () => {
 export default DietMainScreen
 
 const styles = StyleSheet.create({
-    containerContent: {
-        alignItems: "center",
-        flex: 1
-    },
-    itemContainer: {
-        width: dimensions.WINDOW_WIDTH,
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        flexWrap: "wrap",
-        flexDirection: "row"
-    },
-    subCatText: {
-        fontSize: moderateScale(16),
-        padding: moderateScale(10)
-    },
-    tryAgain: {
-        backgroundColor: defaultTheme.transparent,
-        borderColor: defaultTheme.primaryColor,
-        borderWidth: 1,
-        marginTop: moderateScale(10)
-    },
-    errorText: {
-        fontSize: moderateScale(16),
-        textAlign: "center",
-        color: defaultTheme.darkText
-    },
-    Ebtn: {
-        color: defaultTheme.darkText
-    }
+
 })

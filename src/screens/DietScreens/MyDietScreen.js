@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ConfirmButton, DietCard } from '../../components'
 import { moderateScale } from 'react-native-size-matters'
@@ -8,10 +8,11 @@ import { useNavigation } from '@react-navigation/native'
 import AnimatedLottieView from 'lottie-react-native'
 import { dimensions } from '../../constants/Dimensions'
 import { defaultTheme } from '../../constants/theme'
-import ActiveDietRow from '../../components/ActiveDietRow'
+// import ActiveDietRow from '../../components/ActiveDietRow'
 import FastingDietplan from '../FastingDiet/FastingDietplan'
 import DietplanOld from './DietplanOld'
 import DietPlan from './DietPlan'
+import FastingDietplanNew from '../FastingDiet/FastingDietPlanNew'
 
 const MyDietScreen = () => {
 
@@ -47,6 +48,10 @@ const MyDietScreen = () => {
       navigation.navigate('DietStartScreen');
     }
   };
+  // useEffect(() => {
+  //   navigation.navigate("DietCategoryTab",{activationDiet:true})
+  // }, [])
+  
 
   const renderDiet = () => {
     if (dietNew.isOld) {
@@ -62,22 +67,18 @@ const MyDietScreen = () => {
         return <FastingDietplan />
       } else {
         return (
-          <>
+          <View style={{ height: dimensions.WINDOW_HEIGTH * 0.8, alignItems: "center", justifyContent: "center" }}>
             <AnimatedLottieView
               source={require('../../../res/animations/mealplan.json')}
-              style={{ width: dimensions.WINDOW_WIDTH * 0.4 }}
+              style={{ width: dimensions.WINDOW_WIDTH * 0.3 }}
               autoPlay={true}
               loop={true}
             />
-            <Text style={[styles.text2, { fontFamily: lang.font, lineHeight: moderateScale(25) }]}>
+              <Text style={[styles.text2, { fontFamily: lang.font,lineHeight:moderateScale(25)}]}>
               {`هنوز برنامه غذایی ندارین ! \nبرای دریافت برنامه غذایی`}
-              <TouchableOpacity
-                onPress={() => navigation.navigate('DietStartScreen')}
-              >
-                <Text style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
-              </TouchableOpacity>
+                <Text onPress={() => navigation.navigate('DietStartScreen')} style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
             </Text>
-          </>
+          </View>
         )
       }
     } else {
@@ -91,7 +92,7 @@ const MyDietScreen = () => {
         )
       } else if (dietNew.isActive && fastingDiet.isActive) {
 
-        return <FastingDietplan />
+        return <FastingDietplanNew />
       } else {
         return (
           <>
@@ -101,13 +102,9 @@ const MyDietScreen = () => {
               autoPlay={true}
               loop={true}
             />
-            <Text style={[styles.text2, { fontFamily: lang.font, lineHeight: moderateScale(25) }]}>
+            <Text style={[styles.text2, { fontFamily: lang.font,lineHeight:moderateScale(25)}]}>
               {`هنوز برنامه غذایی ندارین ! \nبرای دریافت برنامه غذایی`}
-              <TouchableOpacity
-                onPress={() => navigation.navigate('DietStartScreen')}
-              >
-                <Text style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
-              </TouchableOpacity>
+                <Text onPress={() => navigation.navigate('DietCategoryTab')} style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
             </Text>
           </>
         )
@@ -154,10 +151,11 @@ export default MyDietScreen
 const styles = StyleSheet.create({
   container: {
     maxHeight: dimensions.WINDOW_HEIGTH,
+    minHeight:dimensions.WINDOW_HEIGTH*0.7,
     // paddingVertical: moderateScale(10),
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: moderateScale(100)
+    // paddingBottom: moderateScale(100)
   },
   text2: {
     fontSize: moderateScale(15),

@@ -22,6 +22,7 @@ import AnimatedLottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 import Info from '../../../res/img/info4.svg'
 import DietPlanRow from '../../components/DietPlanRow'
+import CheetDay from '../../components/dietComponents/CheetDay'
 PouchDB.plugin(pouchdbSearch);
 const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
@@ -42,6 +43,7 @@ const DietPlan = (props) => {
     const [showShutDownModal, setShowShutDownModal] = useState(false)
     const [shutownLoading, setShutownLoading] = useState(false)
     const [advice, setAdvice] = useState()
+    const [isCheetDay, setIsCheetDay] = useState(false)
     const translateY = useRef(new Animated.Value(100)).current
     const [selectedMEalName, setSelectedMEalName] = useState()
 
@@ -128,7 +130,7 @@ const DietPlan = (props) => {
 
 
     const randomGenerator = (data) => {
-        return data[Math.floor(Math.random() * data.length - 1)]
+        return data[Math.floor(Math.random() * (data.length - 1))]
     }
 
     useEffect(() => {
@@ -140,10 +142,10 @@ const DietPlan = (props) => {
                 [moment(selectedDate).format("YYYY-MM-DD")]: {
                     '0': { ...randomGenerator(diet.allBreakfast), isAte: false },
                     "1": { ...randomGenerator(diet.allLunch), isAte: false },
-                    "2": { ...randomGenerator(diet.allSnack), isAte: false },
+                    "2": { ...randomGenerator(diet.allSnack1), isAte: false },
                     "3": { ...randomGenerator(diet.allDinner), isAte: false },
-                    "4": { ...randomGenerator(diet.allSnack), isAte: false },
-                    "5": { ...randomGenerator(diet.allSnack), isAte: false },
+                    "4": { ...randomGenerator(diet.allSnack2), isAte: false },
+                    "5": { ...randomGenerator(diet.allSnack3), isAte: false },
                 }
             }
 
@@ -179,6 +181,39 @@ const DietPlan = (props) => {
         // props.navigation.popToTop()
     }
 
+    const onCheetDayPressed = () => {
+        // load(true)
+        let index = diet.cheetDays.indexOf(selectedDate)
+        if (diet.cheetDays.length <= 1) {
+            if (index == -1) {
+                dispatch(setDietMeal({ ...diet, cheetDays: [...diet.cheetDays, selectedDate] }))
+                setIsCheetDay(true)
+                // load(false)
+            }
+            if (index >= 0) {
+                let cheetDay = diet.cheetDays.filter(item => item != selectedDate)
+                dispatch(setDietMeal({ ...diet, cheetDays: cheetDay }))
+                setIsCheetDay(false)
+                // load(false)
+            }
+
+        } else {
+            if (index != -1) {
+                let cheetDay = diet.cheetDays.filter(item => item != selectedDate)
+                dispatch(setDietMeal({ ...diet, cheetDays: cheetDay }))
+                setIsCheetDay(false)
+                // setIsChange(!isChange)
+                // setTimeout(() => {
+                //     load(false)
+                // }, 500)
+            } else {
+                // setCheetDayModal(true)
+                // load(false)
+            }
+        }
+
+    }
+
     return (
         <SafeAreaView>
             {/* <Toolbar
@@ -198,7 +233,16 @@ const DietPlan = (props) => {
                 onPressShutDown={onPressShutDown}
 
             />
-            <ScrollView contentContainerStyle={{ alignItems: 'center', flexGrow: 1, paddingTop: moderateScale(10), paddingBottom: moderateScale(100) }} >
+            <ScrollView
+                contentContainerStyle={{ alignItems: 'center', flexGrow: 1, paddingTop: moderateScale(10), paddingBottom: moderateScale(100) }}
+                showsVerticalScrollIndicator={false}
+            >
+                <CheetDay
+                    isCheetDay={diet.cheetDays.indexOf(selectedDate)!==-1?true:false}
+                    lang={lang}
+                    onCheetDayPressed={onCheetDayPressed}
+                    diet={diet}
+                />
                 {
                     advice ?
                         <View style={styles.adviceContaienr}>
@@ -217,156 +261,159 @@ const DietPlan = (props) => {
                 {
                     diet[selectedDate] &&
                     <>
-                        <DietPlanRow
-                            title={lang.breakfast}
-                            pack={diet[selectedDate]["0"]}
-                            foodDB={foodDB}
-                            lang={lang}
-                            meal={"0"}
-                            offlineDB={offlineDB}
-                            user={user}
-                            auth={auth}
-                            selectedDate={selectedDate}
-                            mealDB={mealDB}
-                            onChangepackage={(e) => {
-                                setSelectedpackageForChange(diet.allBreakfast)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.breakfast)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
-                            }}
-                            fastingDiet={diet}
-                            diet={diet}
-                            icon={require("../../../res/img/breakfast.png")}
+                        {
+                            diet.cheetDays.indexOf(selectedDate)!==-1 ? <></> :
+                                <>
+                                    <DietPlanRow
+                                        title={lang.breakfast}
+                                        pack={diet[selectedDate]["0"]}
+                                        foodDB={foodDB}
+                                        lang={lang}
+                                        meal={"0"}
+                                        offlineDB={offlineDB}
+                                        user={user}
+                                        auth={auth}
+                                        selectedDate={selectedDate}
+                                        mealDB={mealDB}
+                                        onChangepackage={(e) => {
+                                            setSelectedpackageForChange(diet.allBreakfast)
+                                            setSelectedMealForChange(e)
+                                            setSelectedMEalName(lang.breakfast)
+                                            Animated.spring(translateY, {
+                                                toValue: 0,
+                                                useNativeDriver: true
+                                            }).start()
+                                        }}
+                                        fastingDiet={diet}
+                                        diet={diet}
+                                        icon={require("../../../res/img/breakfast.png")}
+                                    />
+                                    <DietPlanRow
+                                        title={lang.snack1}
+                                        pack={diet[selectedDate]["2"]}
+                                        foodDB={foodDB}
+                                        lang={lang}
+                                        meal={"2"}
+                                        offlineDB={offlineDB}
+                                        user={user}
+                                        auth={auth}
+                                        selectedDate={selectedDate}
+                                        mealDB={mealDB}
+                                        onChangepackage={(e) => {
+                                            setSelectedpackageForChange(diet.allSnack1)
+                                            setSelectedMealForChange(e)
+                                            setSelectedMEalName(lang.snack1)
+                                            Animated.spring(translateY, {
+                                                toValue: 0,
+                                                useNativeDriver: true
+                                            }).start()
+                                        }}
+                                        fastingDiet={diet}
+                                        diet={diet}
+                                        icon={require("../../../res/img/snack.png")}
 
-                        />
-                        <DietPlanRow
-                            title={lang.snack1}
-                            pack={diet[selectedDate]["2"]}
-                            foodDB={foodDB}
-                            lang={lang}
-                            meal={"2"}
-                            offlineDB={offlineDB}
-                            user={user}
-                            auth={auth}
-                            selectedDate={selectedDate}
-                            mealDB={mealDB}
-                            onChangepackage={(e) => {
-                                setSelectedpackageForChange(diet.allSnack)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.snack1)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
-                            }}
-                            fastingDiet={diet}
-                            diet={diet}
-                            icon={require("../../../res/img/snack.png")}
+                                    />
+                                    <DietPlanRow
+                                        title={lang.lunch}
+                                        pack={diet[selectedDate]["1"]}
+                                        foodDB={foodDB}
+                                        lang={lang}
+                                        meal={"1"}
+                                        offlineDB={offlineDB}
+                                        user={user}
+                                        auth={auth}
+                                        selectedDate={selectedDate}
+                                        mealDB={mealDB}
+                                        onChangepackage={(e) => {
+                                            setSelectedpackageForChange(diet.allLunch)
+                                            setSelectedMealForChange(e)
+                                            setSelectedMEalName(lang.lunch)
+                                            Animated.spring(translateY, {
+                                                toValue: 0,
+                                                useNativeDriver: true
+                                            }).start()
+                                        }}
+                                        fastingDiet={diet}
+                                        diet={diet}
+                                        icon={require("../../../res/img/lunch.png")}
 
-                        />
-                        <DietPlanRow
-                            title={lang.lunch}
-                            pack={diet[selectedDate]["1"]}
-                            foodDB={foodDB}
-                            lang={lang}
-                            meal={"1"}
-                            offlineDB={offlineDB}
-                            user={user}
-                            auth={auth}
-                            selectedDate={selectedDate}
-                            mealDB={mealDB}
-                            onChangepackage={(e) => {
-                                setSelectedpackageForChange(diet.allLunch)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.lunch)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
-                            }}
-                            fastingDiet={diet}
-                            diet={diet}
-                            icon={require("../../../res/img/lunch.png")}
+                                    />
+                                    <DietPlanRow
+                                        title={lang.snack2}
+                                        pack={diet[selectedDate]["4"]}
+                                        foodDB={foodDB}
+                                        lang={lang}
+                                        meal={"4"}
+                                        offlineDB={offlineDB}
+                                        user={user}
+                                        auth={auth}
+                                        selectedDate={selectedDate}
+                                        mealDB={mealDB}
+                                        onChangepackage={(e) => {
+                                            setSelectedpackageForChange(diet.allSnack2)
+                                            setSelectedMealForChange(e)
+                                            setSelectedMEalName(lang.snack2)
+                                            Animated.spring(translateY, {
+                                                toValue: 0,
+                                                useNativeDriver: true
+                                            }).start()
+                                        }}
+                                        fastingDiet={diet}
+                                        diet={diet}
+                                        icon={require("../../../res/img/snack.png")}
 
-                        />
-                        <DietPlanRow
-                            title={lang.snack2}
-                            pack={diet[selectedDate]["4"]}
-                            foodDB={foodDB}
-                            lang={lang}
-                            meal={"4"}
-                            offlineDB={offlineDB}
-                            user={user}
-                            auth={auth}
-                            selectedDate={selectedDate}
-                            mealDB={mealDB}
-                            onChangepackage={(e) => {
-                                setSelectedpackageForChange(diet.allSnack)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.snack2)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
-                            }}
-                            fastingDiet={diet}
-                            diet={diet}
-                            icon={require("../../../res/img/snack.png")}
+                                    />
+                                    <DietPlanRow
+                                        title={lang.dinner}
+                                        pack={diet[selectedDate]["3"]}
+                                        foodDB={foodDB}
+                                        lang={lang}
+                                        meal={"3"}
+                                        offlineDB={offlineDB}
+                                        user={user}
+                                        auth={auth}
+                                        selectedDate={selectedDate}
+                                        mealDB={mealDB}
+                                        onChangepackage={(e) => {
+                                            setSelectedpackageForChange(diet.allDinner)
+                                            setSelectedMealForChange(e)
+                                            setSelectedMEalName(lang.dinner)
+                                            Animated.spring(translateY, {
+                                                toValue: 0,
+                                                useNativeDriver: true
+                                            }).start()
+                                        }}
+                                        fastingDiet={diet}
+                                        diet={diet}
+                                        icon={require("../../../res/img/dinner.png")}
 
-                        />
-                        <DietPlanRow
-                            title={lang.dinner}
-                            pack={diet[selectedDate]["3"]}
-                            foodDB={foodDB}
-                            lang={lang}
-                            meal={"3"}
-                            offlineDB={offlineDB}
-                            user={user}
-                            auth={auth}
-                            selectedDate={selectedDate}
-                            mealDB={mealDB}
-                            onChangepackage={(e) => {
-                                setSelectedpackageForChange(diet.allDinner)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.dinner)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
-                            }}
-                            fastingDiet={diet}
-                            diet={diet}
-                            icon={require("../../../res/img/dinner.png")}
-
-                        />
-                        <DietPlanRow
-                            title={lang.snack3}
-                            pack={diet[selectedDate]["5"]}
-                            foodDB={foodDB}
-                            lang={lang}
-                            meal={"5"}
-                            offlineDB={offlineDB}
-                            user={user}
-                            auth={auth}
-                            selectedDate={selectedDate}
-                            mealDB={mealDB}
-                            onChangepackage={(e) => {
-                                setSelectedpackageForChange(diet.allSnack)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.snack2)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
-                            }}
-                            fastingDiet={diet}
-                            diet={diet}
-                            icon={require("../../../res/img/snack-icon.png")}
-                        />
-
+                                    />
+                                    <DietPlanRow
+                                        title={lang.snack3}
+                                        pack={diet[selectedDate]["5"]}
+                                        foodDB={foodDB}
+                                        lang={lang}
+                                        meal={"5"}
+                                        offlineDB={offlineDB}
+                                        user={user}
+                                        auth={auth}
+                                        selectedDate={selectedDate}
+                                        mealDB={mealDB}
+                                        onChangepackage={(e) => {
+                                            setSelectedpackageForChange(diet.allSnack3)
+                                            setSelectedMealForChange(e)
+                                            setSelectedMEalName(lang.snack2)
+                                            Animated.spring(translateY, {
+                                                toValue: 0,
+                                                useNativeDriver: true
+                                            }).start()
+                                        }}
+                                        fastingDiet={diet}
+                                        diet={diet}
+                                        icon={require("../../../res/img/snack-icon.png")}
+                                    />
+                                </>
+                        }
                     </>
                 }
                 {
@@ -498,7 +545,7 @@ const styles = StyleSheet.create({
     },
     adviceContaienr: {
         width: dimensions.WINDOW_WIDTH * 0.9,
-        padding: moderateScale(20), 
+        padding: moderateScale(20),
         alignSelf: "center",
         backgroundColor: defaultTheme.lightBackground,
         borderRadius: 10,

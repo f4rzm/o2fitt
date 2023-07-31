@@ -7,7 +7,10 @@ const INITIAL_STATE = {
     allLunch: [],
     allSnack: [],
     allDinner: [],
-    isOld:true
+    isOld:true,
+    isBuy:false,
+    percent:0,
+    cheetDays:[]
 }
 
 export const dietNew = (state = INITIAL_STATE, action) => {
@@ -21,6 +24,8 @@ export const dietNew = (state = INITIAL_STATE, action) => {
             return { ...state, isOld:false }
         case types.SET_IS_ACTIVE:
             return { ...state, isActive:true }
+        case types.CALCULATE_PERCENT:
+            return { ...state, percent:action.payload }
         case types.CLEAR_DIET:
             return {
                 isActive: false,
@@ -29,7 +34,9 @@ export const dietNew = (state = INITIAL_STATE, action) => {
                 allLunch: [],
                 allSnack: [],
                 allDinner: [],
-                isOld:false
+                isOld:false,
+                percent:0,
+                cheetDays:[]
             }
         case types.SHUTDOWN_DIET_PLAN: {
             return {
@@ -39,7 +46,9 @@ export const dietNew = (state = INITIAL_STATE, action) => {
                 allLunch: [],
                 allSnack: [],
                 allDinner: [],
-                isOld:false
+                isOld:false,
+                percent:0,
+                cheetDays:[]
             }
         }
         default:
