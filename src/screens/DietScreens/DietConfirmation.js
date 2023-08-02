@@ -71,7 +71,7 @@ function DietConfirmation(props) {
 
     const onSuccess = (res) => {
 
-
+console.warn(res.data.data);
         if (props.route.params.dietId == 66) {
             const foodMeals = [
                 { id: 0, name: "صبحانه" },
@@ -140,6 +140,9 @@ function DietConfirmation(props) {
                 allEftar: eftars
             });
             dispatch(setOldDietFalse())
+            dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
+            dispatch(setIsActive(true))
+            dispatch(setActivaitonAndDeativation(true))
             setTimeout(() => {
                 // navigation.popToTop()
                 navigation.navigate("Drawer", { activationDiet: true })
@@ -333,9 +336,7 @@ function DietConfirmation(props) {
     const onConfirm = () => {
         if (fastingDiet.isActive) {
             setLoading(true)
-            dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
-            dispatch(setIsActive(true))
-            dispatch(setActivaitonAndDeativation(true))
+           
             setTimeout(() => {
                 dispatch(
                     updateTarget(

@@ -55,7 +55,6 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
 
 
     }
-    console.warn(dimensions.WINDOW_HEIGTH);
 
     return (
         <KeyboardAvoidingView behavior='height'>

@@ -27,13 +27,6 @@ const DietMainScreen = (props) => {
     const auth = useSelector(state => state.auth)
     const Tabs = createMaterialTopTabNavigator()
     const navigation=useNavigation()
-    useEffect(() => {
-        navigation.navigate("SetRefferalCode1")
-    
-      return () => {
-        
-      }
-    }, [])
     
     return (
         <MainToolbarWithTopCurveView

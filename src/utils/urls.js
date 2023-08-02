@@ -17,7 +17,7 @@ export const urls = {
     baseFoodTrack2: "https://gateway.o2fitt.com/foodTrack/api/v2/",
     baseDiet: "https://gateway.o2fitt.com/diettest/api/v1/",
     baseUserTrack: "https://gateway.o2fitt.com/userTrack/api/v1/",
-    baseWorkout: "https://gateway.o2fitt.com/workoutTrackTest/api/v1/",
+    baseWorkout: "https://gateway.o2fitt.com/workoutTrack/api/v1/",
     userHistory: "UserHistory",
     userSpecificationHistory: "UserSpecificationHistory",
     blog: "Blog/",

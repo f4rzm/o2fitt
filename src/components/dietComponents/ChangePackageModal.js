@@ -116,6 +116,7 @@ function ChangePackageModal(props) {
                         onChangeText={(text) => onChangeText(text)}
                         style={{ borderRadius: 15, width: dimensions.WINDOW_WIDTH * 0.8, borderColor: defaultTheme.border, fontFamily: props.lang.font, fontSize: moderateScale(14), paddingHorizontal: 15, height: moderateScale(40), textAlign: "right" }}
                         placeholder={props.lang.searchItemFoodTitle1}
+                        placeholderTextColor={defaultTheme.gray}
 
                     />
                 </View>

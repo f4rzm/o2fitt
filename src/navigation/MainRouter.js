@@ -76,6 +76,8 @@ import DrawerNavigator from "./DrawerNavigator";
 import FastingDietplan from "../screens/FastingDiet/FastingDietplan";
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 import RecipeFilterScreen from "../screens/recipe/RecipeFilterScreen";
+import ChangePackageModalScreen from "../screens/DietScreens/ChangePackageModalScreen";
+import ChangeFastingModal from "../screens/FastingDiet/ChangeFastingPackageModal";
 
 
 const MainRoute = props => {
@@ -112,7 +114,6 @@ const MainRoute = props => {
                             <>
                                 
                                  <Stack.Group screenOptions={{ presentation: "modal",headerShown:false,cardStyleInterpolator:CardStyleInterpolators.forRevealFromBottomAndroid }}>
-                                    <Stack.Screen name="SetRefferalCode1" component={SetRefferalCode} options={options} />
                                     <Stack.Screen
                                     initialParams={{
                                         lang: lang,
@@ -124,6 +125,8 @@ const MainRoute = props => {
                                     name="Drawer"
                                     component={DrawerNavigator}
                                 />
+                                    <Stack.Screen name="ChangePackageModalScreen" component={ChangePackageModalScreen} options={options} />
+                                    <Stack.Screen name="ChangeFastingModal" component={ChangeFastingModal} options={options} />
                                 </Stack.Group>
                                 {/* <Stack.Screen
                                     name="Tabs"
