@@ -50,7 +50,7 @@ export {
     exchangeLunch,
     exchangeDinner,
     changeData,
-} from './diet'
+} from './dietOld'
 
 export {
     setStarRatingTimer,

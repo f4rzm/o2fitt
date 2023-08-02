@@ -64,7 +64,7 @@ export default function TabBarComp({ state, descriptors, navigation, position, l
                 options.tabBarIcon&&
                 <Animated.Image
                   source={options.tabBarIcon}
-                  style={{ tintColor: isFocused ? defaultTheme.primaryColor : defaultTheme.gray, width: moderateScale(19), height: moderateScale(19), transform: [{ scale: scale }],resizeMode:"contain"}}
+                  style={{ tintColor: isFocused ? defaultTheme.primaryColor : defaultTheme.mainText, width: moderateScale(19), height: moderateScale(19), transform: [{ scale: scale }],resizeMode:"contain"}}
                 />
               }
             </View>

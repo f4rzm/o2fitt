@@ -205,13 +205,13 @@ const IngredientsSearchScreen = props => {
             />
             {
                 errorVisible &&
-                < TouchableWithoutFeedback onPress={() => setErrorVisible(false)}>
+                <TouchableWithoutFeedback onPress={() => setErrorVisible(false)}>
                     <View style={styles.wrapper}>
                         <BlurView
                             style={styles.absolute}
                             blurType="light"
                             blurAmount={9}
-                            blurRadius={9}
+                            // blurRadius={9}
                         />
                     </View>
                 </TouchableWithoutFeedback>

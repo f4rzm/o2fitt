@@ -277,7 +277,7 @@ const ReportScreen = props => {
 
   const getWaterReports = () => {
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackWater +
       '/' +
       urls.userHistory +
@@ -331,7 +331,7 @@ const ReportScreen = props => {
 
   const getStepReports = () => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSteps +
       '/' +
       urls.userHistory +
@@ -389,7 +389,7 @@ const ReportScreen = props => {
 
   const getWorkoutReports = () => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackWorkout +
       '/' +
       urls.userHistory +
@@ -445,7 +445,7 @@ const ReportScreen = props => {
 
   const getSleepReports = () => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSleep +
       urls.userHistory +
       `?days=${duration.id}&userId=${user.id}`;
@@ -500,7 +500,7 @@ const ReportScreen = props => {
 
   const getNutritionReport = () => {
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackFood +
       urls.userHistory +
       `?days=${duration.id}&userId=${user.id}`;

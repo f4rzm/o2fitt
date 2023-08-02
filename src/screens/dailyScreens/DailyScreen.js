@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -11,10 +11,10 @@ import {
   AppState,
   Platform,
 } from 'react-native';
-import {dimensions} from '../../constants/Dimensions';
-import {defaultTheme} from '../../constants/theme';
-import {useSelector, useDispatch} from 'react-redux';
-import {moderateScale} from 'react-native-size-matters';
+import { dimensions } from '../../constants/Dimensions';
+import { defaultTheme } from '../../constants/theme';
+import { useSelector, useDispatch } from 'react-redux';
+import { moderateScale } from 'react-native-size-matters';
 import {
   Information,
   Calendar,
@@ -30,30 +30,30 @@ import {
 import moment from 'moment';
 import PouchDB from '../../../pouchdb';
 import pouchdbSearch from 'pouchdb-find';
-import {urls} from '../../utils/urls';
-import {RestController} from '../../classess/RestController';
-import {SyncMealDB} from '../../classess/SyncMealDB';
-import {SyncActivityDB} from '../../classess/SyncActivityDB';
-import {SyncPedoDB} from '../../classess/SyncPedoDB';
+import { urls } from '../../utils/urls';
+import { RestController } from '../../classess/RestController';
+import { SyncMealDB } from '../../classess/SyncMealDB';
+import { SyncActivityDB } from '../../classess/SyncActivityDB';
+import { SyncPedoDB } from '../../classess/SyncPedoDB';
 import Lunch from '../../../res/img/lunch.svg';
 import Breakfast from '../../../res/img/breakfast.svg';
 import Dinner from '../../../res/img/dinner.svg';
 // import Orientation from 'react-native-orientation-locker'
 import Toast from 'react-native-toast-message';
-import {BlurView} from '@react-native-community/blur';
-import {setIsBuy, clearDiet} from '../../redux/actions/diet';
+import { BlurView } from '@react-native-community/blur';
+import { setIsBuy, clearDiet } from '../../redux/actions/diet';
 import axios from 'axios';
 import StarRatingModal from '../../components/starRatingModal';
 import VIP from '../../components/VIP';
-import {addDate} from '../../redux/actions/syncedDate';
-import {Modal} from 'react-native-paper';
-import {setStarRatingTimer} from '../../redux/actions';
+import { addDate } from '../../redux/actions/syncedDate';
+import { Modal } from 'react-native-paper';
+import { setStarRatingTimer } from '../../redux/actions';
 
 PouchDB.plugin(pouchdbSearch);
-const pedoDB = new PouchDB('pedo', {adapter: 'react-native-sqlite'});
-const mealDB = new PouchDB('meal', {adapter: 'react-native-sqlite'});
-const activityDB = new PouchDB('activity', {adapter: 'react-native-sqlite'});
-const offlineDB = new PouchDB('offline', {adapter: 'react-native-sqlite'});
+const pedoDB = new PouchDB('pedo', { adapter: 'react-native-sqlite' });
+const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
+const activityDB = new PouchDB('activity', { adapter: 'react-native-sqlite' });
+const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
 const DailyScreen = props => {
   const dispatch = useDispatch();
@@ -130,7 +130,7 @@ const DailyScreen = props => {
   useEffect(() => {
     AppState.addEventListener('change', _handleAppStateChange);
 
-    return () => {};
+    return () => { };
   }, []);
 
   const _handleAppStateChange = nextAppState => {
@@ -442,8 +442,8 @@ const DailyScreen = props => {
       selectedDate === '2021-03-21'
         ? '2021-03-22'
         : selectedDate === '2021-03-22'
-        ? '2021-03-23'
-        : moment(selectedDate, 'YYYY-MM-DD').add(1, 'day').format('YYYY-MM-DD');
+          ? '2021-03-23'
+          : moment(selectedDate, 'YYYY-MM-DD').add(1, 'day').format('YYYY-MM-DD');
     setDate(nDay);
     AsyncStorage.setItem('homeDate', nDay);
     // dispatch(updateDate(nDay));
@@ -456,8 +456,8 @@ const DailyScreen = props => {
       selectedDate === '2021-03-23'
         ? '2021-03-22'
         : selectedDate === '2021-03-22'
-        ? '2021-03-21'
-        : moment(selectedDate, 'YYYY-MM-DD')
+          ? '2021-03-21'
+          : moment(selectedDate, 'YYYY-MM-DD')
             .subtract(1, 'days')
             .format('YYYY-MM-DD');
     setDate(pDay);
@@ -514,7 +514,7 @@ const DailyScreen = props => {
 
   const editMeal = item => {
     if (item.foodId === null && item.personalFoodId === null) {
-      props.navigation.navigate('AddCaloryScreen', {meal: item});
+      props.navigation.navigate('AddCaloryScreen', { meal: item });
     } else {
       props.navigation.navigate('FoodDetailScreen', {
         meal: item,
@@ -544,7 +544,7 @@ const DailyScreen = props => {
   const onActivityEdit = async item => {
     const date = await AsyncStorage.getItem('homeDate');
     if (item.stepsCount) {
-      props.navigation.navigate('PedometerScreen', {item: item, date: date});
+      props.navigation.navigate('PedometerScreen', { item: item, date: date });
     } else {
       props.navigation.navigate('ActivityDetailsScreen', {
         activity: item,
@@ -573,19 +573,19 @@ const DailyScreen = props => {
     // RC.checkPrerequisites("delete", url, params, header, (res) => removeMealSuccess(res, item), removeMealFailure, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
     // }
     // else {
-    offlineDB.allDocs({include_docs: false}).then(records => {
+    offlineDB.allDocs({ include_docs: false }).then(records => {
       offlineDB
         .post({
           method: 'delete',
           type: 'meal',
-          url: urls.foodBaseUrl2 + urls.userTrackFood + `?_id=${item._id}`,
+          url: urls.baseFoodTrack2 + urls.userTrackFood + `?_id=${item._id}`,
           header: {
             headers: {
               Authorization: 'Bearer ' + auth.access_token,
               Language: lang.capitalName,
             },
           },
-          params: {...item},
+          params: { ...item },
           index: records.total_rows,
         })
         .then(res => {
@@ -600,16 +600,16 @@ const DailyScreen = props => {
   const removeMealDB = item => {
     mealDB
       .find({
-        selector: {_id: item._id},
+        selector: { _id: item._id },
       })
       .then(rec => {
         if (rec.docs.length > 0) {
-          mealDB.put({...rec.docs[0], _deleted: true}).then(() => {
+          mealDB.put({ ...rec.docs[0], _deleted: true }).then(() => {
             // setErrorContext(lang.successful)
             // setErrorVisible(true)
             Toast.show({
               type: 'success',
-              props: {text2: lang.successful, style: {fontFamily: lang.font}},
+              props: { text2: lang.successful, style: { fontFamily: lang.font } },
               visibilityTime: 800,
             });
           });
@@ -629,7 +629,7 @@ const DailyScreen = props => {
       // setErrorVisible(true)
       Toast.show({
         type: 'error',
-        props: {text2: lang.serverError, style: {fontFamily: lang.font}},
+        props: { text2: lang.serverError, style: { fontFamily: lang.font } },
         visibilityTime: 800,
       });
     }
@@ -639,7 +639,7 @@ const DailyScreen = props => {
     if (item.stepsCount) {
       if (app.networkConnectivity) {
         const url =
-          urls.workoutBaseUrl +
+          urls.baseWorkout +
           urls.userTrackSteps +
           `?userTrackStepsId=${item.id}`;
         const header = {
@@ -668,7 +668,7 @@ const DailyScreen = props => {
             method: 'delete',
             type: 'pedo',
             url:
-              urls.workoutBaseUrl +
+              urls.baseWorkout +
               urls.userTrackSteps +
               `?userTrackStepsId=${item.id}`,
             header: {
@@ -689,7 +689,7 @@ const DailyScreen = props => {
     } else {
       if (app.networkConnectivity) {
         const url =
-          urls.workoutBaseUrl +
+          urls.baseWorkout +
           urls.userTrackWorkout +
           `?userTrackWorkoutId=${item.id}`;
         const header = {
@@ -718,7 +718,7 @@ const DailyScreen = props => {
             method: 'delete',
             type: 'activity',
             url:
-              urls.workoutBaseUrl +
+              urls.baseWorkout +
               urls.userTrackWorkout +
               `?userTrackWorkoutId=${item.id}`,
             header: {
@@ -744,22 +744,22 @@ const DailyScreen = props => {
 
   const deleteActivityFromDB = item => {
     if (item.stepsCount) {
-      pedoDB.put({...item, _deleted: true}).then(() => {
+      pedoDB.put({ ...item, _deleted: true }).then(() => {
         // setErrorContext(lang.successful)
         // setErrorVisible(true)
         Toast.show({
           type: 'success',
-          props: {text2: lang.successful, style: {fontFamily: lang.font}},
+          props: { text2: lang.successful, style: { fontFamily: lang.font } },
         });
       });
       getPedofromDB(selectedDate);
     } else {
-      activityDB.put({...item, _deleted: true}).then(res => {
+      activityDB.put({ ...item, _deleted: true }).then(res => {
         // setErrorContext(lang.successful)
         // setErrorVisible(true)
         Toast.show({
           type: 'success',
-          props: {text2: lang.successful, style: {fontFamily: lang.font}},
+          props: { text2: lang.successful, style: { fontFamily: lang.font } },
           visibilityTime: 800,
         });
       });
@@ -776,7 +776,7 @@ const DailyScreen = props => {
 
   const syncMeal = date => {
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackFood +
       `UserMealsByDate?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -814,11 +814,11 @@ const DailyScreen = props => {
     );
   };
 
-  const getMealsFailure = () => {};
+  const getMealsFailure = () => { };
 
   const getPedoFromServer = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSteps +
       `?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -854,11 +854,11 @@ const DailyScreen = props => {
     );
   };
 
-  const getPedoFailure = () => {};
+  const getPedoFailure = () => { };
 
   const syncActivities = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackWorkout +
       `/GetByDate?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -894,11 +894,11 @@ const DailyScreen = props => {
     );
   };
 
-  const getActivityFailure = () => {};
+  const getActivityFailure = () => { };
 
-  const onRefreshTokenSuccess = () => {};
+  const onRefreshTokenSuccess = () => { };
 
-  const onRefreshTokenFailure = () => {};
+  const onRefreshTokenFailure = () => { };
   const goToPackages = () => {
     setTimeout(
       () => {
@@ -1071,10 +1071,10 @@ const DailyScreen = props => {
     if (diet.isActive == true && diet.isBuy == true) {
       if (
         parseInt(moment(fastingDiet.startDate).format('YYYYMMDD')) <=
-          parseInt(moment().format('YYYYMMDD')) &&
+        parseInt(moment().format('YYYYMMDD')) &&
         (fastingDiet.endDate
           ? parseInt(moment(fastingDiet.endDate).format('YYYYMMDD')) >=
-            parseInt(moment().format('YYYYMMDD'))
+          parseInt(moment().format('YYYYMMDD'))
           : true)
       ) {
         props.navigation.navigate('FastingDietplan');
@@ -1113,7 +1113,7 @@ const DailyScreen = props => {
         setDeleteAction(item);
         showDeleteDialog(true);
       },
-      barcode: () => props.navigation.navigate('BarcodeScreen', {foodMeal: 9}),
+      barcode: () => props.navigation.navigate('BarcodeScreen', { foodMeal: 9 }),
       budget: (targetCalorie * 0.25).toFixed(2),
       hasCredit: hasCredit,
       analyzMealPress: analyzMealPress.bind(null, 'sahar'),
@@ -1135,7 +1135,7 @@ const DailyScreen = props => {
         setDeleteAction(item);
         showDeleteDialog(true);
       },
-      barcode: () => props.navigation.navigate('BarcodeScreen', {foodMeal: 6}),
+      barcode: () => props.navigation.navigate('BarcodeScreen', { foodMeal: 6 }),
       budget: (targetCalorie * 0.3).toFixed(2),
       hasCredit: hasCredit,
       analyzMealPress: analyzMealPress.bind(null, 'eftar'),
@@ -1157,7 +1157,7 @@ const DailyScreen = props => {
         setDeleteAction(item);
         showDeleteDialog(true);
       },
-      barcode: () => props.navigation.navigate('BarcodeScreen', {foodMeal: 3}),
+      barcode: () => props.navigation.navigate('BarcodeScreen', { foodMeal: 3 }),
       budget: (targetCalorie * 0.35).toFixed(2),
       hasCredit: hasCredit,
       analyzMealPress: analyzMealPress.bind(null, 'Rdinner'),
@@ -1182,7 +1182,7 @@ const DailyScreen = props => {
         setDeleteAction(item);
         showDeleteDialog(true);
       },
-      barcode: () => props.navigation.navigate('BarcodeScreen', {foodMeal: 7}),
+      barcode: () => props.navigation.navigate('BarcodeScreen', { foodMeal: 7 }),
       budget: (targetCalorie * 0.1).toFixed(2),
       hasCredit: hasCredit,
       analyzMealPress: analyzMealPress.bind(null, 'Rsnack'),
@@ -1218,7 +1218,7 @@ const DailyScreen = props => {
         calendarPressed={showCalendar}
         selectedDate={selectedDate}
         user={user}
-        // disabled={calDisabledBtn}
+      // disabled={calDisabledBtn}
       />
       <ScrollView
         contentContainerStyle={{
@@ -1226,11 +1226,11 @@ const DailyScreen = props => {
         }}
         showsVerticalScrollIndicator={false}>
         <View
-          style={{width: dimensions.WINDOW_WIDTH, height: moderateScale(20)}}
+          style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(20) }}
         />
-        {user.countryId !== 128 ||
-        !diet.isActive ||
-        lang.name == 'persian' ? null : (
+        {/* {user.countryId !== 128 ||
+          !diet.isActive ||
+          lang.name == 'persian' ? null : (
           <DietCard
             lang={lang}
             profile={profile}
@@ -1238,13 +1238,13 @@ const DailyScreen = props => {
             diet={diet}
             onCardPressed={onDietPressed}
           />
-        )}
+        )} */}
         {parseInt(moment(fastingDiet.startDate).format('YYYYMMDD')) <=
           parseInt(moment(selectedDate).format('YYYYMMDD')) &&
-        (fastingDiet.endDate
-          ? parseInt(moment(fastingDiet.endDate).format('YYYYMMDD')) >=
+          (fastingDiet.endDate
+            ? parseInt(moment(fastingDiet.endDate).format('YYYYMMDD')) >=
             parseInt(moment(selectedDate).format('YYYYMMDD'))
-          : true) ? (
+            : true) ? (
           <>
             {fastingContainerData.map(item => {
               return (
@@ -1279,7 +1279,7 @@ const DailyScreen = props => {
                 showDeleteDialog(true);
               }}
               barcode={() =>
-                props.navigation.navigate('BarcodeScreen', {foodMeal: 0})
+                props.navigation.navigate('BarcodeScreen', { foodMeal: 0 })
               }
               budget={(targetCalorie * 0.25).toFixed(2)}
               hasCredit={hasCredit}
@@ -1299,7 +1299,7 @@ const DailyScreen = props => {
                 showDeleteDialog(true);
               }}
               barcode={() =>
-                props.navigation.navigate('BarcodeScreen', {foodMeal: 1})
+                props.navigation.navigate('BarcodeScreen', { foodMeal: 1 })
               }
               budget={(targetCalorie * 0.35).toFixed(2)}
               hasCredit={hasCredit}
@@ -1319,7 +1319,7 @@ const DailyScreen = props => {
                 showDeleteDialog(true);
               }}
               barcode={() =>
-                props.navigation.navigate('BarcodeScreen', {foodMeal: 3})
+                props.navigation.navigate('BarcodeScreen', { foodMeal: 3 })
               }
               budget={(targetCalorie * 0.25).toFixed(2)}
               hasCredit={hasCredit}
@@ -1339,7 +1339,7 @@ const DailyScreen = props => {
                 showDeleteDialog(true);
               }}
               barcode={() =>
-                props.navigation.navigate('BarcodeScreen', {foodMeal: 2})
+                props.navigation.navigate('BarcodeScreen', { foodMeal: 2 })
               }
               budget={(targetCalorie * 0.15).toFixed(2)}
               hasCredit={hasCredit}
@@ -1377,7 +1377,7 @@ const DailyScreen = props => {
             title={lang.countCalories}
             leftImage={require('../../../res/img/plus.png')}
             imageStyle={styles.img2}
-            textStyle={[styles.buttonText, {fontSize: moderateScale(16)}]}
+            textStyle={[styles.buttonText, { fontSize: moderateScale(16) }]}
             onPress={addCalorie}
           />
           <ConfirmButton
@@ -1401,7 +1401,7 @@ const DailyScreen = props => {
           /> */}
         </RowSpaceBetween>
         <View
-          style={{width: dimensions.WINDOW_WIDTH, height: moderateScale(50)}}
+          style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(50) }}
         />
       </ScrollView>
       <Information

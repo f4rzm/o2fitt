@@ -402,7 +402,7 @@ const ActivityDetailsScreen = props => {
         offlineDB.post({
           method: method,
           type: "activity",
-          url: urls.workoutBaseUrl + urls.userTrackWorkout,
+          url: urls.baseWorkout + urls.userTrackWorkout,
           header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
           params: { ...data }
         }).then(res => {
@@ -465,7 +465,7 @@ const ActivityDetailsScreen = props => {
   }
 
   const saveServer = (activity, method) => {
-    const url = urls.workoutBaseUrl + urls.userTrackWorkout
+    const url = urls.baseWorkout + urls.userTrackWorkout
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const params = { ...activity }
     const RC = new RestController()

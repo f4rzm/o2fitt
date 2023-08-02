@@ -1,4 +1,4 @@
-import { ActivityIndicator, Animated, BackHandler, SafeAreaView, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, BackHandler, SafeAreaView, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
@@ -17,7 +17,7 @@ import { BlurView } from '@react-native-community/blur'
 import { moderateScale } from 'react-native-size-matters'
 import { dimensions } from '../../constants/Dimensions'
 import Power from '../../../res/img/power.svg'
-import { clearDiet } from '../../redux/actions/diet'
+import { clearDiet, setActivaitonAndDeativation, shutDownDiet } from '../../redux/actions/dietNew'
 import { advices } from '../../utils/Advice'
 import AnimatedLottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
@@ -50,20 +50,18 @@ const FastingDietplan = (props) => {
     const [selectedMEalName, setSelectedMEalName] = useState()
 
     React.useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", ()=>{
+        BackHandler.addEventListener("hardwareBackPress", () => {
             props.navigation.popToTop()
             return true
         });
 
-        return () => BackHandler.removeEventListener("hardwareBackPress", ()=>{
+        return () => BackHandler.removeEventListener("hardwareBackPress", () => {
             props.navigation.popToTop()
             return true
         });
     }, [])
-    
 
     const dispatch = useDispatch()
-
     const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM-DD"))
 
     useEffect(() => {
@@ -131,9 +129,9 @@ const FastingDietplan = (props) => {
     }
 
     const setDiet = () => {
-        const data = require('../../utils/diet/dietPackage.json')
-        const fastingData=require("../../utils/diet/fastingPack.json")
-        
+        // const data = require('../../utils/diet/dietPackage.json')
+        // const fastingData = require("../../utils/diet/fastingPack.json")
+
         const targetCaloriePerDay = getData()
         const lowRange = targetCaloriePerDay * 0.97
         const hightRange = targetCaloriePerDay * 1.03
@@ -153,9 +151,6 @@ const FastingDietplan = (props) => {
                     }
                 }
             }
-            if (index == data.length - 1) {
-
-            }
         })
 
         fastingData.filter((item, index) => {
@@ -166,9 +161,6 @@ const FastingDietplan = (props) => {
                         eftar = [...eftar, item]
                     }
                 }
-            }
-            if (index == data.length - 1) {
-
             }
         })
         data.filter((item, index) => {
@@ -181,9 +173,6 @@ const FastingDietplan = (props) => {
 
                 }
             }
-            if (index == data.length - 1) {
-
-            }
         })
 
         fastingData.filter((item, index) => {
@@ -195,12 +184,7 @@ const FastingDietplan = (props) => {
                     }
                 }
             }
-            if (index == data.length - 1) {
-
-
-            }
         })
-
         const randomGenerators = {
             [moment(selectedDate).format("YYYY-MM-DD")]: {
                 '9': randomGenerator(sahar),
@@ -219,6 +203,8 @@ const FastingDietplan = (props) => {
                 allEftar: eftar
             }
         ))
+        dispatch(setActivaitonAndDeativation(true))
+
         setFastingPlan(randomGenerators[selectedDate])
 
 
@@ -276,36 +262,37 @@ const FastingDietplan = (props) => {
     }, [selectedDate])
 
     const nextDayPressed = () => {
-
         let nDay = moment(selectedDate, 'YYYY-MM-DD').add(1, 'day').format('YYYY-MM-DD')
         // await AsyncStorage.setItem("dietDate", nDay)
         setSelectedDate(nDay)
     }
-    const prevDayPressed = () => {
 
+    const prevDayPressed = () => {
         let PDay = moment(selectedDate, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD')
-        // await AsyncStorage.setItem("dietDate", PDay)
         setSelectedDate(PDay)
     }
+
     const onPressShutDown = () => {
         setShowShutDownModal(true)
     }
+
     const shutDownWholeDiet = () => {
         analytics().logEvent('shutDown_fastingDiet')
         setShutownLoading(true)
-        dispatch(shutDownFastingDiet())
+        dispatch(shutDownFastingDiet(true))
         dispatch(clearDiet())
+        dispatch(shutDownDiet())
         setShutownLoading(false)
-        props.navigation.popToTop()
+        // props.navigation.popToTop()
     }
 
     return (
         <SafeAreaView>
-            <Toolbar
+            {/* <Toolbar
                 lang={lang}
                 title={"برنامه غذایی"}
                 onBack={() => props.navigation.popToTop()}
-            />
+            /> */}
             <DietCalendar
                 lang={lang}
                 profile={profile}
@@ -361,7 +348,7 @@ const FastingDietplan = (props) => {
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.sahari)
                                 Animated.spring(translateY, {
-                                    toValue: -100,
+                                    toValue: 0,
                                     useNativeDriver: true
                                 }).start()
                             }}
@@ -386,7 +373,7 @@ const FastingDietplan = (props) => {
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.eftar)
                                 Animated.spring(translateY, {
-                                    toValue: -100,
+                                    toValue: 0,
                                     useNativeDriver: true
                                 }).start()
                             }}
@@ -411,7 +398,7 @@ const FastingDietplan = (props) => {
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.snack1)
                                 Animated.spring(translateY, {
-                                    toValue: -100,
+                                    toValue: 0,
                                     useNativeDriver: true
                                 }).start()
                             }}
@@ -436,14 +423,13 @@ const FastingDietplan = (props) => {
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.dinner)
                                 Animated.spring(translateY, {
-                                    toValue: -100,
+                                    toValue: 0,
                                     useNativeDriver: true
                                 }).start()
                             }}
                             fastingDiet={fastingDiet}
                             diet={diet}
                             icon={require("../../../res/img/dinner-icon.png")}
-
                         />
                         <FastingPlanFoodRow
                             title={lang.snack}
@@ -461,7 +447,7 @@ const FastingDietplan = (props) => {
                                 setSelectedMealForChange(e)
                                 setSelectedMEalName(lang.snack2)
                                 Animated.spring(translateY, {
-                                    toValue: -100,
+                                    toValue: 0,
                                     useNativeDriver: true
                                 }).start()
                             }}
@@ -509,29 +495,26 @@ const FastingDietplan = (props) => {
             </Modal>
             <Modal
                 visible={showShutDownModal}
-
                 onDismiss={() => {
                     setShowShutDownModal(false)
                 }}
                 style={{ alignItems: 'center', justifyContent: "center" }}
-
             >
-
-
-                <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: 15, backgroundColor: defaultTheme.lightBackground, alignItems: 'center', borderWidth: 1, borderColor: defaultTheme.primaryColor }}>
-                    <View style={{ paddingTop: moderateScale(50) }}>
+                <View style={styles.shutDownContainer}>
+                    <View style={{ paddingTop: moderateScale(20) }}>
                         <Power
-                            width={moderateScale(80)}
-                            height={moderateScale(80)}
+                            width={moderateScale(30)}
+                            height={moderateScale(30)}
                         />
-
                     </View>
                     <Text style={[styles.shutDownText, { fontFamily: lang.font, marginTop: moderateScale(20) }]}>{lang.shutDownDietTitle}</Text>
-                    <Text style={[styles.shutDownText, { fontFamily: lang.font, marginVertical: moderateScale(50) }]}>{lang.shutDownDietText}</Text>
-                    <Text style={[styles.shutDownText, { fontFamily: lang.font, fontSize: moderateScale(14), marginBottom: moderateScale(40) }]}>{lang.shutDownConfirm}</Text>
+                    <Text style={[styles.shutDownText, { fontFamily: lang.font, marginVertical: moderateScale(20) }]}>{lang.shutDownDietText}</Text>
+                    <Text style={[styles.shutDownText, { fontFamily: lang.font, fontSize: moderateScale(14), marginBottom: moderateScale(30) }]}>{lang.shutDownConfirm}</Text>
                     <View style={{ width: "100%", justifyContent: "space-around", flexDirection: "row", marginBottom: moderateScale(25) }}>
                         {
-                            shutownLoading ? <ActivityIndicator size={"large"} color={defaultTheme.primaryColor} /> :
+                            shutownLoading ?
+                                <ActivityIndicator size={"large"} color={defaultTheme.primaryColor} />
+                                :
                                 <>
                                     <ConfirmButton
                                         lang={lang}
@@ -545,8 +528,6 @@ const FastingDietplan = (props) => {
                                         title={lang.no}
                                         style={{ backgroundColor: defaultTheme.green, width: moderateScale(150), elevation: 2 }}
                                         onPress={() => setShowShutDownModal(false)}
-
-
                                     />
                                 </>
                         }
@@ -578,9 +559,43 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     shutDownText: {
-
         fontSize: moderateScale(18),
         color: defaultTheme.darkText,
         textAlign: "center"
     },
+    shutDownContainer: {
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        borderRadius: 15,
+        backgroundColor: defaultTheme.lightBackground,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: defaultTheme.primaryColor
+    },
+    tipsContainer: {
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        alignSelf: "center",
+        borderWidth: 1,
+        borderColor: defaultTheme.border,
+        borderRadius: 10,
+        paddingHorizontal: moderateScale(15),
+        paddingVertical: moderateScale(10),
+        marginTop: moderateScale(15)
+    },
+    adviceContaienr: {
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        padding: moderateScale(20),
+        alignSelf: "center",
+        backgroundColor: defaultTheme.lightBackground,
+        borderRadius: 10,
+        elevation: 4,
+        marginBottom: moderateScale(15),
+        paddingVertical: moderateScale(10),
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 2.27,
+    }
 })

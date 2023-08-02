@@ -38,7 +38,7 @@ import NativeSplashScreen from 'react-native-splash-screen';
 import { firebase } from '@react-native-firebase/analytics';
 import { TextInput } from 'react-native-paper';
 import { BlurView } from '@react-native-community/blur';
-import { setIsBuy } from '../../redux/actions/diet';
+import { setIsBuy } from '../../redux/actions/dietNew';
 import moment from 'moment'
 
 const LoginScreen = (props) => {
@@ -174,7 +174,7 @@ const LoginScreen = (props) => {
   const getProfile = () => {
     console.log('LoginScreen => user => ', userId);
     const url =
-      urls.userBaseUrl +
+      urls.baseUserTrack +
       urls.userProfiles +
       urls.getUserTrackSpecification +
       '?userId=' +

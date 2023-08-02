@@ -394,7 +394,7 @@ const GoalWeightScreen = props => {
 
                     />
                 </RowSpaceBetween> */}
-                <View style={{ alignItems: "center", width: dimensions.WINDOW_WIDTH }}>
+                {/* <View style={{ alignItems: "center", width: dimensions.WINDOW_WIDTH }}>
                     {
                         user.countryId !== 128 ? null :
                             <DietCard
@@ -405,7 +405,7 @@ const GoalWeightScreen = props => {
                                 onCardPressed={onDietPressed}
                             />
                     }
-                </View>
+                </View> */}
 
 
 

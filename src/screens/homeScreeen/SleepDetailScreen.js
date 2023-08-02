@@ -64,7 +64,7 @@ const SleepDetailScreen = props => {
     }
 
     const getSleepData = ()=>{
-      const url = urls.workoutBaseUrl + urls.userTrackSleep + `UserHistory?userId=${user.id}&days=11`
+      const url = urls.baseWorkout + urls.userTrackSleep + `UserHistory?userId=${user.id}&days=11`
       const header = {headers : {Authorization : "Bearer " + auth.access_token , Language : lang.capitalName}}
       const params = {}
   

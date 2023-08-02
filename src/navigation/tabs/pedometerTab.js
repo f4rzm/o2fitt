@@ -21,14 +21,14 @@ const Tab = createMaterialTopTabNavigator();
 const PedometerTabs = (props) => {
     const [isActiveModal, setisActiveModal] = useState(false)
     const lang = props.lang
-    const navigation=useNavigation()
+    const navigation = useNavigation()
     return (
         <>
             <Toolbar
                 lang={lang}
                 title={lang.setStepTitle}
                 onBack={() => {
-                    if (isActiveModal==false) {
+                    if (isActiveModal == false) {
                         navigation.goBack()
                     }
                 }}
@@ -40,13 +40,12 @@ const PedometerTabs = (props) => {
                     tabBarInactiveTintColor: defaultTheme.mainText,
                     tabBarLabelStyle: { fontSize: lang.langName === "persian" ? moderateScale(14) : moderateScale(11), fontFamily: lang.font, bottom: Platform.OS === "ios" ? moderateScale(0) : moderateScale(4) },
                     tabBarIndicatorStyle: { backgroundColor: defaultTheme.primaryColor },
-                    tabBarStyle: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0,borderTopLeftRadius:20,borderTopRightRadius:20 },
+                    tabBarStyle: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0, borderTopLeftRadius: 20, borderTopRightRadius: 20 },
                     tabBarShowIcon: true,
                     tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
-                    tabBarPressColor:defaultTheme.lightGray
-                  }}
-                  tabBar={props => <TabBarComp {...props} lang={lang} />}
-
+                    tabBarPressColor: defaultTheme.lightGray
+                }}
+                tabBar={props => <TabBarComp {...props} lang={lang} />}
                 lazy={true}
                 initialRouteName={"PedometerScreen"}
             >

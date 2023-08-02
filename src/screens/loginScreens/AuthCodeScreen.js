@@ -22,7 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from 'lottie-react-native';
 import { latinNumbers } from "../../utils/latinNumbers"
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field'
-import { setIsBuy } from '../../redux/actions/diet';
+import { setIsBuy } from '../../redux/actions/dietNew';
 import moment from 'moment';
 import { SpecificationDBController } from '../../classess/SpecificationDBController';
 import { getAndroidId, getApiLevel, getBrand, getFontScale, getIpAddress, getModel, getVersion, isEmulator, isTablet } from 'react-native-device-info';
@@ -171,7 +171,7 @@ const AuthCodeScreen = props => {
   const getProfile = (userId, token) => {
     console.log('LoginScreen => user => ', userId);
     const url =
-      urls.userBaseUrl +
+      urls.baseUserTrack +
       urls.userProfiles +
       urls.getUserTrackSpecification +
       '?userId=' +

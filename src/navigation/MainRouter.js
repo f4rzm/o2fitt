@@ -74,6 +74,9 @@ import ChooseDietTargetScreen from "../screens/DietScreens/ChooseDietTargetScree
 import BodyAnalyzeScreen from '../screens/homeScreeen/BodyAnalyzeScreen'
 import DrawerNavigator from "./DrawerNavigator";
 import FastingDietplan from "../screens/FastingDiet/FastingDietplan";
+import { createStackNavigator } from "@react-navigation/stack";
+import DietMainScreen from "../screens/DietScreens/DietMainScreen";
+// import RecipeFilterScreen from "../screens/recipe/RecipeFilterScreen";
 
 
 const MainRoute = props => {
@@ -89,7 +92,7 @@ const MainRoute = props => {
     const specification = useSelector(state => state.specification[0])
     const diet = useSelector(state => state.diet)
 
-    const Stack = createNativeStackNavigator();
+    const Stack = createStackNavigator();
 
 
     return (
@@ -97,7 +100,7 @@ const MainRoute = props => {
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
-                animationEnabled: false,
+                animationEnabled: true,
 
             }}
             // initialRouteName={"FastingDietplan"}
@@ -194,6 +197,8 @@ const MainRoute = props => {
                                 <Stack.Screen name="BlogCatScreen" component={BlogCatScreen} options={options} />
                                 <Stack.Screen name="SetRefferalCode" component={SetRefferalCode} options={options} />
                                 <Stack.Screen name="FastingDietplan" component={FastingDietplan} options={options} />
+                                <Stack.Screen name="DietMainScreen" component={DietMainScreen} options={options} />
+                                {/* <Stack.Screen name="RecipeFilterScreen" component={RecipeFilterScreen} options={options} /> */}
 
                             </> :
                             <Stack.Screen name="WelcomeRouter" component={WelcomeRouter} options={options} /> :

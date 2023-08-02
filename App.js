@@ -220,7 +220,7 @@ enableScreens();
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['pedometer', 'diet', 'starRating', 'syncedDate', 'fastingDiet'],
+  whitelist: ['pedometer', 'diet', 'starRating', 'syncedDate', 'fastingDiet',"dietNew"],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
 

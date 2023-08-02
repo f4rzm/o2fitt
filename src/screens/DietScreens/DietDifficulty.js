@@ -24,6 +24,7 @@ function DietDifficulty(props) {
     const [goal, setGoal] = useState(profile)
     const [weightChangeRateId, setWeightChangeRateId] = useState()
     const [hardshipdata, setHardshipdata] = useState([])
+    const [noResult, setNoResult] = useState(false)
 
     const [loading, setLoading] = useState(false)
 
@@ -115,7 +116,7 @@ function DietDifficulty(props) {
             ?
             weightLostData.filter((item) => (item.calCalrie > 1200 && item.calCalrie < 2500))
             :
-            weightLostData.filter((item) => item.calCalrie > 1020)
+            weightLostData.filter((item) => item.calCalrie > 1200)
 
     const filteretWeightGain =
         parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
@@ -124,21 +125,25 @@ function DietDifficulty(props) {
             ?
             weigthGainData.filter((item) => (item.calCalrie < 2500 && item.calCalrie > 1200))
             :
-            weigthGainData.filter((item) => item.calCalrie < 3100)
+            weigthGainData.filter((item) => item.calCalrie < 3000)
 
 
     useEffect(() => {
         if (parseFloat(props.route.params.weight) < parseFloat(props.route.params.targetWeight)) {
             // console.error(weigthGainData);
             setHardshipdata(weigthGainData)
-            if(filteretWeightGain.length>0){
+            if (filteretWeightGain.length > 0) {
 
                 setWeightChangeRateId(filteretWeightGain[0].id)
+            }else{
+                setNoResult(true)
             }
         } else if (parseFloat(props.route.params.weight) > parseFloat(props.route.params.targetWeight)) {
             setHardshipdata(weightLostData)
-            if(filteredCalCalorie.length>0){
+            if (filteredCalCalorie.length > 0) {
                 setWeightChangeRateId(filteredCalCalorie[0].id)
+            }else{
+                setNoResult(true)
             }
         } else {
             setHardshipdata([{ id: 0, calCalrie: calCalorie(0), name: "خیلی آسان", title: "ثبات وزن" }])
@@ -150,7 +155,9 @@ function DietDifficulty(props) {
             activityRate: props.route.params.activityRate,
             weight: props.route.params.weight,
             targetWeight: props.route.params.targetWeight,
-            weightChangeRate: weightChangeRateId
+            weightChangeRate: weightChangeRateId,
+            dietId:props.route.params.dietId,
+            alergiesId:props.route.params.alergiesId
         })
 
     }
@@ -186,7 +193,7 @@ function DietDifficulty(props) {
                 </View>
 
                 <View style={{ paddingBottom: moderateScale(60) }}>
-                    {
+                    {/* {
                         parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
                             &&
                             (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
@@ -196,8 +203,8 @@ function DietDifficulty(props) {
                                         hardshipdata.map((item) => {
                                             return (
                                                 <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                                    console.warn(item.calCalrie)
                                                     if (item.calCalrie >= 1200 && item.calCalrie <= 2500) {
-                                                        console.warn(item.calCalrie)
                                                         setWeightChangeRateId(item.id)
                                                     } else {
                                                         null
@@ -216,33 +223,33 @@ function DietDifficulty(props) {
                                         })
                                 }
                             </> :
-                            <>
-                                {
-                                    hardshipdata.length <= 0 ? null :
-                                        hardshipdata.map((item) => {
-                                            return (
-                                                <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                                                    if (item.calCalrie >= 1050 && item.calCalrie <= 3050) {
-                                                        console.warn(item.calCalrie)
-                                                        setWeightChangeRateId(item.id)
-                                                    } else {
-                                                        null
-                                                    }
+                            <>*/}
+                    {
+                        hardshipdata.length <= 0 ? null :
+                            hardshipdata.map((item) => {
+                                return (
+                                    <TouchableOpacity activeOpacity={0.8} onPress={() => {
+                                        if (item.calCalrie >= 1200 && item.calCalrie <= 3045) {
+                                            console.warn(item.calCalrie)
+                                            setWeightChangeRateId(item.id)
+                                        } else {
+                                            null
+                                        }
 
-                                                }} style={[styles.difficultyCards, { backgroundColor: item.calCalrie >= 1050 && item.calCalrie <= 3050 ? defaultTheme.lightBackground : defaultTheme.grayBackground, }]}>
-                                                    <View style={{ flexDirection: "row", alignItems: "center", padding: moderateScale(12), paddingBottom: moderateScale(2) }}>
-                                                        <View style={{ borderWidth: 1, padding: moderateScale(2.5), borderRadius: 50, borderColor: defaultTheme.lightGray }}>
-                                                            <View style={[styles.checkBox, { backgroundColor: weightChangeRateId == item.id ? defaultTheme.primaryColor : defaultTheme.white }]} />
-                                                        </View>
-                                                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), marginHorizontal: moderateScale(5), color: item.calCalrie >= 1050 && item.calCalrie <= 3050 ? defaultTheme.darkText : defaultTheme.lightGray }}>{item.name}</Text>
-                                                    </View>
-                                                    <Text style={{ fontFamily: lang.font, paddingHorizontal: moderateScale(13), paddingBottom: moderateScale(15), color: item.calCalrie >= 1050 && item.calCalrie <= 3050 ? defaultTheme.mainText : defaultTheme.lightGray, textAlign: "left", marginTop: moderateScale(5) }}>{item.title}</Text>
-                                                </TouchableOpacity>
-                                            )
-                                        })
-                                }</>
+                                    }} style={[styles.difficultyCards, { backgroundColor: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.lightBackground : defaultTheme.grayBackground, }]}>
+                                        <View style={{ flexDirection: "row", alignItems: "center", padding: moderateScale(12), paddingBottom: moderateScale(2) }}>
+                                            <View style={{ borderWidth: 1, padding: moderateScale(2.5), borderRadius: 50, borderColor: defaultTheme.lightGray }}>
+                                                <View style={[styles.checkBox, { backgroundColor: weightChangeRateId == item.id ? defaultTheme.primaryColor : defaultTheme.white }]} />
+                                            </View>
+                                            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16), marginHorizontal: moderateScale(5), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.darkText : defaultTheme.lightGray }}>{item.name}</Text>
+                                        </View>
+                                        <Text style={{ fontFamily: lang.font, paddingHorizontal: moderateScale(13), paddingBottom: moderateScale(15), color: item.calCalrie >= 1200 && item.calCalrie <= 3000 ? defaultTheme.mainText : defaultTheme.lightGray, textAlign: "left", marginTop: moderateScale(5) }}>{item.title}</Text>
+                                    </TouchableOpacity>
+                                )
+                            })
                     }
-
+                    {/* </>
+                    } */}
                 </View>
             </ScrollView>
 
@@ -259,20 +266,20 @@ function DietDifficulty(props) {
                     isLoading={loading}
                 />
             </View>
-            {filteretWeightGain.length <= 0 || filteredCalCalorie.length <= 0 ?
-                // <BlurView style={{ width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, position: "absolute" }} blurAmount={1} blurRadius={1} blurType="dark">
-                <Information
-                    lang={lang}
-                    context={"برای هدف انتخابی شما برنامه غذایی اصولی وجود ندارد\nلطفا در مراحل قبل نوع فعالیت روزانه رو تغییر بدین"}
-                    button1Pressed={() => props.navigation.pop(3)}
-                    showMainButton={false}
-                    button1={"تنظیم مجدد هدف"}
-                    button1Style={{ width: moderateScale(150), backgroundColor: defaultTheme.green2, height: moderateScale(50) }}
-                    button1TextStyle={{ fontSize: moderateScale(16) }}
-                />
-                // </BlurView>
+            {noResult ?
+                <BlurView style={{ width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, position: "absolute" }} blurAmount={1} blurRadius={1} blurType="dark">
+                    <Information
+                        lang={lang}
+                        context={"برای هدف انتخابی شما برنامه غذایی اصولی وجود ندارد\nلطفا در مراحل قبل نوع فعالیت روزانه رو تغییر بدین"}
+                        button1Pressed={() => props.navigation.pop(3)}
+                        showMainButton={false}
+                        button1={"تنظیم مجدد هدف"}
+                        button1Style={{ width: moderateScale(150), backgroundColor: defaultTheme.green2, height: moderateScale(50) }}
+                        button1TextStyle={{ fontSize: moderateScale(16) }}
+                    />
+                </BlurView>
                 : null
-            }
+            } 
         </>
     )
 }

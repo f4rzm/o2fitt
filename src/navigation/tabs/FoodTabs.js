@@ -106,14 +106,14 @@ const FoodTabs = (props) => {
         children={(nestedProps) => <SearchCookingTab mealId={props.mealId} isSearchOnline={props.isSearchOnline} isSearch={props.isSearch} searchText={props.searchText} isLastData={props.isLastData} moreResult={props.moreResult} searchResult={props.searchResult} setFoodType={props.setFoodType} {...nestedProps} />}
         options={{
           tabBarLabel: lang.myCoocking,
-          tabBarIcon: ({ tintColor, focused }) => (
-            <Image
-            source={focused ? require("../../../res/img/lock.png") : require("../../../res/img/lock.png")}
-            style={{ width: moderateScale(15), height: moderateScale(18) }}
-            tintColor={tintColor}
-            resizeMode="contain"
-            />
-            )
+          // tabBarIcon: ({ tintColor, focused }) => (
+          //   <Image
+          //   source={focused ? require("../../../res/img/lock.png") : require("../../../res/img/lock.png")}
+          //   style={{ width: moderateScale(15), height: moderateScale(18) }}
+          //   tintColor={tintColor}
+          //   resizeMode="contain"
+          //   />
+          //   )
           }}
       />
           <Tab.Screen

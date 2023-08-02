@@ -10,8 +10,6 @@ import Power from '../../../res/img/power.svg'
 const Calendar = props => {
     const dietExpiredDate = moment().diff(moment(props.profile.pkExpireDate), "d")
 
-    console.error(Math.abs(parseInt(dietExpiredDate)))
-
     let nextIsEnabled = false
     let prevIsEnabled = true
     if (moment(props.selectedDate, "YYYY-MM-DD").diff(moment(), "days") < 10) {
@@ -19,7 +17,7 @@ const Calendar = props => {
             nextIsEnabled = true
         }
     }
-    if (moment(props.selectedDate).subtract(1, "days").isBefore(props.diet.dietStartDate)) {
+    if (moment(props.selectedDate).subtract(1, "days").isBefore(props.diet.startDate)) {
         prevIsEnabled = false
     }
 

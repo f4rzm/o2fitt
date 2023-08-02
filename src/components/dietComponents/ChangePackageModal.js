@@ -9,7 +9,7 @@ import BreakFast from '../../../res/img/breakfast.svg'
 import { useDispatch } from 'react-redux'
 import { exchangeBreakFast, exchangeDinner, exchangeLunch } from '../../redux/actions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { exchangeSnack } from '../../redux/actions/diet'
+import { exchangeSnack } from '../../redux/actions/dietNew'
 import LottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 
@@ -42,7 +42,7 @@ function ChangePackageModal(props) {
         console.error(item.id)
         setSelectedPackageData(item)
         Animated.spring(translateY, {
-            toValue: -100,
+            toValue: 0,
             useNativeDriver: true
         }).start()
         setFocused(true)
@@ -102,6 +102,7 @@ function ChangePackageModal(props) {
         }
         analytics().logEvent('dietPack_Changed')
     }
+    console.warn(dimensions.WINDOW_HEIGTH);
     return (
         <SafeAreaView>
             <Animated.View style={[{ transform: [{ translateY: props.translateY }] }, styles.AnimatedModal]}>
@@ -152,7 +153,26 @@ function ChangePackageModal(props) {
                 }}
             >
                 <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH, marginBottom: 0 }}>
-                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025 }}>
+
+                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025, paddingBottom: moderateScale(30) }}>
+
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: moderateScale(10) }}>
+                            <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }}
+                                onPress={foodPressed}>
+                                <Image
+                                    style={styles.crossImage}
+                                    source={require("../../../res/img/done.png")}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }} onPress={() => {
+                                setFocused(false)
+                            }}>
+                                <Image
+                                    style={styles.doneImage}
+                                    source={require("../../../res/img/cross.png")}
+                                />
+                            </TouchableOpacity>
+                        </View>
                         {
                             selectedPackageData.length <= 0 ?
                                 null :
@@ -172,7 +192,7 @@ function ChangePackageModal(props) {
                                         selectedPackageData.dietPackFoods.map((item, index) => {
                                             return (
                                                 <View style={{ padding: moderateScale(5), alignItems: "center", borderBottomWidth: selectedPackageData.dietPackFoods.length - 1 !== index ? 1 : 0, borderBottomColor: defaultTheme.border, flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15, width: dimensions.WINDOW_WIDTH * 0.8, paddingVertical: moderateScale(8) }}>
-                                                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.35,textAlign:"left" }}>{item.foodName}</Text>
+                                                    <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.35, textAlign: "left" }}>{item.foodName}</Text>
                                                     <View style={{ flexDirection: "row" }}>
                                                         {/* <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(5), color: defaultTheme.mainText }}></Text> */}
                                                         <Text style={{ fontFamily: props.lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, width: dimensions.WINDOW_WIDTH * 0.3, textAlign: "right" }}>{item.value} {item.measureUnitName}</Text>
@@ -184,14 +204,14 @@ function ChangePackageModal(props) {
                                 </View>
                         }
 
-                        <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+                        {/* <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0, paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0 }}>
                             <ConfirmButton
                                 lang={props.lang}
                                 title={"انتخاب"}
                                 style={styles.confirmButton}
                                 onPress={foodPressed}
                             />
-                        </View>
+                        </View> */}
                     </View>
                 </Animated.View>
             </Modal>
@@ -214,14 +234,26 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
         alignItems: "center",
-        paddingBottom: moderateScale(15),
-        height: dimensions.WINDOW_HEIGTH * 0.9
+        // paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
+        height: dimensions.WINDOW_HEIGTH * 0.8
     },
     confirmButton: {
         backgroundColor: defaultTheme.green,
         alignSelf: "center",
         marginBottom: moderateScale(25),
         zIndex: 15
+    },
+    doneImage: {
+        width: moderateScale(20),
+        height: moderateScale(25),
+        tintColor: defaultTheme.darkGray,
+        resizeMode: "contain"
+    },
+    crossImage: {
+        width: moderateScale(25),
+        height: moderateScale(25),
+        tintColor: defaultTheme.primaryColor,
+        resizeMode: "contain"
     }
 
 });

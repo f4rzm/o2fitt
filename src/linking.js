@@ -1,16 +1,34 @@
 const config = {
     screens: {
         HomeScreen: {
-            path: 'home'
+            path: 'home',
+            parse: {
+                status: (status) => `${status}`,
+            },
         },
         CountStepScreen: {
-            path: 'countStep'
+            path: 'CountStepScreen',
+            parse: {
+                status: (status) => `${status}`,
+            },
+        },
+        AddWaterScreen: {
+            path: 'AddWaterScreen',
+            parse: {
+                status: (status) => `${status}`,
+            },
         },
         LoginScreen: {
-            path: "loginscreen"
+            path: "loginscreen",
+            parse: {
+                status: (status) => `${status}`,
+            },
         },
         EditGoalScreen: {
-            path: "editgoalscreen"
+            path: "editgoalscreen",
+            parse: {
+                status: (status) => `${status}`,
+            },
         },
         PaymentResultScreen: {
             path: "paymentResultScreen/:status",
@@ -22,8 +40,8 @@ const config = {
 }
 
 const linking = {
-    prefixes: ["o2fitt://CountStepScreen", "https://bank.o2fitt.com", "https://test.o2fitt.com"],
-    // prefixes: ["o2fitt://app"],
+    // prefixes: ["o2fitt://CountStepScreen", "https://bank.o2fitt.com", "https://test.o2fitt.com"],
+    prefixes: ["o2fitt://app"],
     config
 }
 

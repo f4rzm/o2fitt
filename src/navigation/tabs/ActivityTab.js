@@ -25,7 +25,6 @@ const ActivityTab = (props) => {
     <Tab.Navigator
       sceneContainerStyle={{ backgroundColor: null }}
       tabBar={props => <TabBarComp {...props} lang={lang} />}
-
       tabBarOptions={{
         scrollEnabled: true,
         activeTintColor: defaultTheme.primaryColor,

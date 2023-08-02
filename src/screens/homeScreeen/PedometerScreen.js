@@ -368,7 +368,7 @@ const PedometerScreen = (props) => {
 
   const getFromServer = () => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSteps +
       `?dateTime=${selectedDate}&userId=${user.id}`;
     const header = {
@@ -486,7 +486,7 @@ const PedometerScreen = (props) => {
 
     // const lastPedoID = await AsyncStorage.getItem("lastPedoID")
     // const newPedoID = await AsyncStorage.getItem("StepsID")
-    const url = urls.workoutBaseUrl + urls.userTrackSteps
+    const url = urls.baseWorkout + urls.userTrackSteps
     //console.warn(url);
 
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
@@ -562,7 +562,7 @@ const PedometerScreen = (props) => {
         .post({
           method: 'put',
           type: 'pedo',
-          url: urls.workoutBaseUrl + urls.userTrackSteps + '/id',
+          url: urls.baseWorkout + urls.userTrackSteps + '/id',
           header: {
             headers: {
               Authorization: 'Bearer ' + auth.access_token,
@@ -580,7 +580,7 @@ const PedometerScreen = (props) => {
         .post({
           method: 'post',
           type: 'pedo',
-          url: urls.workoutBaseUrl + urls.userTrackSteps,
+          url: urls.baseWorkout + urls.userTrackSteps,
           header: {
             headers: {
               Authorization: 'Bearer ' + auth.access_token,

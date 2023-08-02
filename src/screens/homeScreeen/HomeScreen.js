@@ -57,6 +57,8 @@ import {isSetRating, setVipTimer} from '../../redux/actions/starRating';
 import {Button} from 'react-native-paper';
 import {openSettings} from 'react-native-send-intent';
 import {addDate} from '../../redux/actions/syncedDate';
+import OutPlusBtn from '../../components/OutPlusBtn';
+import { BlurView } from '@react-native-community/blur';
 // const WalkEvent = new NativeEventEmitter(RNWalkCounter);
 
 PouchDB.plugin(pouchdbSearch);
@@ -141,7 +143,7 @@ const HomeScreen = props => {
 
   // console.error(user.id);
   const getStepFromDB = async (date, serverResponse) => {
-    const url = urls.workoutBaseUrl + urls.userTrackSteps;
+    const url = urls.baseWorkout + urls.userTrackSteps;
     const RC = new RestController();
 
     const header = {
@@ -694,7 +696,7 @@ const HomeScreen = props => {
 
   const syncWater = date => {
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackWater +
       `?StartDate=${date}&EndDate=${date}&userId=${user.id}`;
     const header = {
@@ -737,7 +739,7 @@ const HomeScreen = props => {
 
   const syncSteps = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSteps +
       `?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -780,7 +782,7 @@ const HomeScreen = props => {
 
   const syncSleep = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackSleep +
       urls.getByDate +
       `?userId=${user.id}&dateTime=${date}`;
@@ -818,7 +820,7 @@ const HomeScreen = props => {
   const syncMeal = date => {
     // alert("asd")
     const url =
-      urls.foodBaseUrl +
+      urls.baseFoodTrack +
       urls.userTrackFood +
       `UserMealsByDate?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -863,7 +865,7 @@ const HomeScreen = props => {
 
   const syncActivities = date => {
     const url =
-      urls.workoutBaseUrl +
+      urls.baseWorkout +
       urls.userTrackWorkout +
       `/GetByDate?dateTime=${date}&userId=${user.id}`;
     const header = {
@@ -1262,7 +1264,7 @@ const HomeScreen = props => {
           }
           autoSteps={pedometer.AutoStepsCounter}
         />
-        {user.countryId == 128 && lang.langName == 'persian' && (
+        {/* {user.countryId == 128 && lang.langName == 'persian' && (
           <DietCard
             lang={lang}
             profile={profile}
@@ -1270,7 +1272,7 @@ const HomeScreen = props => {
             diet={diet}
             onCardPressed={onDietPressed}
           />
-        )}
+        )} */}
 
         {/* <View style={{ backgroundColor: "black" }}>
           <Text style={{ color: defaultTheme.white }}>dietPK:{profile.dietPkExpireDate}</Text>
@@ -1422,6 +1424,13 @@ const HomeScreen = props => {
         ))} */}
       </ScrollView>
 
+      <OutPlusBtn
+        onPressPlus={() => { }}
+        lang={lang}
+        navigation={props.navigation}
+        profile={profile}
+        selectedDate={selectedDate}
+      />
       <Uploader app={app} auth={auth} />
     </>
   );
@@ -1433,6 +1442,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'gold',
+  },
+
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  wrapper: {
+    position: 'absolute',
+    zIndex: 10,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

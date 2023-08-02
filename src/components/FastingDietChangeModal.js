@@ -1,4 +1,4 @@
-import { FlatList, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View,Animated,SafeAreaView, ActivityIndicator, Image } from 'react-native'
+import { FlatList, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Animated, SafeAreaView, ActivityIndicator, Image } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { dimensions } from '../constants/Dimensions';
 import { defaultTheme } from '../constants/theme';
@@ -8,9 +8,10 @@ import { setFastingMeal } from '../redux/actions/fasting';
 import { Modal } from 'react-native-paper';
 import ConfirmButton from './ConfirmButton';
 import AnimatedLottieView from 'lottie-react-native';
+import RowSpaceBetween from './layout/RowSpaceBetween';
 
-const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissModal, selectedDate, fastingDiet, meal,translateY ,selectedMealName}) => {
-    
+const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissModal, selectedDate, fastingDiet, meal, translateY, selectedMealName }) => {
+
     const [FilterFoods, setFilterFoods] = useState(selectedPackageForChange)
     const [selectedPackageData, setSelectedPackageData] = useState([])
     const [focused, setFocused] = useState(false)
@@ -22,13 +23,10 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
     const onChangeText = (text) => {
         // console.warn(FilterFoods[0].tag.split(""))
         setText(text)
-
         let filteredData = item.filter((item) => {
             var tags = item.name.search(text)
-
             if (tags !== -1) {
                 return item
-
             }
         })
         setFilterFoods(filteredData)
@@ -36,7 +34,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
     const dietPackPressed = (item) => {
         setSelectedPackageData(item)
         Animated.spring(translateY, {
-            toValue: -100,
+            toValue: 0,
             useNativeDriver: true
         }).start()
         setFocused(true)
@@ -57,13 +55,30 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
 
 
     }
-    // console.warn(props.package)
-    
+    console.warn(dimensions.WINDOW_HEIGTH);
+
     return (
         <KeyboardAvoidingView behavior='height'>
             <Animated.View style={[{ transform: [{ translateY: translateY }] }, styles.AnimatedModal]}>
-                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.95, textAlign: "center", marginVertical: moderateScale(5) }}>{selectedMealName}</Text>
-                <View style={{ borderRadius: 15, width: dimensions.WINDOW_WIDTH * 0.8, borderColor: defaultTheme.lightGray, borderWidth: 1, flexDirection: "row", alignItems: "center", paddingHorizontal: moderateScale(10), backgroundColor: "white", marginBottom: moderateScale(15)}}>
+                <View style={{ flexDirection: "row", justifyContent: "space-around", width: dimensions.WINDOW_WIDTH * 0.9 }}>
+                    <TouchableOpacity
+                        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+                        onPress={dismissModal}
+                    >
+                        <Image
+                            source={require("../../res/img/cross.png")}
+                            style={{ width: moderateScale(20), tintColor: defaultTheme.gray, height: moderateScale(20) }}
+                        />
+                    </TouchableOpacity>
+                    <View style={{ flex: 4 }} >
+                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText, textAlign: "center", marginVertical: moderateScale(5), paddingVertical: moderateScale(3) }}>{selectedMealName}</Text>
+                    </View>
+                    <View style={{ flex: 1 }} />
+                    {/* <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText, textAlign: "center", marginVertical: moderateScale(5), paddingVertical: moderateScale(3) }}>{selectedMealName}</Text>
+                    <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText, textAlign: "center", marginVertical: moderateScale(5), paddingVertical: moderateScale(3) }}>{selectedMealName}</Text> */}
+
+                </View>
+                <View style={styles.searchBarContainer}>
                     <Image
                         source={require("../../res/img/search.png")}
                         style={{ width: moderateScale(17), tintColor: defaultTheme.gray, height: moderateScale(17) }}
@@ -95,9 +110,10 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                         <FlatList
                             data={FilterFoods.length <= 0 ? item : FilterFoods}
                             renderItem={renderItem}
+                            contentContainerStyle={{ paddingBottom: moderateScale(100) }}
                         />
                 }
-                <View style={{ height: moderateScale(110) }} />
+                {/* <View style={{ height: moderateScale(110) }} /> */}
 
             </Animated.View>
             <Modal
@@ -105,17 +121,36 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                 contentContainerStyle={{ position: 'absolute', bottom: 0 }}
                 onDismiss={() => {
                     setFocused(false)
-
                 }}
             >
                 <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH, marginBottom: 0 }}>
-                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025 }}>
+                    <View style={styles.packDetailsContainer}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: moderateScale(10) }}>
+                            <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }} onPress={() => {
+                                currentFastingDiet[selectedDate][meal] = selectedPackageData
+                                dispatch(setFastingMeal({ currentFastingDiet }))
+                                dismissModal()
+                            }}>
+                                <Image
+                                    style={styles.crossImage}
+                                    source={require("../../res/img/done.png")}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }} onPress={() => {
+                                setFocused(false)
+                            }}>
+                                <Image
+                                    style={styles.doneImage}
+                                    source={require("../../res/img/cross.png")}
+                                />
+                            </TouchableOpacity>
+                        </View>
                         {
                             selectedPackageData.length <= 0 ?
                                 null :
                                 <View style={{ alignSelf: "center", borderColor: defaultTheme.border, borderWidth: 1, borderRadius: 10, marginVertical: moderateScale(20) }}>
                                     <View style={{ width: dimensions.WINDOW_WIDTH * 0.8, height: moderateScale(50), backgroundColor: defaultTheme.grayBackground, borderTopLeftRadius: 8, borderTopRightRadius: 8, borderColor: defaultTheme.border, justifyContent: 'center' }}>
-                                        <View style={{ justifyContent: "space-between", width: "100%", flexDirection: "row",  }}>
+                                        <View style={{ justifyContent: "space-between", width: "100%", flexDirection: "row", }}>
                                             <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), paddingHorizontal: moderateScale(25), color: defaultTheme.mainText }}>{selectedMealName}</Text>
                                             <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), paddingHorizontal: moderateScale(25), color: defaultTheme.mainText }}>{parseInt(selectedPackageData.nutrientValue.split(",")[23])} کالری</Text>
                                         </View>
@@ -124,7 +159,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                                         selectedPackageData.dietPackFoods.map((e, index) => {
                                             return (
                                                 <View style={{ padding: moderateScale(5), alignItems: "center", borderBottomWidth: selectedPackageData.dietPackFoods.length - 1 !== index ? 1 : 0, borderBottomColor: defaultTheme.border, flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15, width: dimensions.WINDOW_WIDTH * 0.8, paddingVertical: moderateScale(8) }}>
-                                                    <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, width: dimensions.WINDOW_WIDTH * 0.35,textAlign:"left" }}>{e.foodName}</Text>
+                                                    <Text style={[styles.foodName, { fontFamily: lang.font, }]}>{e.foodName}</Text>
                                                     <View style={{ flexDirection: "row" }}>
                                                         <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, width: dimensions.WINDOW_WIDTH * 0.3, textAlign: "right" }}>{e.value} {e.measureUnitName}</Text>
                                                     </View>
@@ -135,7 +170,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                                 </View>
                         }
 
-                        <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0,alignItems:"center",paddingBottom:moderateScale(15) }}>
+                        {/* <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0,alignItems:"center",paddingBottom:moderateScale(20) }}>
                         <ConfirmButton
                             lang={lang}
                             style={{ width: dimensions.WINDOW_WIDTH * 0.45, backgroundColor: defaultTheme.green }}
@@ -146,7 +181,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                                 dismissModal()
                             }}
                         />
-                        </View>
+                        </View> */}
                     </View>
                 </Animated.View>
             </Modal>
@@ -173,18 +208,55 @@ const styles = StyleSheet.create({
     AnimatedModal: {
         width: dimensions.WINDOW_WIDTH * 0.95,
         backgroundColor: "white",
-        top: 100,
+        // top: 100,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
         alignItems: "center",
-        paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
-        height: dimensions.WINDOW_HEIGTH * 0.9
+        // paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
+        height: dimensions.WINDOW_HEIGTH * 0.8,
     },
     confirmButton: {
         backgroundColor: defaultTheme.green,
         alignSelf: "center",
         marginBottom: moderateScale(25),
         zIndex: 15
+    },
+    doneImage: {
+        width: moderateScale(20),
+        height: moderateScale(25),
+        tintColor: defaultTheme.darkGray,
+        resizeMode: "contain"
+    },
+    crossImage: {
+        width: moderateScale(25),
+        height: moderateScale(25),
+        tintColor: defaultTheme.primaryColor,
+        resizeMode: "contain"
+    },
+    searchBarContainer: {
+        borderRadius: 15,
+        width: dimensions.WINDOW_WIDTH * 0.8,
+        borderColor: defaultTheme.lightGray,
+        borderWidth: 1, flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: moderateScale(10),
+        backgroundColor: "white",
+        marginBottom: moderateScale(15)
+    },
+    packDetailsContainer: {
+        width: dimensions.WINDOW_WIDTH * 0.95,
+        backgroundColor: defaultTheme.lightBackground,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderRadius: 15,
+        marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
+        paddingBottom: moderateScale(60)
+    },
+    foodName: {
+        fontSize: moderateScale(15),
+        color: defaultTheme.darkText,
+        width: dimensions.WINDOW_WIDTH * 0.35,
+        textAlign: "left"
     }
 })

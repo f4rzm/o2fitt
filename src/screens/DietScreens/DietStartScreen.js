@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView, BackHandler } from 'react-native'
+import { View, Text, Image, StyleSheet, ScrollView, Animated, FlatList, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView, Alert } from 'react-native'
 import { ConfirmButton, Toolbar, DietCaloriePayment, Information } from '../../components'
 import { useSelector, useDispatch } from 'react-redux'
 import { defaultTheme } from '../../constants/theme'
@@ -10,13 +10,20 @@ import BreakFast from '../../../res/img/breakfast.svg'
 import ChangePackage from '../../../res/img/changePackage.svg'
 import { Modal } from 'react-native-paper'
 import Info from '../../../res/img/info5.svg'
-import { saveOldData } from '../../redux/actions/diet'
+import {  saveOldData, shutDownDiet } from '../../redux/actions/dietNew'
+import { clearDiet } from '../../redux/actions/dietOld'
+
 import analytics from '@react-native-firebase/analytics';
 import axios from 'axios'
 import { BlurView } from '@react-native-community/blur'
-
+import { updateTarget } from '../../redux/actions'
+import { setFastingActivation, shutDownFastingDiet, setActivaitonAndDeativation } from '../../redux/actions/fasting'
+import moment from 'moment'
 
 function DietStartScreen(props) {
+
+    const dietCategory = props.route.params
+    console.warn(dietCategory);
     const dispatch = useDispatch()
     const [showNoInternetModal, setShowNoInternetModal] = React.useState(false)
     const [errorVisible, setErrorVisible] = useState(false)
@@ -27,19 +34,9 @@ function DietStartScreen(props) {
     const auth = useSelector(state => state.auth)
     const diet = useSelector(state => state.diet)
     const profile = useSelector(state => state.profile)
+    const fastingDiet = useSelector(state => state.fastingDiet)
     const [autoFuces, setAutoFuces] = useState(false)
     const translateY = useRef(new Animated.Value(100)).current
-    React.useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", ()=>{
-            props.navigation.goBack()
-            return true
-        });
-
-        return () => BackHandler.removeEventListener("hardwareBackPress", ()=>{
-            props.navigation.popToTop()
-            return true
-        });
-    }, [])
 
     const data = [
         { id: 0, name: lang.walnut, measure: lang.twoMedium, caloire: 65 },
@@ -54,8 +51,8 @@ function DietStartScreen(props) {
             <View style={{ width: dimensions.WINDOW_WIDTH * 0.8, height: moderateScale(50), justifyContent: 'center', borderBottomWidth: item.index == 3 ? 0 : 1, borderColor: defaultTheme.border }}>
                 <View style={{ justifyContent: "space-between", width: "100%", flexDirection: "row", marginHorizontal: moderateScale(15) }}>
                     <View style={{}}>
-                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText,textAlign:"left" }}>{item.item.name}</Text>
-                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(12),textAlign:"left" }}>{item.item.measure}</Text>
+                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, textAlign: "left" }}>{item.item.name}</Text>
+                        <Text style={{ fontFamily: lang.font, fontSize: moderateScale(12), textAlign: "left" }}>{item.item.measure}</Text>
                     </View>
                     <Text style={{ fontFamily: lang.font, fontSize: moderateScale(18), paddingHorizontal: moderateScale(25), color: defaultTheme.mainText }}>{item.item.caloire}</Text>
                 </View>
@@ -102,7 +99,7 @@ function DietStartScreen(props) {
         } else {
             dispatch(saveOldData(profile))
             Animated.spring(translateY, {
-                toValue: -100,
+                toValue: 0,
                 useNativeDriver: true
             }).start()
             setAutoFuces(true)
@@ -115,7 +112,24 @@ function DietStartScreen(props) {
     const NoInternetCallback = () => {
         setShowNoInternetModal(false)
     }
+    const shutDownWholeDiet = async () => {
+        dispatch(shutDownDiet())
+        dispatch(clearDiet())
+        if (dietCategory.id!==66) {
+            dispatch(shutDownFastingDiet(false))
+            dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))
 
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
+        }
+        else {
+            dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true, endDate: null }))
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 66 })
+        }
+        // dispatch(shutDownFastingDiet())
+        analytics().logEvent('get_new_diet')
+
+        setAutoFuces(false)
+    }
 
     return (
         <SafeAreaView>
@@ -137,20 +151,23 @@ function DietStartScreen(props) {
                 lang={lang}
                 onBack={() => props.navigation.popToTop()}
             />
-            <ScrollView style={{ flexGrow: 1, }} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1, height: dimensions.WINDOW_HEIGTH }} showsVerticalScrollIndicator={false}>
                 <View style={{ backgroundColor: defaultTheme.primaryColor }}>
                     <Image
-                        source={require("../../../res/img/foods.jpg")}
+                        source={dietCategory ? { uri: dietCategory.image } : require("../../../res/img/foods.jpg")}
                         style={{ borderTopRightRadius: 30, borderTopLeftRadius: 30, width: "100%", height: moderateScale(150) }}
                     />
                 </View>
 
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.whatIsDiet}</Text>
-                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.whatIsDietDescribe}</Text>
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.dietAdvantages}</Text>
-                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.dietAdvantageDescribe}</Text>
-                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.exampleOfDiet}</Text>
-                <View style={{alignItems:"center"}}>
+                <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{dietCategory ? dietCategory.name[lang.langName] : lang.whatIsDiet}</Text>
+                <Text style={[styles.text2, { fontFamily: lang.font, }]}>{dietCategory ? dietCategory.description[lang.langName] : lang.whatIsDietDescribe}</Text>
+                {dietCategory == null && <>
+                    <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.dietAdvantages}</Text>
+                    <Text style={[styles.text2, { fontFamily: lang.font, }]}>{lang.dietAdvantageDescribe}</Text>
+                    {/* <Text style={[styles.text, { fontFamily: lang.titleFont, }]}>{lang.exampleOfDiet}</Text> */}
+                </>
+                }
+                {/* <View style={{ alignItems: "center" }}>
                     <FlatList
                         data={data}
                         // ListFooterComponent={renderFooter}
@@ -158,10 +175,9 @@ function DietStartScreen(props) {
                         ListHeaderComponent={renderHeader}
                         renderItem={RenderItem}
                     />
-                </View>
-                <View style={{height:moderateScale(45)}}/>
+                </View> */}
+                <View style={{ height: moderateScale(45) }} />
             </ScrollView>
-
             <LinearGradient
                 colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
                 style={styles.buttonGradient}>
@@ -191,29 +207,14 @@ function DietStartScreen(props) {
                         />
                         <Text style={{ fontFamily: lang.font, fontSize: moderateScale(20), color: defaultTheme.darkText }}> قبلش یادتون باشه </Text>
                     </View>
-                    <Text style={{ width: dimensions.WINDOW_WIDTH * 0.7, fontSize: moderateScale(17), marginVertical: moderateScale(16), fontFamily: lang.font, lineHeight: moderateScale(22), paddingBottom: moderateScale(18), color: defaultTheme.mainText,textAlign:"left" }}>با دریافت برنامه غذایی کالری هدف روزانه شما تغییر میکنه و از این به بعد با برنامه غذایی به پیشرفت ادامه میدین</Text>
+                    <Text style={{ width: dimensions.WINDOW_WIDTH * 0.7, fontSize: moderateScale(17), marginVertical: moderateScale(16), fontFamily: lang.font, lineHeight: moderateScale(22), paddingBottom: moderateScale(18), color: defaultTheme.mainText, textAlign: "left" }}>با دریافت برنامه غذایی کالری هدف روزانه شما تغییر میکنه و از این به بعد با برنامه غذایی به پیشرفت ادامه میدین</Text>
                     <ConfirmButton
                         lang={lang}
                         style={styles.button4}
                         title={lang.okLetsGo}
                         leftImage={require('../../../res/img/done.png')}
                         onPress={() => {
-                            const header = {
-                                headers: {
-                                    Authorization: 'Bearer ' + auth.access_token,
-                                    Language: lang.capitalName,
-                                },
-                            };
-                            // axios.get("https://identity.o2fitt.com/api/v1/Users/DayOfWeeks", header).then(() => {
-                                props.navigation.navigate("ChooseDietTargetScreen")
-                                setAutoFuces(false)
-                            // }).catch((err) => {
-                            //     setErrorVisible(true)
-                            //     setErrorContext(lang.noInternet)
-                            //     setAutoFuces(false)
-
-                            // })
-
+                            shutDownWholeDiet()
                         }}
                     />
                 </Animated.View>
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
         marginHorizontal: moderateScale(20),
         marginVertical: moderateScale(14),
         color: defaultTheme.darkText,
-        textAlign:"left"
+        textAlign: "left"
     },
     text2: {
         width: dimensions.WINDOW_WIDTH * 0.90,
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(15),
         lineHeight: moderateScale(25),
         color: defaultTheme.lightGray2,
-        textAlign:"left"
+        textAlign: "left"
 
     },
     packages: {
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     AnimatedModal: {
         width: dimensions.WINDOW_WIDTH * 0.95,
         backgroundColor: "white",
-        top: 100,
+        // top: 100,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,

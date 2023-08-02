@@ -4,7 +4,7 @@ import ProfileRouter from "./profileRouter"
 import HomeRouter from "./homeRouter"
 import DailyRouter from "./dailyRouter"
 import GoalRouter from "./goalRouter"
-import { Linking, Platform, View, Text, TouchableOpacity, Image, Animated, Easing, StyleSheet, SafeAreaView, TouchableWithoutFeedback } from "react-native"
+import { Linking, Platform, View, Text, TouchableOpacity, Image, Animated, Easing, StyleSheet, SafeAreaView, TouchableWithoutFeedback, Alert } from "react-native"
 import { urls } from "../utils/urls"
 import { RestController } from "../classess/RestController"
 import { TabBar, MarketModal, ConfirmButton, TabPlusButton, VpnErrprModal, NoInternetModal, Information } from "../components";
@@ -26,7 +26,9 @@ import TimeZoneError from "../components/TimeZoneError";
 import { RecipeCatScreen } from "../screens";
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from "axios";
-import { Modal } from "react-native-paper";
+import UpdateModal from "../components/modals/UpdateModal";
+import { getVersion } from "react-native-device-info";
+import DietMainScreen from "../screens/DietScreens/DietMainScreen";
 // import Source from 'react-native-vpn-detect'
 
 const Tab = createBottomTabNavigator();
@@ -103,43 +105,88 @@ const Tabs = (props) => {
     }
   }
 
-
   const getMarketMessage = () => {
-    const url = urls.socialBaseUrl + urls.contactUs + urls.marketMessage
+    const url = urls.socialBaseUrl + urls.marketMessage + urls.GetByDateUser
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
-    const params = {
-    }
-
     const RC = new RestController()
-    RC.checkPrerequisites("get", url, params, header, onMarketMessageSuccess, () => false, auth, onRefreshTokenSuccess, onRefreshTokenFailure)
+
+    RC.get(url, header, onMarketMessageSuccess, onFailedGetMarketMessage)
   }
 
   const onMarketMessageSuccess = async (res) => {
-    if (res.data.data) {
-      let history = await AsyncStorage.getItem("marketHistory")
-      history = history ? JSON.parse(history) : []
-      if (history.findIndex(item => item == res.data.data.id) === -1) {
-        history.push(res.data.data.id)
-        await AsyncStorage.setItem("marketHistory", JSON.stringify(history))
-        setTimeout(() => {
+
+    console.warn(res.data.data);
+    setMarketMsg(res.data.data)
+    setShowMarketDialog(true)
+    const today = moment()
+
+    let marketMessage = await AsyncStorage.getItem("marketMessage")
+    marketMessage = marketMessage ? JSON.parse(marketMessage) : null
+
+    
+    if (marketMessage) {
+
+      if (marketMessage.id == res.data.data.id) {
+        if (marketMessage.nextTimeShow.diff(today, 'seconds') > 0) {
           setMarketMsg(res.data.data)
           setShowMarketDialog(true)
-        }, 800);
+          AsyncStorage.setItem("marketMessage", JSON.stringify({ ...marketMessage, nextTimeShow: moment().add(marketMessage.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
+          Alert.alert("ok")
+        }
+      }
+      else if (res.data.data) {
+        setMarketMsg(res.data.data)
+        setShowMarketDialog(true)
+        AsyncStorage.setItem("marketMessage", JSON.stringify({ ...res.data.data, nextTimeShow: moment().add(res.data.data.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
+        Alert.alert("ok")
+      }
+    } else if (res.data.data) {
+
+      setMarketMsg(res.data.data)
+      setShowMarketDialog(true)
+      AsyncStorage.setItem("marketMessage", JSON.stringify({ ...res.data.data, nextTimeShow: moment().add(res.data.data.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
+      Alert.alert("ok")
+    }
+
+    // if (res.data.data) {
+    //   let history = await AsyncStorage.getItem("marketHistory")
+    //   history = history ? JSON.parse(history) : []
+    //   if (history.findIndex(item => item.id == res.data.data.id) === -1) {
+    //     history.push(res.data.data.id)
+    //     await AsyncStorage.setItem("marketHistory", JSON.stringify(history))
+    //     setTimeout(() => {
+    //       setMarketMsg(res.data.data)
+    //       setShowMarketDialog(true)
+    //     }, 800);
+    //   }
+    // }
+  }
+  const onFailedGetMarketMessage = async() => {
+    let marketMessage =await AsyncStorage.getItem("marketMessage")
+    marketMessage = marketMessage ? JSON.parse(marketMessage) : null
+    const today = moment()
+
+    if (marketMessage) {
+
+      if (marketMessage.nextTimeShow.diff(today, 'seconds') > 0) {
+        setMarketMsg(marketMessage)
+        setShowMarketDialog(true)
+        AsyncStorage.setItem("marketMessage", JSON.stringify({ ...marketMessage, nextTimeShow: moment().add(marketMessage.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
       }
     }
   }
 
   const handleMarketDialogPressed = () => {
     setShowMarketDialog(false)
-    Linking.canOpenURL(marketMsg.url).then(() => {
-      setTimeout(() => {
-        Linking.openURL(marketMsg.url).catch(() => {
-          props.navigation.navigate(marketMsg.url)
+    // Linking.canOpenURL(marketMsg.url).then(() => {
+    //   setTimeout(() => {
+    //     Linking.openURL(marketMsg.url).catch(() => {
+    //       props.navigation.navigate(marketMsg.url)
 
-        })
-      }, Platform.OS === "ios" ? 500 : 50)
-    })
-    analytics().logEvent('marketMessagePressed')
+    //     })
+    //   }, Platform.OS === "ios" ? 500 : 50)
+    // })
+    // analytics().logEvent('marketMessagePressed')
   }
 
   const onFailure = () => {
@@ -163,6 +210,7 @@ const Tabs = (props) => {
 
 
   useEffect(() => {
+    getMarketMessage()
     // const pkExpireDate = moment(profile.pkExpireDate, 'YYYY-MM-DDTHH:mm:ss');
     const vipTimer = moment(starRating.vipTimer, "YYYY-MM-DDTHH:mm:ss")
     const today = moment();
@@ -263,53 +311,12 @@ const Tabs = (props) => {
     inputRange: [0, 1],
     outputRange: ["0deg", "45deg"]
   })
-  const CustomTabBarButton = ({ children, onPress }) => (
-    <TouchableOpacity
-      activeOpacity={0.5}
-      style={{ top: -30, justifyContent: "center", alignItems: "center", zIndex: 90 }}
-      onPress={() => {
-        Animated.timing(
-          plusRotation,
-          {
-            toValue: 1,
-            duration: 500,
-            easing: Easing.out(Easing.exp), // Easing is an additional import from react-native
-            useNativeDriver: true  // To make use of native driver for performance
-          }
-        ).start(() => {
-          Animated.timing(
-            plusRotation,
-            {
-              toValue: 0,
-              duration: 500,
-              easing: Easing.out(Easing.exp), // Easing is an additional import from react-native
-              useNativeDriver: true  // To make use of native driver for import { fastingDiet } from '../redux/reducers/fasting/fasting';
 
-            }
-          ).start()
-        })
-      }}
-    >
-      <View style={{ width: 50, height: 50, borderRadius: 35, backgroundColor: defaultTheme.primaryColor, elevation: 10, alignItems: "center", justifyContent: "center" }}>
-        <Animated.Image
-          style={{ width: 30, height: 30, resizeMode: "contain", tintColor: "white", transform: [{ rotate: spin }] }}
-          source={require("../../res/img/plus.png")}
-        />
-      </View>
-    </TouchableOpacity>
-  )
   const [errorVisible, setErrorVisible] = useState(false)
   const [errorContext, setErrorContext] = useState(lang.noInternet)
+  const [updateModal, setUpdateModal] = useState(false)
 
   React.useEffect(() => {
-    console.warn(user.id);
-    // dispatch(clearDiet())
-    console.error(diet.oldData);
-    for (let i = 0; i < diet.weekSnack.length - 1; i++) {
-      if (diet.weekSnack[i].id == undefined || diet.weekSnack[i].id == null) {
-        console.error(diet.weekSnack[i])
-      }
-    }
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -323,8 +330,17 @@ const Tabs = (props) => {
         setErrorVisible(true)
         setErrorContext(lang.noInternet)
       })
-  }, [])
 
+    const RC = new RestController()
+    const url = urls.socialBaseUrl + urls.appVersion + urls.getAppversion + `?marketType=2&curentAppVersion=${getVersion()}`
+    RC.get(url, header, onSuccessGetAppVersion, onFailureGetAppVersion)
+  }, [])
+  const onSuccessGetAppVersion = (res) => {
+    setUpdateModal(res.data.data);
+  }
+  const onFailureGetAppVersion = (err) => {
+    console.error(err);
+  }
 
 
   return (
@@ -339,6 +355,7 @@ const Tabs = (props) => {
         >
           <Tab.Screen name="HomeRouter" component={HomeRouter} />
           <Tab.Screen name="DailyRouter" component={DailyRouter} />
+          <Tab.Screen name="DietMainScreen" component={DietMainScreen} />
           <Tab.Screen name="GoalRouter" component={GoalRouter} />
           {
             lang.langName == "persian" ?
@@ -347,7 +364,7 @@ const Tabs = (props) => {
           }
         </Tab.Navigator>
       </SafeAreaView>
-      {/* {showMmarketDialog &&
+      {showMmarketDialog &&
         <MarketModal
           lang={lang}
           visible={showMmarketDialog}
@@ -357,155 +374,78 @@ const Tabs = (props) => {
           item={marketMsg}
           onPress={handleMarketDialogPressed}
         />
-      } */}
-      {
-        diet.isForceUpdate ||
-
-          (Vip && user.countryId == 128 && starRating.vipShown) ||
-          (vpn && errorVisible == false)
-          ?
-          <BlurView
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-            blurType="light"
-            blurAmount={0}
-            blurRadius={4}
-          />
-          : null
       }
-
-      {/* {
-        diet.isForceUpdate == true && */}
-      <Modal
-        visible={diet.isForceUpdate}
-        style={{ alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0)" }}
-      >
-        <TouchableOpacity activeOpacity={1}>
-
-          <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
-            <LottieView
-              source={require('../../res/animations/forceU.json')}
-              style={{ width: moderateScale(400), height: moderateScale(400) }}
-              autoPlay={true}
-              loop={true}
-            />
-            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(17), color: defaultTheme.darkText }}>{lang.forceUpdateTitle}</Text>
-            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.mainText, textAlign: "center", padding: 10, lineHeight: moderateScale(23) }}>{lang.forceUpdateText}</Text>
-
-            <ConfirmButton
-              lang={lang}
-              title={lang.forceUpdateBtn}
-              style={{ backgroundColor: defaultTheme.green, marginVertical: moderateScale(10) }}
-              onPress={() => {
-                // Linking.openURL("https://cafebazaar.ir/app/com.o2fitt")
-                // Linking.openURL("https://o2fit.me/DownloadApp")
-                Linking.openURL("https://play.google.com/store/apps/details?id=com.o2fitt")
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-      {/* } */}
 
 
       {premiumModal && user.countryId == 128 && starRating.vipShown ?
-        <Animated.View style={{ transform: [{ translateY: translateY }], position: "absolute", backgroundColor: "rgba(0,0,0,0.3)", width: dimensions.WINDOW_WIDTH }}>
-          <TouchableOpacity
-            onPress={() => fadeModal()}
-            style={{ alignSelf: "baseline", alignItems: "center", padding: moderateScale(7), flexDirection: "row", borderWidth: 1, borderColor: defaultTheme.border, borderRadius: moderateScale(20), marginHorizontal: moderateScale(15), marginVertical: moderateScale(5) }}>
-            <Image
-              source={require('../../res/img/cross.png')}
-              style={{ width: moderateScale(18), height: moderateScale(18), tintColor: defaultTheme.white }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => fadeModal()} style={{ flexDirection: "row", alignItems: "center", width: dimensions.WINDOW_WIDTH * 0.95, alignSelf: "center", backgroundColor: defaultTheme.lightBackground, borderRadius: moderateScale(11) }}>
-            <LottieView
-              source={require('../../res/animations/vip.json')}
-              autoPlay={true}
-              loop={false}
-              style={{ width: moderateScale(100), height: moderateScale(100) }}
-            />
-            <View style={{ width: dimensions.WINDOW_WIDTH * 0.45 }}>
-              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText }}>{lang.expiredPremium}</Text>
-              <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, textAlign: "left" }}>{lang.expirePremiumDes}</Text>
-            </View>
-            <ConfirmButton
-              lang={lang}
-              style={{ backgroundColor: defaultTheme.green2, width: moderateScale(80), heigth: moderateScale(20) }}
-              title={lang.reNew}
-              onPress={() => {
-                setPremiumModal(false)
-                navigation.navigate("PackagesScreen")
-              }}
-            />
-          </TouchableOpacity>
-        </Animated.View>
-        : null}
-
+        <BlurView style={{ position: "absolute", height: moderateScale(160), width: dimensions.WINDOW_WIDTH }} blurType={"dark"} overlayColor={"transparent"} blurAmount={5}>
+          <Animated.View style={{ transform: [{ translateY: translateY }] }}>
+            <TouchableOpacity
+              onPress={() => fadeModal()}
+              style={{ alignSelf: "baseline", alignItems: "center", padding: moderateScale(7), flexDirection: "row", borderWidth: 1, borderColor: defaultTheme.border, borderRadius: moderateScale(20), marginHorizontal: moderateScale(15), marginVertical: moderateScale(5) }}>
+              <Image
+                source={require('../../res/img/cross.png')}
+                style={{ width: moderateScale(18), height: moderateScale(18), tintColor: defaultTheme.white }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => fadeModal()} style={{ flexDirection: "row", alignItems: "center", width: dimensions.WINDOW_WIDTH * 0.95, alignSelf: "center", backgroundColor: defaultTheme.lightBackground, borderRadius: moderateScale(11) }}>
+              <LottieView
+                source={require('../../res/animations/vip.json')}
+                autoPlay={true}
+                loop={false}
+                style={{ width: moderateScale(100), height: moderateScale(100) }}
+              />
+              <View style={{ width: dimensions.WINDOW_WIDTH * 0.45 }}>
+                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText }}>{lang.expiredPremium}</Text>
+                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), color: defaultTheme.darkText, textAlign: "left" }}>{lang.expirePremiumDes}</Text>
+              </View>
+              <ConfirmButton
+                lang={lang}
+                style={{ backgroundColor: defaultTheme.green2, width: moderateScale(80), heigth: moderateScale(20) }}
+                title={lang.reNew}
+                onPress={() => {
+                  setPremiumModal(false)
+                  navigation.navigate("PackagesScreen")
+                }}
+              />
+            </TouchableOpacity>
+          </Animated.View>
+        </BlurView>
+        : null
+      }
+      {
+        Vip && user.countryId == 128 && starRating.vipShown ?
+          <VIP
+            lang={lang}
+            auth={auth}
+            user={user}
+            crossPressed={() => {
+              setVIP(false)
+              dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
+              dispatch(vipShown(false))
+            }}
+          />
+          :
+          null
+      }
       {/* {
-        Vip && user.countryId == 128 && starRating.vipShown ? */}
-      <Modal
-        style={{ alignItems: "center", justifyContent: "center" }}
-        visible={Vip && user.countryId == 128 && starRating.vipShown}
-        onDismiss={() => {
-          setVIP(false)
-          dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
-          dispatch(vipShown(false))
-        }}
-      >
-        <VIP
+        updateModal &&
+        <UpdateModal
+          item={updateModal}
           lang={lang}
-          auth={auth}
-          user={user}
           crossPressed={() => {
-            setVIP(false)
-            dispatch(setVipTimer(moment().add(3, "days").format("YYYY-MM-DD")))
-            dispatch(vipShown(false))
+            setUpdateModal(false)
           }}
         />
-      </Modal>
-      {/* :
-          null
       } */}
-
-      {/* {
-        parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3 && */}
-      <Modal visible={parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3}>
+      {
+        parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3 &&
         <TimeZoneError
           lang={lang}
           crossPressed={() => { }}
         />
-      </Modal>
-      {/* } */}
-      {vpn && errorVisible == false &&
-        <Modal
-          style={{ alignItems: "center", justifyContent: "center" }}
-          visible={vpn && errorVisible == false}
-          onDismiss={(doNotShow) => {
-            if (doNotShow == true) {
-              AsyncStorage.setItem("vpnShown", 'true')
-            }
-            setVpn(false)
-          }}
-        >
-          <VpnErrprModal
-            lang={lang}
-            user={user}
-            onDismiss={(doNotShow) => {
-              if (doNotShow == true) {
-                AsyncStorage.setItem("vpnShown", 'true')
-              }
-              setVpn(false)
-            }}
-
-          />
-        </Modal>
       }
+
       {errorVisible ? (
         <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
           <View style={styles.wrapper}>

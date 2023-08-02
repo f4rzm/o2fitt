@@ -1,5 +1,5 @@
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
     WelcomeOnboardingScreen,
     ChooseGenderScreen,
@@ -17,14 +17,15 @@ const Routes = ()=>{
         contentStyle : {backgroundColor : null},
         animationEnabled : false 
     }
-    const Stack = createNativeStackNavigator();
+    const Stack = createStackNavigator();
 
     return (
         <Stack.Navigator
             screenOptions={{
-                headerShown : false,
+                headerShown: false,
+                animationEnabled: true,
                 contentStyle : {backgroundColor : null},
-                stackAnimation : "none"
+                // stackAnimation : "none"
             }}
         >
             <Stack.Screen name="ChooseFoodHabbitationScreen" component={ChooseFoodHabbitationScreen} options={options}/>

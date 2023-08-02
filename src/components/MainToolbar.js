@@ -55,9 +55,12 @@ const MainToolbar = props => {
                 </TouchableOpacity>
 
             </View>
-            <View style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: "white", height: moderateScale(25), borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+            {
+                !props.disableCurve &&
+                <View style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: "white", height: moderateScale(25), borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
 
-            </View>
+                </View>
+            }
 
         </View>
     )

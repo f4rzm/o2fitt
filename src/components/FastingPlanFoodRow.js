@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { dimensions } from '../constants/Dimensions'
 import { allMeasureUnits } from '../utils/measureUnits'
@@ -10,10 +10,18 @@ import analytics from '@react-native-firebase/analytics';
 import { urls } from '../utils/urls'
 import { setFastingMeal } from '../redux/actions/fasting'
 import { useDispatch } from 'react-redux';
-import { calculatePercent } from '../redux/actions/diet'
+import { calculatePercent } from '../redux/actions/dietNew'
 import ChangePackage from '../../res/img/changePackage.svg'
+import PouchDB from '../../pouchdb'
+import pouchdbSearch from 'pouchdb-find';
 
-const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, offlineDB, user, auth, selectedDate, mealDB, fastingDiet, diet, icon }) => {
+PouchDB.plugin(pouchdbSearch);
+
+const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
+const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
+const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
+
+const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, auth, selectedDate,fastingDiet, diet, icon }) => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const getFromDb = async () => {
@@ -57,7 +65,7 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
             offlineDB.post({
                 method: 'post',
                 type: 'meal',
-                url: urls.foodBaseUrl + urls.userTrackFood,
+                url: urls.baseFoodTrack + urls.userTrackFood,
                 header: {
                     headers: {
                         Authorization: 'Bearer ' + auth.access_token,
@@ -88,6 +96,7 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
             dispatch(setFastingMeal(changeIsAte))
 
             let percent = diet.percent + 0.55
+            
             setTimeout(() => {
                 dispatch(calculatePercent(percent))
                 setLoading(false)
@@ -132,7 +141,7 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
                 offlineDB.post({
                     method: "delete",
                     type: "meal",
-                    url: urls.foodBaseUrl2 + urls.userTrackFood + `?_id=${element.serverId}`,
+                    url: urls.baseFoodTrack2 + urls.userTrackFood + `?_id=${element.serverId}`,
                     header: { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } },
                     params: { ...element },
                     index: records.total_rows
@@ -148,7 +157,6 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
     }
 
     const removeMealDB = (element, index) => {
-
         let removedmealFromServer = fastingDiet
         removedmealFromServer[selectedDate][meal].isAte = false
         if (pack.dietPackFoods.length - 1 == index) {
@@ -159,7 +167,6 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
                 setLoading(false)
             }, 1000);
         }
-
         mealDB.find({
             selector: { _id: element.serverId }
         }).then(rec => {
@@ -205,7 +212,6 @@ const FastingPlanFoodRow = ({ pack, meal, title, foodDB, lang, onChangepackage, 
                                 title={"لغو"}
                                 style={{ width: dimensions.WINDOW_WIDTH * 0.5, backgroundColor: defaultTheme.white, borderWidth: 1, borderColor: defaultTheme.error}}
                                 textStyle={{ fontSize: moderateScale(15), color: defaultTheme.error }}
-
                                 onPress={removeFromServer}
                             />
                         </View>

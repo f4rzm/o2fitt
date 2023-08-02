@@ -36,7 +36,7 @@ const GoalTabs = (props) => {
       //   style: { backgroundColor: defaultTheme.lightBackground, justifyContent: "center", height: moderateScale(42), elevation: 0, },
       //   showIcon: true,
       //   tabStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
-        
+
       // }}
       tabBar={props => <TabBarComp {...props} lang={lang} />}
 
@@ -49,12 +49,12 @@ const GoalTabs = (props) => {
       //   showIcon: true,
       //   tabBarItemStyle: { flexDirection: "row", alignItems: "center", justifyContent: "center", height: moderateScale(42) },
       //   tabBarPressColor:defaultTheme.lightGray,
-        
+
       // }}
-    initialRouteName={"GoalWeightScreen"}
+      initialRouteName={"GoalWeightScreen"}
       lazy={true}
     >
-       <Tab.Screen name="GoalBodyScreen" component={GoalBodyScreen}
+      <Tab.Screen name="GoalBodyScreen" component={GoalBodyScreen}
         options={{
           tabBarLabel: lang.limbBody,
           tabBarIcon: ({ tintColor, focused }) => (
@@ -65,7 +65,7 @@ const GoalTabs = (props) => {
               resizeMode="contain"
             />
           ),
-          tabBarIcon:require("../../../res/img/body.png")
+          tabBarIcon: require("../../../res/img/body.png")
         }}
       />
       {
@@ -81,10 +81,10 @@ const GoalTabs = (props) => {
                   resizeMode="contain"
                 />
               ),
-              tabBarIcon:require("../../../res/img/donut.png")
+              tabBarIcon: require("../../../res/img/donut.png")
 
             }}
-            
+
           /> : null
       }
       <Tab.Screen name="GoalWeightScreen" component={GoalWeightScreen}
@@ -98,13 +98,13 @@ const GoalTabs = (props) => {
               resizeMode="contain"
             />
           ),
-          tabBarShowIcon:true,
-          tabBarIcon:require("../../../res/img/scale.png")
-          
+          tabBarShowIcon: true,
+          tabBarIcon: require("../../../res/img/scale.png")
+
         }}
       />
-      
-     
+
+
       {/* <Tab.Screen name="GoalActivityScreen" component={GoalActivityScreen} 
           options={{ 
             tabBarLabel: lang.exerciseFavorite , 

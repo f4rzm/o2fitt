@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import PackageResultModal from '../../components/PackageResultModal'
 import { useDispatch } from 'react-redux'
 import { updateProfileLocaly } from '../../redux/actions'
-import { setIsBuy } from '../../redux/actions/diet'
+import { setIsBuy } from '../../redux/actions/dietNew'
 // import { useBazaar } from '@cafebazaar/react-native-poolakey'
 import { setPackageSale } from '../../redux/actions/user'
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -109,7 +109,7 @@ function PackagesScreen(props) {
 
     }
     const getProfile = () => {
-        const url = urls.userBaseUrl + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + user.id
+        const url = urls.baseUserTrack + urls.userProfiles + urls.getUserTrackSpecification + "?userId=" + user.id
         const header = {}
         const params = {}
         const RC = new RestController()

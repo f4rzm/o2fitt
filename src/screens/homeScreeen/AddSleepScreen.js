@@ -273,7 +273,7 @@ const AddSleepScreen = (props) => {
   };
 
   const saveServer = (data) => {
-    const url = urls.workoutBaseUrl + urls.userTrackSleep;
+    const url = urls.baseWorkout + urls.userTrackSleep;
     const header = {
       headers: {
         Authorization: 'Bearer ' + auth.access_token,
@@ -430,7 +430,7 @@ const AddSleepScreen = (props) => {
           .post({
             method: 'post',
             type: 'sleep',
-            url: urls.workoutBaseUrl + urls.userTrackSleep,
+            url: urls.baseWorkout + urls.userTrackSleep,
             header: {
               headers: {
                 Authorization: 'Bearer ' + auth.access_token,
