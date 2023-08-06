@@ -17,6 +17,7 @@ import MyCustomTabBar from '../../components/Navigators/CustomTabNavigator'
 // import CustomTopTabNavigator from '../../components/CustomTopTabNavigator'
 import MyDietScreen from './MyDietScreen'
 import DietCategoryScreen from './DietCategoryScreen'
+import { useNavigation } from '@react-navigation/native'
 
 const DietMainScreen = (props) => {
     const dietNew = useSelector(state => state.dietNew)
@@ -25,6 +26,8 @@ const DietMainScreen = (props) => {
     const app = useSelector(state => state.app)
     const auth = useSelector(state => state.auth)
     const Tabs = createMaterialTopTabNavigator()
+    const navigation=useNavigation()
+    
     return (
         <MainToolbarWithTopCurveView
             onMessagePressed={() => props.navigation.navigate('MessagesScreen')}
@@ -41,7 +44,8 @@ const DietMainScreen = (props) => {
                 tabBar={(props) => <MyCustomTabBar {...props} cardWidth={dimensions.WINDOW_WIDTH * 0.97 / 2} lang={lang} />}
                 needsOffscreenAlphaCompositing={true}
                 screenOptions={{
-                    swipeEnabled: false
+                    // swipeEnabled: false
+                    
                 }}
                 initialRouteName={dietNew.isActive || diet.isActive ? 'MyDietTab' : "DietCategoryTab"}
             >

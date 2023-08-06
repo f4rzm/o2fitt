@@ -29,7 +29,7 @@ export class SyncBulkData {
             db.bulkDocs(bulks).then(res=>{
                 
                 if(oldData.length > 0){
-                    console.log("ssssssssssss",oldData.filter(item=>item!=null))
+                    // console.log("ssssssssssss",oldData.filter(item=>item!=null))
                     db.bulkDocs(oldData.filter(item=>item!=null).map(item=>({...item , _deleted : true})))
                 }
             })

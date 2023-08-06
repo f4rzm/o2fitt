@@ -9,7 +9,10 @@ const DietBanner = ({ lang, item }) => {
     console.warn(item);
     const navigation = useNavigation()
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("DietStartScreen", item)} style={styles.container}>
+        <TouchableOpacity onPress={() => {
+            navigation.navigate("MyDietTab")
+            navigation.navigate("DietStartScreen", item)
+            }} style={styles.container}>
             <Image
                 source={{ uri: item.bannerImage }}
                 style={styles.bannerImage}

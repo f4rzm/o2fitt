@@ -8,7 +8,6 @@ import { defaultTheme } from '../constants/theme'
 import ConfirmButton from './ConfirmButton'
 import analytics from '@react-native-firebase/analytics';
 import { urls } from '../utils/urls'
-// import { setDietMeal } from '../redux/actions/dietNew'
 import { useDispatch } from 'react-redux';
 import { calculatePercent, setDietMeal } from '../redux/actions/dietNew'
 import ChangePackage from '../../res/img/changePackage.svg'
@@ -21,7 +20,7 @@ const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
-const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, selectedDate, fastingDiet, diet, icon }) => {
+const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, selectedDate, fastingDiet, diet, icon,setDisableAdding,disableAddBtn }) => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
     const getFromDb = async () => {
@@ -38,6 +37,7 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
         analytics().logEvent('diet_post');
     }
     const saveServer = (food, packageItem, index) => {
+        setDisableAdding(true)
         const filteredMeasureUnit = allMeasureUnits.filter((item) => item.id == packageItem.measureUnitId)
         const nutrientValue = food.nutrientValue.map((item) => (item * packageItem.value * filteredMeasureUnit[0].value) / 100)
         const params = {
@@ -52,7 +52,7 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
             measureUnitId: packageItem.measureUnitId,
             measureUnitName: packageItem.measureUnitName,
             personalFoodId: '',
-            _id: `${user.id}${Date.now().toString()}`
+            _id: `${user.id}${Math.random(Math.floor()*1000)}${Date.now().toString()}`
         }
 
 
@@ -81,20 +81,20 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
         saveToDB({
             ...params
         });
-        let serverIdPackChange = fastingDiet
+        let serverIdPackChange = diet
         serverIdPackChange[selectedDate][meal].dietPackFoods[index].serverId = params._id
         dispatch(setDietMeal(serverIdPackChange))
 
         if (pack.dietPackFoods.length - 1 == index) {
-            let changeIsAte = fastingDiet
+            let changeIsAte = diet
             changeIsAte[selectedDate][meal].isAte = true
-
             dispatch(setDietMeal(changeIsAte))
 
-            let percent = diet.percent + 0.55
+            // let percent = diet.percent + 0.55
             setTimeout(() => {
-                dispatch(calculatePercent(percent))
+                dispatch(calculatePercent(diet.percent + 0.55))
                 setLoading(false)
+                setDisableAdding(false)
             }, 1000);
         }
     }
@@ -126,6 +126,7 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
 
     const removeFromServer = (id, modalId) => {
         setLoading(true)
+        setDisableAdding(true)
         pack.dietPackFoods.forEach((element, index) => {
 
             offlineDB.allDocs({ include_docs: false }).then((records) => {
@@ -150,14 +151,15 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
 
     const removeMealDB = (element, index) => {
 
-        let removedmealFromServer = fastingDiet
+        let removedmealFromServer = diet
         removedmealFromServer[selectedDate][meal].isAte = false
         if (pack.dietPackFoods.length - 1 == index) {
             dispatch(setDietMeal(removedmealFromServer))
             let percent = diet.percent - 0.55
             setTimeout(() => {
-                dispatch(calculatePercent(percent))
+                dispatch(calculatePercent(diet.percent - 0.55))
                 setLoading(false)
+                setDisableAdding(false)
             }, 1000);
         }
 
@@ -205,14 +207,14 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
                                 title={"لغو"}
                                 style={{ width: dimensions.WINDOW_WIDTH * 0.5, backgroundColor: defaultTheme.white, borderWidth: 1, borderColor: defaultTheme.error }}
                                 textStyle={{ fontSize: moderateScale(15), color: defaultTheme.error }}
-
+                                deActive={disableAddBtn}
                                 onPress={removeFromServer}
                             />
                         </View>
                         :
                         <View style={styles.footerContainer}>
 
-                            <TouchableOpacity onPress={() => getFromDb()} activeOpacity={0.8} style={{ height: moderateScale(40), justifyContent: "center", flexDirection: "row", borderRadius: 10, backgroundColor: defaultTheme.primaryColor, alignItems: "center", padding: moderateScale(10) }}>
+                            <TouchableOpacity disabled={disableAddBtn} onPress={() => getFromDb()} activeOpacity={0.8} style={{ height: moderateScale(40), justifyContent: "center", flexDirection: "row", borderRadius: 10, backgroundColor: defaultTheme.primaryColor, alignItems: "center", padding: moderateScale(10) }}>
                                 <Image
                                     source={require('../../res/img/done.png')}
                                     style={{ width: moderateScale(20), height: moderateScale(20), resizeMode: "contain" }}
@@ -220,7 +222,7 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
                                 <Text style={{ color: "white", fontFamily: lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(5) }}>ثبت در روزانه</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => onChangepackage(meal)} activeOpacity={0.8} style={{ height: moderateScale(42), justifyContent: "center", flexDirection: "row", borderRadius: 10, alignItems: "center", borderColor: defaultTheme.border, borderWidth: 1, paddingHorizontal: moderateScale(15) }}>
+                            <TouchableOpacity disabled={disableAddBtn} onPress={() => onChangepackage(meal)} activeOpacity={0.8} style={{ height: moderateScale(42), justifyContent: "center", flexDirection: "row", borderRadius: 10, alignItems: "center", borderColor: defaultTheme.border, borderWidth: 1, paddingHorizontal: moderateScale(15) }}>
                                 <ChangePackage />
                                 <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), marginHorizontal: moderateScale(5), color: defaultTheme.darkText }}>تعویض برنامه</Text>
                             </TouchableOpacity>

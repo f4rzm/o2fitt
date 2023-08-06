@@ -10,6 +10,7 @@ import {
   NativeEventEmitter,
   Text,
   AppState,
+  Alert,
 } from 'react-native';
 import {moderateScale} from 'react-native-size-matters';
 import {useSelector, useDispatch} from 'react-redux';
@@ -80,6 +81,7 @@ const HomeScreen = props => {
   const profile = useSelector(state => state.profile);
   const pedometer = useSelector(state => state.pedometer);
   const diet = useSelector(state => state.diet);
+  const dietNew = useSelector(state => state.dietNew);
   const starRating = useSelector(state => state.starRating);
   const syncedDate = useSelector(state => state.syncedDate);
   const fastingDiet = useSelector(state => state.fastingDiet);
@@ -516,7 +518,7 @@ const HomeScreen = props => {
           fields: ['_id', 'insertDate', 'value'],
         })
         .then(records => {
-          console.log('sssssssss', records);
+          // console.log('sssssssss', records);
           let water = 0;
           records.docs.map(item => (water = parseFloat(item.value)));
           setUserWater(water);

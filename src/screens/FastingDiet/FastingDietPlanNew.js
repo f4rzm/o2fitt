@@ -22,6 +22,7 @@ import { advices } from '../../utils/Advice'
 import AnimatedLottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 import Info from '../../../res/img/info4.svg'
+import { useNavigation } from '@react-navigation/native'
 
 
 PouchDB.plugin(pouchdbSearch);
@@ -229,19 +230,19 @@ const FastingDietplanNew = (props) => {
     }
 
     useEffect(() => {
-       
+
         // console.warn(randomGenerators.selectedDate);
         if (fastingDiet[selectedDate]) {
             setFastingPlan(fastingDiet[selectedDate])
         }
-         else {
+        else {
             if (fastingDiet.allDinner.length > 0 &&
                 fastingDiet.allSahar.length > 0 &&
                 fastingDiet.allSnack1.length > 0 &&
                 fastingDiet.allSnack2.length > 0 &&
                 fastingDiet.allEftar.length > 0
             ) {
-                
+
                 const randomPack = {
                     [moment(selectedDate).format("YYYY-MM-DD")]: {
                         '9': { ...randomGenerator(fastingDiet.allSahar), isAte: false },
@@ -258,7 +259,7 @@ const FastingDietplanNew = (props) => {
                 ))
                 setFastingPlan(randomPack[selectedDate])
             } else {
-            Alert.alert("ok")
+                Alert.alert("ok")
 
                 // setDiet()
 
@@ -290,7 +291,7 @@ const FastingDietplanNew = (props) => {
         setShutownLoading(false)
         // props.navigation.popToTop()
     }
-
+    const navigation = useNavigation()
     return (
         <SafeAreaView>
             {/* <Toolbar
@@ -349,13 +350,21 @@ const FastingDietplanNew = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allSahar)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.sahari)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
+                                navigation.navigate("ChangeFastingModal",
+                                    {
+                                        selectedPackageForChange: fastingDiet.allSahar,
+                                        meal: e,
+                                        selectedMealName: lang.sahari,
+                                        selectedDate: selectedDate,
+                                        diet: fastingDiet
+                                    })
+                                // setSelectedpackageForChange(fastingDiet.allSahar)
+                                // setSelectedMealForChange(e)
+                                // setSelectedMEalName(lang.sahari)
+                                // Animated.spring(translateY, {
+                                //     toValue: 0,
+                                //     useNativeDriver: true
+                                // }).start()
                             }}
                             fastingDiet={fastingDiet}
                             diet={diet}
@@ -374,13 +383,21 @@ const FastingDietplanNew = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allEftar)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.eftar)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
+                                navigation.navigate("ChangeFastingModal",
+                                {
+                                    selectedPackageForChange: fastingDiet.allEftar,
+                                    meal: e,
+                                    selectedMealName: lang.eftar,
+                                    selectedDate: selectedDate,
+                                    diet: fastingDiet
+                                })
+                                // setSelectedpackageForChange(fastingDiet.allEftar)
+                                // setSelectedMealForChange(e)
+                                // setSelectedMEalName(lang.eftar)
+                                // Animated.spring(translateY, {
+                                //     toValue: 0,
+                                //     useNativeDriver: true
+                                // }).start()
                             }}
                             fastingDiet={fastingDiet}
                             diet={diet}
@@ -399,13 +416,21 @@ const FastingDietplanNew = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allSnack1)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.snack1)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
+                                navigation.navigate("ChangeFastingModal",
+                                {
+                                    selectedPackageForChange: fastingDiet.allSnack1,
+                                    meal: e,
+                                    selectedMealName: lang.snack1,
+                                    selectedDate: selectedDate,
+                                    diet: fastingDiet
+                                })
+                                // setSelectedpackageForChange(fastingDiet.allSnack1)
+                                // setSelectedMealForChange(e)
+                                // setSelectedMEalName(lang.snack1)
+                                // Animated.spring(translateY, {
+                                //     toValue: 0,
+                                //     useNativeDriver: true
+                                // }).start()
                             }}
                             fastingDiet={fastingDiet}
                             diet={diet}
@@ -424,13 +449,21 @@ const FastingDietplanNew = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allDinner)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.dinner)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
+                                navigation.navigate("ChangeFastingModal",
+                                {
+                                    selectedPackageForChange: fastingDiet.allDinner,
+                                    meal: e,
+                                    selectedMealName: lang.dinner,
+                                    selectedDate: selectedDate,
+                                    diet: fastingDiet
+                                })
+                                // setSelectedpackageForChange(fastingDiet.allDinner)
+                                // setSelectedMealForChange(e)
+                                // setSelectedMEalName(lang.dinner)
+                                // Animated.spring(translateY, {
+                                //     toValue: 0,
+                                //     useNativeDriver: true
+                                // }).start()
                             }}
                             fastingDiet={fastingDiet}
                             diet={diet}
@@ -448,13 +481,21 @@ const FastingDietplanNew = (props) => {
                             selectedDate={selectedDate}
                             mealDB={mealDB}
                             onChangepackage={(e) => {
-                                setSelectedpackageForChange(fastingDiet.allSnack2)
-                                setSelectedMealForChange(e)
-                                setSelectedMEalName(lang.snack2)
-                                Animated.spring(translateY, {
-                                    toValue: 0,
-                                    useNativeDriver: true
-                                }).start()
+                                navigation.navigate("ChangeFastingModal",
+                                {
+                                    selectedPackageForChange: fastingDiet.allSnack2,
+                                    meal: e,
+                                    selectedMealName: lang.snack2,
+                                    selectedDate: selectedDate,
+                                    diet: fastingDiet
+                                })
+                                // setSelectedpackageForChange(fastingDiet.allSnack2)
+                                // setSelectedMealForChange(e)
+                                // setSelectedMEalName(lang.snack2)
+                                // Animated.spring(translateY, {
+                                //     toValue: 0,
+                                //     useNativeDriver: true
+                                // }).start()
                             }}
                             fastingDiet={fastingDiet}
                             diet={diet}

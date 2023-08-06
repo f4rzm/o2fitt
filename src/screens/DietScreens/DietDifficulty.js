@@ -109,24 +109,8 @@ function DietDifficulty(props) {
         { id: 800, calCalrie: calCalorie(800), name: "سخت ", title: "افزایش 3.2 کیلوگرم در ماه" },
     ]
 
-    const filteredCalCalorie =
-        parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
-            &&
-            (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
-            ?
-            weightLostData.filter((item) => (item.calCalrie > 1200 && item.calCalrie < 2500))
-            :
-            weightLostData.filter((item) => item.calCalrie > 1200)
-
-    const filteretWeightGain =
-        parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
-            &&
-            (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)
-            ?
-            weigthGainData.filter((item) => (item.calCalrie < 2500 && item.calCalrie > 1200))
-            :
-            weigthGainData.filter((item) => item.calCalrie < 3000)
-
+    const filteredCalCalorie = weightLostData.filter((item) => (item.calCalrie > 1200 && item.calCalrie < 3000))
+    const filteretWeightGain = weigthGainData.filter((item) => (item.calCalrie < 3000 && item.calCalrie > 1200))
 
     useEffect(() => {
         if (parseFloat(props.route.params.weight) < parseFloat(props.route.params.targetWeight)) {
@@ -135,14 +119,14 @@ function DietDifficulty(props) {
             if (filteretWeightGain.length > 0) {
 
                 setWeightChangeRateId(filteretWeightGain[0].id)
-            }else{
+            } else {
                 setNoResult(true)
             }
         } else if (parseFloat(props.route.params.weight) > parseFloat(props.route.params.targetWeight)) {
             setHardshipdata(weightLostData)
             if (filteredCalCalorie.length > 0) {
                 setWeightChangeRateId(filteredCalCalorie[0].id)
-            }else{
+            } else {
                 setNoResult(true)
             }
         } else {
@@ -156,8 +140,8 @@ function DietDifficulty(props) {
             weight: props.route.params.weight,
             targetWeight: props.route.params.targetWeight,
             weightChangeRate: weightChangeRateId,
-            dietId:props.route.params.dietId,
-            alergiesId:props.route.params.alergiesId
+            dietId: props.route.params.dietId,
+            alergiesId: props.route.params.alergiesId
         })
 
     }
@@ -279,7 +263,7 @@ function DietDifficulty(props) {
                     />
                 </BlurView>
                 : null
-            } 
+            }
         </>
     )
 }

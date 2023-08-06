@@ -55,7 +55,6 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
 
 
     }
-    console.warn(dimensions.WINDOW_HEIGTH);
 
     return (
         <KeyboardAvoidingView behavior='height'>
@@ -123,7 +122,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                     setFocused(false)
                 }}
             >
-                <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH, marginBottom: 0 }}>
+                <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH}}>
                     <View style={styles.packDetailsContainer}>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: moderateScale(10) }}>
                             <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }} onPress={() => {
@@ -169,6 +168,7 @@ const FastingDietChangeModal = ({ item, lang, selectedPackageForChange, dismissM
                                     }
                                 </View>
                         }
+                        <View style={{height:dimensions.WINDOW_HEIGTH*0.17}}/>
 
                         {/* <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderRadius: 10, borderTopLeftRadius: 0, borderTopRightRadius: 0,alignItems:"center",paddingBottom:moderateScale(20) }}>
                         <ConfirmButton
@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         // paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
         height: dimensions.WINDOW_HEIGTH * 0.8,
+        paddingBottom: moderateScale(60)
     },
     confirmButton: {
         backgroundColor: defaultTheme.green,
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 0,
         borderRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
-        paddingBottom: moderateScale(60)
+        // paddingBottom: moderateScale(130)
     },
     foodName: {
         fontSize: moderateScale(15),

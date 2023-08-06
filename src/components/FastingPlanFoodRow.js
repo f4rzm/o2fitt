@@ -56,7 +56,7 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
             measureUnitId: packageItem.measureUnitId,
             measureUnitName: packageItem.measureUnitName,
             personalFoodId: '',
-            _id: `${user.id}${Date.now().toString()}`
+            _id: `${user.id}${Math.random(Math.floor()*1000)}${Date.now().toString()}`
         }
 
 
@@ -65,7 +65,7 @@ const FastingPlanFoodRow = ({ pack, meal, title,  lang, onChangepackage,  user, 
             offlineDB.post({
                 method: 'post',
                 type: 'meal',
-                url: urls.baseFoodTrack + urls.userTrackFood,
+                url: urls.baseFoodTrack2 + urls.userTrackFood,
                 header: {
                     headers: {
                         Authorization: 'Bearer ' + auth.access_token,

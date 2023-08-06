@@ -1,4 +1,4 @@
-import { Animated, Image, TouchableOpacity, View } from 'react-native'
+import { Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { moderateScale } from 'react-native-size-matters';
 import { defaultTheme } from '../../constants/theme';
 export default function TabBarComp({ state, descriptors, navigation, position, lang }) {
@@ -56,17 +56,30 @@ export default function TabBarComp({ state, descriptors, navigation, position, l
             onLongPress={onLongPress}
             style={{ flex: 1, borderBottomColor: defaultTheme.primaryColor, borderBottomWidth: opacity == 1 ? 1 : 0, paddingVertical: moderateScale(10), alignItems: "center" }}
           >
-            <View style={{flexDirection:"row",alignItems:"center"}}>
-              <Animated.Text style={{ color: "black", fontFamily: lang.font, transform: [{ scale: scale }], color: isFocused ? defaultTheme.primaryColor : defaultTheme.mainText,marginHorizontal:moderateScale(10) }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+
+              <Animated.Text style={{fontFamily: lang.font,}}>
                 {label}
               </Animated.Text>
-              {
-                options.tabBarIcon&&
-                <Animated.Image
-                  source={options.tabBarIcon}
-                  style={{ tintColor: isFocused ? defaultTheme.primaryColor : defaultTheme.mainText, width: moderateScale(19), height: moderateScale(19), transform: [{ scale: scale }],resizeMode:"contain"}}
-                />
-              }
+              <Animated.Text style={{ position: "absolute", opacity: opacity, color: "black", fontFamily: lang.font, transform: [{ scale: scale }], color: defaultTheme.primaryColor, marginHorizontal: moderateScale(10) }}>
+                {label}
+              </Animated.Text>
+              <View style={{ alignItems: "flex-end" }}>
+                {
+                  options.tabBarIcon &&
+                  <Animated.Image
+                    source={options.tabBarIcon}
+                    style={{ tintColor: defaultTheme.mainText, width: moderateScale(19), height: moderateScale(19), transform: [{ scale: scale }], resizeMode: "contain", position: "absolute" }}
+                  />
+                }
+                {
+                  options.tabBarIcon &&
+                  <Animated.Image
+                    source={options.tabBarIcon}
+                    style={{ tintColor: defaultTheme.primaryColor, width: moderateScale(19), height: moderateScale(19), transform: [{ scale: scale }], resizeMode: "contain", opacity: opacity }}
+                  />
+                }
+              </View>
             </View>
             <Animated.View
               style={{ width: moderateScale(100), height: moderateScale(2), backgroundColor: defaultTheme.primaryColor, opacity, marginTop: moderateScale(6) }}
@@ -77,3 +90,14 @@ export default function TabBarComp({ state, descriptors, navigation, position, l
     </View>
   );
 }
+
+
+const styles = StyleSheet.create({
+  textAnimation: {
+    color: "black",
+    
+    transform: [{ scale: scale }],
+    color: defaultTheme.darkText,
+    marginHorizontal: moderateScale(10)
+  }
+})

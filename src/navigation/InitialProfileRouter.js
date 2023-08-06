@@ -33,7 +33,7 @@ const InitialProfileRouter = props => {
     };
 
     React.useEffect(()=>{
-        console.log( "sssssssssssssssssssss" , auth.auth)
+        // console.log( "sssssssssssssssssssss" , auth.auth)
     })
 
     return(

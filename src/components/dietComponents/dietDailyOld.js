@@ -8,7 +8,7 @@ import { defaultTheme } from '../../constants/theme';
 import { allMeasureUnits } from '../../utils/measureUnits';
 
 
-function dietDaily(props) {
+function DietDailyOld(props) {
     const foodValue = parseFloat(props.item.item.value)
     const [food, setFood] = useState({
         nutrientValue: [10],
@@ -53,4 +53,4 @@ function dietDaily(props) {
         </View>
     )
 }
-export default dietDaily
+export default DietDailyOld
