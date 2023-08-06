@@ -30,7 +30,7 @@ const DietMainScreen = (props) => {
     
     return (
         <MainToolbarWithTopCurveView
-            onMessagePressed={() => props.navigation.navigate('MessagesScreen')}
+            onMessagePressed={() => navigation.navigate('MessagesScreen')}
             unreadNum={app.unreadMessages}
             lang={lang}
             contentScrollViewStyle={styles.containerContent}

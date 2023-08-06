@@ -22,6 +22,7 @@ import { advices } from '../../utils/Advice'
 import AnimatedLottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 import Info from '../../../res/img/info4.svg'
+import ShutDownDietModal from '../../components/dietComponents/ShutDownDietModal'
 
 
 PouchDB.plugin(pouchdbSearch);
@@ -470,7 +471,6 @@ const FastingDietplan = (props) => {
                         <Text style={{ fontFamily: lang.font, fontSize: moderateScale(14), lineHeight: 25, color: defaultTheme.mainText, textAlign: "left" }}>برای تغییر رژیم غذایی ابتدا برنامه غذایی فعلی رو از طریق آیکون قرمز رنگ بالا لغو کنین و دوباره برنامه غذایی دریافت کنین.</Text>
                     </View>
                 }
-
             </ScrollView>
             <Modal
                 visible={selectedpackageForChange}
@@ -500,39 +500,12 @@ const FastingDietplan = (props) => {
                 }}
                 style={{ alignItems: 'center', justifyContent: "center" }}
             >
-                <View style={styles.shutDownContainer}>
-                    <View style={{ paddingTop: moderateScale(20) }}>
-                        <Power
-                            width={moderateScale(30)}
-                            height={moderateScale(30)}
-                        />
-                    </View>
-                    <Text style={[styles.shutDownText, { fontFamily: lang.font, marginTop: moderateScale(20) }]}>{lang.shutDownDietTitle}</Text>
-                    <Text style={[styles.shutDownText, { fontFamily: lang.font, marginVertical: moderateScale(20) }]}>{lang.shutDownDietText}</Text>
-                    <Text style={[styles.shutDownText, { fontFamily: lang.font, fontSize: moderateScale(14), marginBottom: moderateScale(30) }]}>{lang.shutDownConfirm}</Text>
-                    <View style={{ width: "100%", justifyContent: "space-around", flexDirection: "row", marginBottom: moderateScale(25) }}>
-                        {
-                            shutownLoading ?
-                                <ActivityIndicator size={"large"} color={defaultTheme.primaryColor} />
-                                :
-                                <>
-                                    <ConfirmButton
-                                        lang={lang}
-                                        title={lang.yes}
-                                        style={{ width: moderateScale(150), borderWidth: 1, borderColor: defaultTheme.error, backgroundColor: defaultTheme.lightBackground, elevation: 2 }}
-                                        onPress={shutDownWholeDiet}
-                                        textStyle={{ color: defaultTheme.error, elevation: 2 }}
-                                    />
-                                    <ConfirmButton
-                                        lang={lang}
-                                        title={lang.no}
-                                        style={{ backgroundColor: defaultTheme.green, width: moderateScale(150), elevation: 2 }}
-                                        onPress={() => setShowShutDownModal(false)}
-                                    />
-                                </>
-                        }
-                    </View>
-                </View>
+                <ShutDownDietModal
+                    lang={lang}
+                    shutownLoading={shutownLoading}
+                    shutDownWholeDiet={shutDownWholeDiet}
+                    reject={() => setShowShutDownModal(false)}
+                />
             </Modal>
         </SafeAreaView>
     )

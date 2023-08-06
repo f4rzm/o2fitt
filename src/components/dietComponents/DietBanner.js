@@ -1,25 +1,38 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import { dimensions } from '../../constants/Dimensions'
 import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
 import { useNavigation } from '@react-navigation/native'
 
 const DietBanner = ({ lang, item }) => {
-    console.warn(item);
+
     const navigation = useNavigation()
+    const [loading, setLoading] = useState(true)
     return (
         <TouchableOpacity onPress={() => {
             navigation.navigate("MyDietTab")
             navigation.navigate("DietStartScreen", item)
-            }} style={styles.container}>
+        }} style={styles.container}>
             <Image
                 source={{ uri: item.bannerImage }}
                 style={styles.bannerImage}
+                onLoadEnd={() => {
+                    setLoading(false)
+                }}
             />
+            {
+                loading &&
+                <View style={[styles.bannerImage, { position: "absolute" }]}>
+                    <ActivityIndicator />
+                </View>
+
+            }
+
             <View style={styles.footerContainer}>
                 <Text style={[styles.text, { fontFamily: lang.font, }]}>{item.name[lang.langName]}</Text>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.description, { fontFamily: lang.font, }]}>{item.description[lang.langName]}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.description, { fontFamily: lang.font, }]}>
+                    {item.description[lang.langName]}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -39,7 +52,9 @@ const styles = StyleSheet.create({
     bannerImage: {
         width: "90%",
         height: moderateScale(100),
-        borderRadius: moderateScale(10)
+        borderRadius: moderateScale(10),
+        alignItems: "center",
+        justifyContent: "center"
     },
     footerContainer: {
         width: "96%",

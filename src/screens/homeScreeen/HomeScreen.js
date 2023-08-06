@@ -142,6 +142,7 @@ const HomeScreen = props => {
   };
 
   React.useEffect(() => {
+    
     if (starRating.starRatingTimer == undefined) {
       dispatch(
         setStarRatingTimer(

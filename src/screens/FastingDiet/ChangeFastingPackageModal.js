@@ -43,20 +43,11 @@ const ChangeFastingModal = (props) => {
                 title={mealName}
                 onBack={() => props.navigation.goBack()}
             />
-            <View style={{ width: dimensions.WINDOW_WIDTH, alignItems: 'center', paddingTop: moderateScale(10) }}>
-                <View style={styles.searchBarContainer}>
-                    <Image
-                        source={require("../../../res/img/search.png")}
-                        style={{ width: moderateScale(17), tintColor: defaultTheme.gray, height: moderateScale(17) }}
-                    />
-                    <TextInput
-                        onChangeText={(text) => onChangeText(text)}
-                        style={{ borderRadius: 15, width: dimensions.WINDOW_WIDTH * 0.8, borderColor: defaultTheme.border, fontFamily: lang.font, fontSize: moderateScale(14), paddingHorizontal: 15, height: moderateScale(40), textAlign: "right" }}
-                        placeholder={lang.searchItemFoodTitle1}
-                        placeholderTextColor={defaultTheme.gray}
-                    />
-                </View>
-            </View>
+            <FloatSearchWithImage
+                lang={lang}
+                image={require("../../../res/img/search.png")}
+                onChangeText={onChangeText}
+            />
             <ScrollView
                 style={{ width: dimensions.WINDOW_WIDTH }}
                 contentContainerStyle={styles.container}

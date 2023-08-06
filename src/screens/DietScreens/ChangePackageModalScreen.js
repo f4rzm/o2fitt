@@ -8,6 +8,7 @@ import { moderateScale } from 'react-native-size-matters'
 import { setDietMeal } from '../../redux/actions/dietNew'
 import { Toolbar } from '../../components'
 import AnimatedLottieView from 'lottie-react-native'
+import FloatSearchWithImage from '../../components/FloatSearchWithImage'
 
 const ChangePackageModalScreen = (props) => {
     const lang = useSelector(state => state.lang)
@@ -41,22 +42,13 @@ const ChangePackageModalScreen = (props) => {
             <Toolbar
                 lang={lang}
                 title={mealName}
-                onBack={()=>props.navigation.goBack()}
+                onBack={() => props.navigation.goBack()}
             />
-            <View style={{ width: dimensions.WINDOW_WIDTH, alignItems: 'center', paddingTop: moderateScale(10) }}>
-                <View style={styles.searchBarContainer}>
-                    <Image
-                        source={require("../../../res/img/search.png")}
-                        style={{ width: moderateScale(17), tintColor: defaultTheme.gray, height: moderateScale(17) }}
-                    />
-                    <TextInput
-                        onChangeText={(text) => onChangeText(text)}
-                        style={{ borderRadius: 15, width: dimensions.WINDOW_WIDTH * 0.8, borderColor: defaultTheme.border, fontFamily: lang.font, fontSize: moderateScale(14), paddingHorizontal: 15, height: moderateScale(40), textAlign: "right" }}
-                        placeholder={lang.searchItemFoodTitle1}
-                        placeholderTextColor={defaultTheme.gray}
-                    />
-                </View>
-            </View>
+            <FloatSearchWithImage
+                lang={lang}
+                image={require("../../../res/img/search.png")}
+                onChangeText={onChangeText}
+            />
             <ScrollView
                 style={{ width: dimensions.WINDOW_WIDTH }}
                 contentContainerStyle={styles.container}
@@ -71,21 +63,21 @@ const ChangePackageModalScreen = (props) => {
                                 lang={lang}
                             />
                         )) :
-                        filterFoods.length == 0 && text.length > 0 ? 
-                        <View style={{ flex: 1 }}>
-                            <AnimatedLottieView
-                                style={{
-                                    width: dimensions.WINDOW_WIDTH * 0.4,
-                                    marginVertical: moderateScale(25),
-                                    alignSelf: "center",
-                                }}
-                                source={require('../../../res/animations/noresulat.json')}
-                                autoPlay
-                                loop={true}
-                            />
-                            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), lineHeight: moderateScale(23), textAlign: "center" }}>{lang.packageNoResult}</Text>
-                        </View>
-                        :
+                        filterFoods.length == 0 && text.length > 0 ?
+                            <View style={{ flex: 1 }}>
+                                <AnimatedLottieView
+                                    style={{
+                                        width: dimensions.WINDOW_WIDTH * 0.4,
+                                        marginVertical: moderateScale(25),
+                                        alignSelf: "center",
+                                    }}
+                                    source={require('../../../res/animations/noresulat.json')}
+                                    autoPlay
+                                    loop={true}
+                                />
+                                <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15), lineHeight: moderateScale(23), textAlign: "center" }}>{lang.packageNoResult}</Text>
+                            </View>
+                            :
                             allPacks.map((item) => (
                                 <DietPackageDetailsRow
                                     pack={item}
@@ -103,7 +95,8 @@ export default ChangePackageModalScreen
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: "center"
+        alignItems: "center",
+        paddingTop: moderateScale(70)
     },
     searchBarContainer: {
         borderRadius: 15,

@@ -6,13 +6,14 @@ import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
 import { dimensions } from '../../constants/Dimensions'
 
-const MainToolbarWithTopCurveView = ({ lang, children, scrollViewStyle, contentScrollViewStyle }) => {
+const MainToolbarWithTopCurveView = ({ lang, children, scrollViewStyle, contentScrollViewStyle,onMessagePressed }) => {
 
     return (
         <>
             <MainToolbar
                 lang={lang}
                 disableCurve={true}
+                onMessagePressed={onMessagePressed}
             />
             <View style={{ height:dimensions.WINDOW_HEIGTH, backgroundColor: defaultTheme.primaryColor, }}>
                 <View

@@ -31,6 +31,7 @@ import EndingPlan from '../../components/EndingPlan'
 
 import pouchdbSearch from 'pouchdb-find';
 import PouchDB from '../../../pouchdb';
+import { updateTarget } from '../../redux/actions'
 PouchDB.plugin(pouchdbSearch);
 
 const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
@@ -973,7 +974,7 @@ function DietPlan(props) {
                 onReject={() => {
                     dispatch(clearDiet())
                     analytics().logEvent('reject_getting_diet')
-                    props.navigation.popToTop()
+                    // props.navigation.popToTop()
 
                 }}
                 onAccept={() => {
@@ -1145,7 +1146,7 @@ function DietPlan(props) {
             </View>
             {
                 selectedDateSnack && selectedDateDinner && selectedDateLunch && selectedDateBreakFast ?
-                    <View style={{ maxHeight: dimensions.WINDOW_WIDTH * 0.9 }}>
+                    <>
                         <Modal
                             visible={lunchFocuse}
                             contentContainerStyle={{ position: 'absolute', bottom: 0 }}
@@ -1278,10 +1279,9 @@ function DietPlan(props) {
                                     setIsChange(!isChange)
                                 }}
                                 closeModal={closeModal}
-
                             />
                         </Modal>
-                    </View>
+                    </>
                     :
                     null
             }
@@ -1308,48 +1308,47 @@ function DietPlan(props) {
                     </TouchableWithoutFeedback> : null
             }
 
-            {showShutDownModal ? (
-                <TouchableWithoutFeedback onPress={() => setShowShutDownModal(false)}>
-                    <View style={styles.wrapper}>
-                        <BlurView style={styles.absolute} blurType="light" blurAmount={6} />
-                        <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: 15, backgroundColor: defaultTheme.lightBackground, alignItems: 'center', borderWidth: 1, borderColor: defaultTheme.primaryColor }}>
-                            <View style={{ paddingTop: moderateScale(50) }}>
-                                <Power
-                                    width={moderateScale(80)}
-                                    height={moderateScale(80)}
-                                />
-
-                            </View>
-                            <Text style={[styles.shutDownText, { fontFamily: lang.font, marginTop: moderateScale(20) }]}>{lang.shutDownDietTitle}</Text>
-                            <Text style={[styles.shutDownText, { fontFamily: lang.font, marginVertical: moderateScale(50) }]}>{lang.shutDownDietText}</Text>
-                            <Text style={[styles.shutDownText, { fontFamily: lang.font, fontSize: moderateScale(14), marginBottom: moderateScale(40) }]}>{lang.shutDownConfirm}</Text>
-                            <View style={{ width: "100%", justifyContent: "space-around", flexDirection: "row", marginBottom: moderateScale(25) }}>
-                                {
-                                    shutownLoading ? <ActivityIndicator size={"large"} color={defaultTheme.primaryColor} /> :
-                                        <>
-                                            <ConfirmButton
-                                                lang={lang}
-                                                title={lang.yes}
-                                                style={{ width: moderateScale(150), borderWidth: 1, borderColor: defaultTheme.error, backgroundColor: defaultTheme.lightBackground, elevation: 2 }}
-                                                onPress={shutDownWholeDiet}
-                                                textStyle={{ color: defaultTheme.error, elevation: 2 }}
-                                            />
-                                            <ConfirmButton
-                                                lang={lang}
-                                                title={lang.no}
-                                                style={{ backgroundColor: defaultTheme.green, width: moderateScale(150), elevation: 2 }}
-                                                onPress={() => setShowShutDownModal(false)}
-
-
-                                            />
-                                        </>
-                                }
-
-                            </View>
-                        </View>
+            <Modal
+                visible={showShutDownModal}
+                onDismiss={() => {
+                    setShowShutDownModal(false)
+                }}
+                style={{ alignItems: 'center', justifyContent: "center" }}
+            >
+                <View style={styles.shutDownContainer}>
+                    <View style={{ paddingTop: moderateScale(20) }}>
+                        <Power
+                            width={moderateScale(30)}
+                            height={moderateScale(30)}
+                        />
                     </View>
-                </TouchableWithoutFeedback>
-            ) : null}
+                    <Text style={[styles.shutDownText, { fontFamily: lang.font, marginTop: moderateScale(20) }]}>{lang.shutDownDietTitle}</Text>
+                    <Text style={[styles.shutDownText, { fontFamily: lang.font, marginVertical: moderateScale(20) }]}>{lang.shutDownDietText}</Text>
+                    <Text style={[styles.shutDownText, { fontFamily: lang.font, fontSize: moderateScale(14), marginBottom: moderateScale(30) }]}>{lang.shutDownConfirm}</Text>
+                    <View style={{ width: "100%", justifyContent: "space-around", flexDirection: "row", marginBottom: moderateScale(25) }}>
+                        {
+                            shutownLoading ? <ActivityIndicator size={"large"} color={defaultTheme.primaryColor} /> :
+                                <>
+                                    <ConfirmButton
+                                        lang={lang}
+                                        title={lang.yes}
+                                        style={{ width: moderateScale(150), borderWidth: 1, borderColor: defaultTheme.error, backgroundColor: defaultTheme.lightBackground, elevation: 2 }}
+                                        onPress={shutDownWholeDiet}
+                                        textStyle={{ color: defaultTheme.error, elevation: 2 }}
+                                    />
+                                    <ConfirmButton
+                                        lang={lang}
+                                        title={lang.no}
+                                        style={{ backgroundColor: defaultTheme.green, width: moderateScale(150), elevation: 2 }}
+                                        onPress={() => setShowShutDownModal(false)}
+
+
+                                    />
+                                </>
+                        }
+                    </View>
+                </View>
+            </Modal>
             {errorVisible ? (
                 <TouchableWithoutFeedback onPress={() => setCloseDialogVisible(false)}>
                     <View style={styles.wrapper}>
@@ -1417,6 +1416,14 @@ const styles = StyleSheet.create({
     },
     shutDownBtn: {
 
-    }
+    },
+    shutDownContainer: {
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        borderRadius: 15,
+        backgroundColor: defaultTheme.lightBackground,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: defaultTheme.primaryColor
+    },
 });
 export default DietPlan

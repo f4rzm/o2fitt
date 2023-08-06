@@ -9,7 +9,6 @@ const INITIAL_STATE = {
     allDinner: [],
     allEftar: [],
     allSahar: []
-
 }
 
 export const fastingDiet = (state = INITIAL_STATE, action) => {

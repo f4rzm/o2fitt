@@ -155,7 +155,7 @@ function ChangePackageModal(props) {
             >
                 <Animated.View style={{ transform: [{ translateY: translateY }], width: dimensions.WINDOW_WIDTH, marginBottom: 0 }}>
 
-                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025, paddingBottom: moderateScale(30) }}>
+                    <View style={{ width: dimensions.WINDOW_WIDTH * 0.95, backgroundColor: defaultTheme.lightBackground, borderBottomRightRadius: 0, borderBottomLeftRadius: 0, borderRadius: 15, marginHorizontal: dimensions.WINDOW_WIDTH * 0.025, paddingBottom: moderateScale(70) }}>
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: moderateScale(10) }}>
                             <TouchableOpacity style={{ paddingHorizontal: moderateScale(20), paddingTop: moderateScale(20) }}
@@ -230,12 +230,12 @@ const styles = StyleSheet.create({
     AnimatedModal: {
         width: dimensions.WINDOW_WIDTH * 0.95,
         backgroundColor: "white",
-        top: 100,
+        top: 0,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         marginHorizontal: dimensions.WINDOW_WIDTH * 0.025,
         alignItems: "center",
-        // paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : 0,
+        paddingBottom: dimensions.WINDOW_HEIGTH == 932 || dimensions.WINDOW_HEIGTH == 852 ? moderateScale(70) : moderateScale(40),
         height: dimensions.WINDOW_HEIGTH * 0.8
     },
     confirmButton: {
