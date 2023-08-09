@@ -37,7 +37,6 @@ const UpdateModal = ({ item, lang, crossPressed }) => {
                     {item.description[lang.langName]}
                 </Text>
                 <View style={{ flexDirection: "row" }}>
-
                     {
                         item.isForced == false ?
                             <ConfirmButton

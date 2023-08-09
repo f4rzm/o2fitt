@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Text,
     Image,
-    Animated
+    Animated,
+    KeyboardAvoidingView
 } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { SearchFoodHeader, ConfirmButton, FoodToolbar, RowSpaceBetween, RowWrapper, Information } from '../../components';
@@ -22,12 +23,15 @@ import pouchdbSearch from 'pouchdb-find'
 import analytics from '@react-native-firebase/analytics';
 import { mealsName } from '../../utils/interfaces/mealsInterface';
 import { nutritions } from '../../utils/nutritions';
+import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-toast-message'
 
 PouchDB.plugin(pouchdbSearch)
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' })
 const offlineDB = new PouchDB("offline", { adapter: 'react-native-sqlite' })
 
 const AddCaloryScreen = props => {
+    console.warn(props.route.params);
     const lang = useSelector(state => state.lang)
     const user = useSelector(state => state.user)
     const app = useSelector(state => state.app)
@@ -209,11 +213,19 @@ const AddCaloryScreen = props => {
         }).then(records => {
             console.log("rec =>", records)
             if (records.docs.length === 0) {
-                mealDB.put(meal, () => props.navigation.goBack()).catch(e => console.log())
+                mealDB.put(meal, () => {}).catch(e => console.log())
             }
             else {
-                mealDB.put({ ...meal, _id: records.docs[0]._id, _rev: records.docs[0]._rev }, () => props.navigation.goBack())
+                mealDB.put({ ...meal, _id: records.docs[0]._id, _rev: records.docs[0]._rev }, () => {})
             }
+            Toast.show({
+                type: 'success',
+                props: { text2: lang.successful, style: { fontFamily: lang.font } },
+                onShow: () => {
+                    props.navigation.goBack()
+                },
+                visibilityTime: 800
+            });
         })
         analytics().logEvent('setCalorie')
     }
@@ -257,6 +269,7 @@ const AddCaloryScreen = props => {
     let fat = (!isNaN(parseFloat(nutritionValue[0])) && parseFloat(nutritionValue[0]) > 0) ? parseFloat(nutritionValue[0]) : 0
     let carbo = (!isNaN(parseFloat(nutritionValue[31])) && parseFloat(nutritionValue[31]) > 0) ? parseFloat(nutritionValue[31]) : 0
     const onDataChanged = (index, text) => {
+        console.warn(text);
         if (text.length > 0) {
             if (!isNaN(parseFloat(text))) {
                 const f = typeof (meal.foodNutrientValue) === "string" ? meal.foodNutrientValue.split(",") : meal.foodNutrientValue
@@ -278,7 +291,8 @@ const AddCaloryScreen = props => {
 
     }
     return (
-        <>
+        <KeyboardAvoidingView keyboardVerticalOffset={dimensions.WINDOW_HEIGTH < 800 ? 30 : 60}
+            style={{ flex: 1 }} behavior='height'>
             <FoodToolbar
                 lang={lang}
                 title={lang.countCalories}
@@ -286,8 +300,8 @@ const AddCaloryScreen = props => {
                 onBack={() => props.navigation.goBack()}
                 text={lang.saved}
             />
-            <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-
+            <ScrollView stickyHeaderIndices={[2,6]} contentContainerStyle={{ alignItems: "center", paddingBottom: moderateScale(60) }}>
+                
                 <RowSpaceBetween style={styles.rowStyle}>
                     <Text style={[styles.text1, { fontFamily: lang.font }]} allowFontScaling={false}>
                         {
@@ -441,10 +455,16 @@ const AddCaloryScreen = props => {
                             </RowWrapper>
                     }
                 </RowSpaceBetween>
-                <SearchFoodHeader
+                {/* <SearchFoodHeader
                     lang={lang}
                     title={lang.nutritionalValue}
-                />
+                /> */}
+                <RowSpaceBetween style={styles.stickyHeader1}>
+                    <Text style={{fontFamily:lang.font,fontSize:moderateScale(16)}}>
+                        {lang.bigNutrition}
+                    </Text>
+                </RowSpaceBetween>
+                
                 <RowSpaceBetween style={styles.rowStyle}>
                     <Text style={[styles.text1, { fontFamily: lang.font }]} allowFontScaling={false}>
                         {
@@ -490,11 +510,16 @@ const AddCaloryScreen = props => {
                         keyboardType="decimal-pad"
                     />
                 </RowSpaceBetween>
+                <RowSpaceBetween style={styles.stickyHeader1}>
+                    <Text style={{fontFamily:lang.font,fontSize:moderateScale(16)}}>
+                        {lang.micronutrientFood}
+                    </Text>
+                </RowSpaceBetween>
                 {
                     nutritions.map((item, index) => {
-                        if (item.id == 1 || item.id == 10 || item.id == 32|| item.id == 24) {
-                            
-                        }else{
+                        if (item.id == 1 || item.id == 10 || item.id == 32 || item.id == 24 || item.id == 2) {
+
+                        } else {
                             return (
                                 <>
 
@@ -508,7 +533,7 @@ const AddCaloryScreen = props => {
                                             style={[styles.nameInput, { fontFamily: lang.font }]}
                                             placeholder={lang.optional}
                                             placeholderTextColor={defaultTheme.lightGray}
-                                            value={meal.foodNutrientValue[item.id - 1]==0?'':meal.foodNutrientValue[item.id - 1].toString()}
+                                            value={parseInt(meal.foodNutrientValue[item.id - 1]) == 0 ? '' : parseInt(meal.foodNutrientValue[item.id - 1]).toString()}
                                             onChangeText={(text) => { onDataChanged(item.id - 1, text) }}
                                             keyboardType="decimal-pad"
                                         />
@@ -520,24 +545,32 @@ const AddCaloryScreen = props => {
                     })
                 }
 
-                <ConfirmButton
-                    lang={lang}
-                    style={styles.button}
-                    title={lang.saved}
-                    leftImage={require("../../../res/img/done.png")}
-                    onPress={onConfirm}
-                    textStyle={styles.buttonText}
-                    isLoading={saving}
-                />
+
 
             </ScrollView>
+            <LinearGradient
+                colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+                style={styles.buttonGradient}>
+                <View style={{}}>
+                    <ConfirmButton
+                        lang={lang}
+                        style={styles.button}
+                        title={lang.saved}
+                        leftImage={require("../../../res/img/done.png")}
+                        onPress={onConfirm}
+                        textStyle={styles.buttonText}
+                        isLoading={saving}
+                    />
+                </View>
+            </LinearGradient>
+
             <Information
                 visible={errorVisible}
                 context={errorContext}
                 onRequestClose={() => setErrorVisible(false)}
                 lang={lang}
             />
-        </>
+        </KeyboardAvoidingView>
     );
 };
 
@@ -601,7 +634,7 @@ const styles = StyleSheet.create({
         width: dimensions.WINDOW_WIDTH * 0.45,
         height: moderateScale(45),
         backgroundColor: defaultTheme.green,
-        marginTop: moderateScale(50),
+        // marginTop: moderateScale(50),
         alignSelf: "center"
     },
     buttonText: {
@@ -622,6 +655,20 @@ const styles = StyleSheet.create({
     meal: {
         width: moderateScale(30),
         height: moderateScale(30)
+    },
+    buttonGradient: {
+        position: "absolute",
+        bottom: 0,
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        height: moderateScale(50),
+        // paddingBottom: 50,
+        backgroundColor: defaultTheme.transparent
+    },
+    stickyHeader1:{
+        width:dimensions.WINDOW_WIDTH,
+        backgroundColor:defaultTheme.grayBackground
     }
 });
 

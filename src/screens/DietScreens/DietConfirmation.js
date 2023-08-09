@@ -71,7 +71,6 @@ function DietConfirmation(props) {
 
     const onSuccess = (res) => {
 
-console.warn(res.data.data);
         if (props.route.params.dietId == 66) {
             const foodMeals = [
                 { id: 0, name: "صبحانه" },
@@ -148,7 +147,7 @@ console.warn(res.data.data);
                 navigation.navigate("Drawer", { activationDiet: true })
             }, 300);
         } else {
-            Alert.alert('not fasting')
+            // Alert.alert('not fasting')
             const data = res.data.data
             let breakfast = [];
             let lunch = [];

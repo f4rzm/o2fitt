@@ -24,7 +24,7 @@ const DietBanner = ({ lang, item }) => {
             {
                 loading &&
                 <View style={[styles.bannerImage, { position: "absolute" }]}>
-                    <ActivityIndicator />
+                    <ActivityIndicator size={'large'} color={defaultTheme.primaryColor}/>
                 </View>
 
             }

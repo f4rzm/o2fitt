@@ -6,7 +6,8 @@ import {
     Image,
     Platform,
     BackHandler,
-    I18nManager
+    I18nManager,
+    Pressable
 } from 'react-native';
 import { dimensions } from '../../constants/Dimensions';
 import { defaultTheme } from '../../constants/theme';
@@ -410,7 +411,7 @@ const GoalWeightScreen = props => {
 
 
 
-                <View style={[styles.headerContainer, { flexDirection: "column" }]}>
+                <Pressable onPress={onEditGoal} style={[styles.headerContainer, { flexDirection: "column" }]}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: moderateScale(8) }}>
                         <Text style={{ fontFamily: lang.titleFont, fontSize: moderateScale(16), color: defaultTheme.darkText }}>{lang.calorieCountingGoal}</Text>
                         <TouchableOpacity
@@ -472,7 +473,7 @@ const GoalWeightScreen = props => {
                         </View>
                     </View>
 
-                </View>
+                </Pressable>
 
                 {
                     showCaution &&

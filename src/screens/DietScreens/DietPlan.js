@@ -26,6 +26,8 @@ import { useNavigation } from '@react-navigation/native'
 import EndingPlan from '../../components/EndingPlan'
 import DietProgresstion from '../../components/dietComponents/DietProgresstion'
 import ShutDownDietModal from '../../components/dietComponents/ShutDownDietModal'
+import InformationModal from '../../components/modals/InformationModal'
+import { setIsActive } from '../../redux/actions/dietOld'
 PouchDB.plugin(pouchdbSearch);
 const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
@@ -47,6 +49,7 @@ const DietPlan = (props) => {
     const [shutownLoading, setShutownLoading] = useState(false)
     const [advice, setAdvice] = useState()
     const [isCheetDay, setIsCheetDay] = useState(false)
+    const [cheetDayModal, setCheetDayModal] = useState(false)
     const translateY = useRef(new Animated.Value(100)).current
     const [selectedMEalName, setSelectedMEalName] = useState()
     const navigation = useNavigation()
@@ -181,6 +184,8 @@ const DietPlan = (props) => {
         analytics().logEvent('shutdown_diet')
         setShutownLoading(true)
         dispatch(shutDownDiet())
+        dispatch(clearDiet())
+        // dispatch(setIsActive(false))
         setShutownLoading(false)
         // props.navigation.popToTop()
     }
@@ -211,7 +216,7 @@ const DietPlan = (props) => {
                 //     load(false)
                 // }, 500)
             } else {
-                // setCheetDayModal(true)
+                setCheetDayModal(true)
                 // load(false)
             }
         }
@@ -566,6 +571,27 @@ const DietPlan = (props) => {
                     reject={()=>setShowShutDownModal(false)}
                 />
             </Modal>
+            {cheetDayModal &&
+                <InformationModal
+                    lang={lang}
+                    showMainButton={true}
+                    onRequestClose={() => setCheetDayModal(false)}
+                    context={"از همه ی روز های ازاد استفاده کردی"}
+                />
+            }
+            {
+                cheetDayModal ?
+                    <TouchableWithoutFeedback onPress={() => setCheetDayModal(false)}>
+                        <View style={styles.wrapper}>
+                            <BlurView
+                                style={styles.absolute}
+                                blurType="light"
+                                blurAmount={6}
+                                reducedTransparencyFallbackColor="white"
+                            />
+                        </View>
+                    </TouchableWithoutFeedback> : null
+            }
         </SafeAreaView>
     )
 }

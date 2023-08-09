@@ -182,7 +182,7 @@ function ChooseDietTargetScreen(props) {
                             <Text style={{ fontFamily: lang.font, fontSize: moderateScale(15) }}>{lang.gr}</Text>
                             <Picker
                                 style={styles.picker}
-                                selectedValue={"5"}
+                                selectedValue={selectedGR}
                                 pickerData={weightgr}
                                 onValueChange={value => {
                                     setSelectedGR(value)

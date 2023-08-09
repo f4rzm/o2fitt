@@ -259,7 +259,7 @@ const FastingDietplanNew = (props) => {
                 ))
                 setFastingPlan(randomPack[selectedDate])
             } else {
-                Alert.alert("ok")
+                // Alert.alert("ok")
 
                 // setDiet()
 

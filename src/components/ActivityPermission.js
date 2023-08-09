@@ -11,7 +11,7 @@ import { defaultTheme } from '../constants/theme'
         <Image
         source={require("../../res/img/lock.png")}
         style={{width:moderateScale(60),height:moderateScale(60)}}
-        resizeMode={'center'}
+        resizeMode={'contain'}
         />
       {/* <Text style={{fontFamily:props.lang.font,paddingTop:moderateScale(15),fontSize:moderateScale(16),color:defaultTheme.darkText}}>{props.lang.subscribe1}</Text> */}
       <Text style={{fontFamily:props.lang.font,fontSize:moderateScale(16),color:defaultTheme.darkText,marginTop:10}}>{props.lang.buyPermission}</Text>

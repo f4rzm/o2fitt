@@ -106,6 +106,7 @@ const Tabs = (props) => {
   }
 
   const getMarketMessage = () => {
+
     const url = urls.socialBaseUrl + urls.marketMessage + urls.GetByDateUser
     const header = { headers: { Authorization: "Bearer " + auth.access_token, Language: lang.capitalName } }
     const RC = new RestController()
@@ -114,38 +115,32 @@ const Tabs = (props) => {
   }
 
   const onMarketMessageSuccess = async (res) => {
-
     console.warn(res.data.data);
-    setMarketMsg(res.data.data)
-    setShowMarketDialog(true)
+
+    // setMarketMsg(res.data.data)
+    // setShowMarketDialog(true)
     const today = moment()
 
     let marketMessage = await AsyncStorage.getItem("marketMessage")
     marketMessage = marketMessage ? JSON.parse(marketMessage) : null
 
-    
     if (marketMessage) {
-
       if (marketMessage.id == res.data.data.id) {
-        if (marketMessage.nextTimeShow.diff(today, 'seconds') > 0) {
+        if (moment(marketMessage.nextTimeShow, "YYYY-MM-DDTHH:mm:ss").diff(today, 'seconds') < 0) {
           setMarketMsg(res.data.data)
           setShowMarketDialog(true)
-          AsyncStorage.setItem("marketMessage", JSON.stringify({ ...marketMessage, nextTimeShow: moment().add(marketMessage.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
-          Alert.alert("ok")
+          AsyncStorage.setItem("marketMessage", JSON.stringify({ ...marketMessage, nextTimeShow: moment().add(res.data.data.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
         }
       }
       else if (res.data.data) {
         setMarketMsg(res.data.data)
         setShowMarketDialog(true)
         AsyncStorage.setItem("marketMessage", JSON.stringify({ ...res.data.data, nextTimeShow: moment().add(res.data.data.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
-        Alert.alert("ok")
       }
     } else if (res.data.data) {
-
       setMarketMsg(res.data.data)
       setShowMarketDialog(true)
       AsyncStorage.setItem("marketMessage", JSON.stringify({ ...res.data.data, nextTimeShow: moment().add(res.data.data.postpone, "hours").format("YYYY-MM-DDTHH:mm:ss") }))
-      Alert.alert("ok")
     }
 
     // if (res.data.data) {
@@ -161,8 +156,9 @@ const Tabs = (props) => {
     //   }
     // }
   }
-  const onFailedGetMarketMessage = async() => {
-    let marketMessage =await AsyncStorage.getItem("marketMessage")
+
+  const onFailedGetMarketMessage = async () => {
+    let marketMessage = await AsyncStorage.getItem("marketMessage")
     marketMessage = marketMessage ? JSON.parse(marketMessage) : null
     const today = moment()
 
@@ -353,18 +349,48 @@ const Tabs = (props) => {
           backBehavior="firstRoute"
           screenOptions={{ headerShown: false }}
         >
-          <Tab.Screen name="HomeRouter" component={HomeRouter} />
-          <Tab.Screen name="DailyRouter" component={DailyRouter} />
-          <Tab.Screen name="DietMainScreen" component={DietMainScreen} />
-          <Tab.Screen name="GoalRouter" component={GoalRouter} />
+          <Tab.Screen
+            options={{ tabBarIcon: require('../../res/img/home.png'), tabBarLabel: lang.botton_menu_home }}
+            name="HomeRouter"
+            component={HomeRouter}
+          />
+          <Tab.Screen
+            options={{ tabBarIcon: require('../../res/img/daily.png'), tabBarLabel: lang.botton_menu_calender }}
+            name="DailyRouter"
+            component={DailyRouter}
+          />
+          {
+            lang.langName == "persian" &&
+            <Tab.Screen
+              options={{ tabBarIcon: require('../../res/img/plan-icon.png'), tabBarLabel: lang.PayDietName }}
+              name="DietMainScreen"
+              component={DietMainScreen}
+            />
+          }
+          <Tab.Screen
+            options={{ tabBarIcon: require('../../res/img/goaltab.png'), tabBarLabel: lang.botton_menu_gol }}
+            name="GoalRouter"
+            component={GoalRouter}
+          />
           {
             lang.langName == "persian" ?
-              <Tab.Screen name="RecipeRouter" component={RecipeCatScreen} /> :
-              <Tab.Screen name="ProfileRouter" component={ProfileRouter} />
+              <Tab.Screen
+                options={{ tabBarIcon: require('../../res/img/ChiefHood.png'), tabBarLabel: lang.chief }}
+                name="RecipeRouter"
+                component={RecipeCatScreen}
+              />
+              :
+              <Tab.Screen
+                options={{ tabBarIcon: require('../../res/img/profile.png'), tabBarLabel: lang.botton_menu_profile }}
+                name="ProfileRouter"
+                component={ProfileRouter}
+              />
           }
         </Tab.Navigator>
       </SafeAreaView>
-      {showMmarketDialog &&
+
+      {
+        showMmarketDialog &&
         <MarketModal
           lang={lang}
           visible={showMmarketDialog}
@@ -428,7 +454,7 @@ const Tabs = (props) => {
           :
           null
       }
-      {/* {
+      {
         updateModal &&
         <UpdateModal
           item={updateModal}
@@ -437,7 +463,7 @@ const Tabs = (props) => {
             setUpdateModal(false)
           }}
         />
-      } */}
+      }
       {
         parseInt(serverTime) > parseInt(moment().format("YYYYMMDD")) + 3 &&
         <TimeZoneError

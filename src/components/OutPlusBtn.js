@@ -263,8 +263,8 @@ const OutPlusBtn = ({ lang, navigation, profile, selectedDate }) => {
                 <Animated.View style={{ position: "absolute", width: dimensions.WINDOW_WIDTH, height: dimensions.WINDOW_HEIGTH, position: "absolute", opacity: opacityView }}>
                     <BlurView
                         style={styles.absolute}
-                        blurRadius={0.1}
-                        blurAmount={0.2}
+                        blurRadius={10}
+                        blurAmount={4}
                     />
                 </Animated.View>
             }

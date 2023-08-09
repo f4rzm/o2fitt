@@ -46,7 +46,10 @@ const MarketModal = props => {
                     </ScrollView>
                     <ConfirmButton
                         lang={props.lang}
-                        onPress={() => { navigation.navigate(item.link) }}
+                        onPress={() => { 
+                            props.onRequestClose()
+                            navigation.navigate(item.link)
+                         }}
                         style={styles.btn}
                         title={item.buttonName[props.lang.langName]}
                     />

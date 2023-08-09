@@ -196,43 +196,50 @@ const EditGoalScreen = props => {
 
     const onConfirm = () => {
         if (!isNaN(parseFloat(goal.targetWeight))) {
-            if (!isNaN(parseFloat(goal.targetStep))) {
-                console.log(goal)
-                if (calCalorie(parseFloat(goal.targetWeight), weightChangeRate.id, activityRate.id) >= 1000) {
-                    setLoading(true)
-                    let oldValues = {
-                        oldWeightChangeRate: profile.weightChangeRate,
-                        oldDailyActivityRate: profile.dailyActivityRate,
-                        oldDateChange: nowTime,
-                        oldTargetWeight: profile.targetWeight
-                    }
-                    AsyncStorage.setItem('oldChanges', JSON.stringify(oldValues))
-                    dispatch(
-                        updateTarget(
-                            {
-                                ...goal,
-                                weightChangeRate: weightChangeRate.id,
-                                dailyActivityRate: activityRate.id,
+            if (goal.targetWeight > 35 && goal.targetWeight < 160) {
 
-                            },
-                            auth,
-                            app,
-                            user,
-                            () => {
-                                analytics().logEvent('editGoal')
-                                props.navigation.goBack()
-                            },
-                            showError
+
+                if (!isNaN(parseFloat(goal.targetStep))) {
+                    console.log(goal)
+                    if (calCalorie(parseFloat(goal.targetWeight), weightChangeRate.id, activityRate.id) >= 1000) {
+                        setLoading(true)
+                        let oldValues = {
+                            oldWeightChangeRate: profile.weightChangeRate,
+                            oldDailyActivityRate: profile.dailyActivityRate,
+                            oldDateChange: nowTime,
+                            oldTargetWeight: profile.targetWeight
+                        }
+                        AsyncStorage.setItem('oldChanges', JSON.stringify(oldValues))
+                        dispatch(
+                            updateTarget(
+                                {
+                                    ...goal,
+                                    weightChangeRate: weightChangeRate.id,
+                                    dailyActivityRate: activityRate.id,
+
+                                },
+                                auth,
+                                app,
+                                user,
+                                () => {
+                                    analytics().logEvent('editGoal')
+                                    props.navigation.goBack()
+                                },
+                                showError
+                            )
                         )
-                    )
 
-                } else {
-                    setErrorContext(lang.lowCalerieDanger2)
+                    } else {
+                        setErrorContext(lang.lowCalerieDanger2)
+                        setErrorVisible(true)
+                    }
+                }
+                else {
+                    setErrorContext(lang.fillAllFild)
                     setErrorVisible(true)
                 }
-            }
-            else {
-                setErrorContext(lang.fillAllFild)
+            } else {
+                setErrorContext(lang.wrongTargetWeightError)
                 setErrorVisible(true)
             }
         }
@@ -302,15 +309,15 @@ const EditGoalScreen = props => {
                                 lang={lang}
                                 value={goal.targetWeight.toString()}
                                 onChangeText={text => {
-                                    (/^[0-9\.]+$/i.test(text)||text=='') ?
-                                    setGoal({ ...goal, targetWeight: text })
-                                
-                                      :Toast.show({
-                                        type:"error",
-                                        props:{text2:lang.typeEN},
-                                        visibilityTime:1800
-                                      })
-                                    
+                                    (/^[0-9\.]+$/i.test(text) || text == '') ?
+                                        setGoal({ ...goal, targetWeight: text })
+
+                                        : Toast.show({
+                                            type: "error",
+                                            props: { text2: lang.typeEN },
+                                            visibilityTime: 1800
+                                        })
+
                                 }}
                                 keyboardType="decimal-pad"
                                 autoFocus={true}
@@ -371,14 +378,14 @@ const EditGoalScreen = props => {
                                 lang={lang}
                                 value={goal.targetStep.toString()}
                                 onChangeText={text => {
-                                    (/^[0-9]+$/i.test(text)||text=='') ?
-                                    setGoal({ ...goal, targetStep: text })
-                                      :Toast.show({
-                                        type:"error",
-                                        props:{text2:lang.typeEN},
-                                        visibilityTime:1800
-                                      })
-                                    }}
+                                    (/^[0-9]+$/i.test(text) || text == '') ?
+                                        setGoal({ ...goal, targetStep: text })
+                                        : Toast.show({
+                                            type: "error",
+                                            props: { text2: lang.typeEN },
+                                            visibilityTime: 1800
+                                        })
+                                }}
                                 keyboardType="numeric"
                             />
                         </RowWrapper>

@@ -427,7 +427,7 @@ const HomeScreen = props => {
   };
 
   const saveStepToSever = (data, stepDbData) => {
-    Alert.alert('saving step')
+    // Alert.alert('saving step')
     const url = urls.baseWorkout + urls.userTrackSteps;
     const header = {
       headers: {

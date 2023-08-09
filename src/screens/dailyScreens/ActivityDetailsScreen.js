@@ -499,6 +499,9 @@ const ActivityDetailsScreen = props => {
   const onRefreshTokenFailure = () => {
 
   }
+  const requestGallery=()=>{
+      
+  }
 
   console.log("model", model)
   console.log("activityModel", activityModel)

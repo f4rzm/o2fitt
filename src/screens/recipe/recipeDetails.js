@@ -199,7 +199,8 @@ function RecipeDetails(props) {
                         {/* <ScrollView
                         // style={{ height:dimensions.WINDOW_HEIGTH }}
                         > */}
-                        {/* <View style={styles.pagerContainer}>
+                        <>
+                            <View style={styles.pagerContainer}>
                                 {
                                     tabs.map((item, index) => {
                                         return (
@@ -217,8 +218,8 @@ function RecipeDetails(props) {
 
                                 }
                                 <Animated.View style={{ position: "absolute", width: dimensions.WINDOW_WIDTH * 0.3, height: "100%", backgroundColor: defaultTheme.primaryColor, transform: [{ translateX: scrollX }], borderRadius: moderateScale(10) }} />
-                            </View> */}
-
+                            </View>
+                        </>
 
                         {/* <Tabs.Screen name="Settings" component={() => <View style={{ width: dimensions.WINDOW_WIDTH, alignSelf: "center" }}>
                                     <Text style={{ width: dimensions.WINDOW_WIDTH, backgroundColor: defaultTheme.grayBackground, fontFamily: lang.font, color: defaultTheme.darkText, fontSize: moderateScale(15), padding: moderateScale(5), paddingHorizontal: moderateScale(10), marginVertical: moderateScale(20), borderTopWidth: 1, borderBottomWidth: 1, borderColor: defaultTheme.border, textAlign: "left" }}>{lang.nutritionalValue100}</Text>
@@ -241,7 +242,7 @@ function RecipeDetails(props) {
                                         }
                                     </View>
                                 </View>} /> */}
-                        <CustomTopTabNavigator
+                        {/* <CustomTopTabNavigator
                             items={tabs}
                             lang={lang}
                             containerStyle={{ backgroundColor: defaultTheme.grayBackground, width: dimensions.WINDOW_WIDTH * 0.93, height: moderateScale(45), marginTop: moderateScale(10) }}
@@ -255,7 +256,7 @@ function RecipeDetails(props) {
                                 setSelectedTab(id)
                                 // }, 3000);
                             }}
-                        />
+                        /> */}
                         {/* </ScrollView> */}
                         {
                             selectedTab == 2 ?
@@ -340,8 +341,8 @@ const styles = StyleSheet.create({
         elevation: 5,
         backgroundColor: defaultTheme.grayBackground,
         paddingVertical: moderateScale(3),
-        paddingHorizontal: moderateScale(3)
-
+        paddingHorizontal: moderateScale(3),
+        marginTop:moderateScale(20)
     },
     foodName: {
         width: dimensions.WINDOW_WIDTH,

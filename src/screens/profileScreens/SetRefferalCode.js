@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ConfirmButton, Information, RowCenter, RowWrapper, Toolbar } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
@@ -82,7 +82,8 @@ const SetRefferalCode = (props) => {
 
     }
     return (
-        <>
+        <KeyboardAvoidingView keyboardVerticalOffset={dimensions.WINDOW_HEIGTH < 800 ? 30 : 60}
+        style={{flex:1}} behavior='height'>
             <Toolbar
                 lang={lang}
                 title={lang.setShareFriend}
@@ -142,7 +143,7 @@ const SetRefferalCode = (props) => {
                     </View>
                 </TouchableWithoutFeedback>
             ) : null}
-        </>
+        </KeyboardAvoidingView>
     )
 }
 

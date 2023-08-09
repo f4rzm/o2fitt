@@ -4,20 +4,22 @@ import {
   CardioCategoryScreen,
   CardioTrainScreen
 } from  "../../screens"
+import { defaultTheme } from '../../constants/theme';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Routes = (props)=>{
     const options = {
         contentStyle : {backgroundColor : null},
-        animationEnabled : false 
+        animationEnabled : true 
     }
-    const Stack = createNativeStackNavigator();
+    const Stack = createStackNavigator();
 
     return (
         <Stack.Navigator
             screenOptions={{
                 headerShown : false,
-                contentStyle : {backgroundColor : null},
-                stackAnimation : "none"
+                contentStyle : {backgroundColor : defaultTheme.lightBackground},
+                animationEnabled:"true"
             }}
         >
             <Stack.Screen 
