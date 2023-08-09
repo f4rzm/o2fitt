@@ -23,6 +23,7 @@ import AnimatedLottieView from 'lottie-react-native'
 import analytics from '@react-native-firebase/analytics';
 import Info from '../../../res/img/info4.svg'
 import ShutDownDietModal from '../../components/dietComponents/ShutDownDietModal'
+import { useNavigation } from '@react-navigation/native'
 
 
 PouchDB.plugin(pouchdbSearch);
@@ -49,15 +50,15 @@ const FastingDietplan = (props) => {
     const [advice, setAdvice] = useState()
     const translateY = useRef(new Animated.Value(100)).current
     const [selectedMEalName, setSelectedMEalName] = useState()
-
+    const navigation=useNavigation()
     React.useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
-            props.navigation.popToTop()
+            navigation.popToTop()
             return true
         });
 
         return () => BackHandler.removeEventListener("hardwareBackPress", () => {
-            props.navigation.popToTop()
+            navigation.popToTop()
             return true
         });
     }, [])

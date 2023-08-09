@@ -5,13 +5,29 @@ import { TabBarIcon, TabPlusButton } from "../components"
 import { moderateScale } from "react-native-size-matters";
 import Recipe from '../../res/img/reciep.svg'
 
-const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) => {
+const TabBar = ({ state, descriptors, navigation, lang, profile, fastingDiet }) => {
 
 
     return (
         <View style={styles.container}>
-
-            <TabBarIcon
+            {
+                state.routes.map((route, index) => {
+                    const { options } = descriptors[route.key];
+                    return (
+                        <TabBarIcon
+                            descriptors={descriptors}
+                            state={state}
+                            navigation={navigation}
+                            route={route}
+                            index={index}
+                            image={options.tabBarIcon}
+                            name={options.tabBarLabel}
+                            font={lang.font}
+                        />
+                    )
+                })
+            }
+            {/* <TabBarIcon
                 descriptors={descriptors}
                 state={state}
                 navigation={navigation}
@@ -40,14 +56,14 @@ const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) =
                 image={require("../../res/img/plan-icon.png")}
                 name={lang.PayDietName}
                 font={lang.font}
-            />
+            /> */}
             {/* <TabPlusButton
                 navigation={navigation}
                 lang={lang}
                 profile={profile}
                 fastingDiet={fastingDiet}
             /> */}
-            <TabBarIcon
+            {/* <TabBarIcon
                 descriptors={descriptors}
                 state={state}
                 navigation={navigation}
@@ -79,7 +95,7 @@ const TabBar = ({ state, descriptors, navigation, lang, profile,fastingDiet }) =
                         name={lang.chief}
                         font={lang.font}
                     />
-            }
+            } */}
 
         </View>
     );
@@ -101,8 +117,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         // borderRadius:15,
-        position:"absolute"
-        
+        position: "absolute"
+
     },
 })
 

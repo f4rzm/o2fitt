@@ -68,7 +68,7 @@ const TabBarIcon = ({ state, descriptors, navigation , route , index , image , n
   const styles = StyleSheet.create({
       container:{
         flex : 1,
-        justifyContent : "center",
+        justifyContent : "space-around",
         alignItems : "center",
         height : "100%",
       },

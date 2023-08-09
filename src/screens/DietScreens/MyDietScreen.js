@@ -13,6 +13,7 @@ import FastingDietplan from '../FastingDiet/FastingDietplan'
 import DietplanOld from './DietplanOld'
 import DietPlan from './DietPlan'
 import FastingDietplanNew from '../FastingDiet/FastingDietPlanNew'
+import DietEndSubscription from '../../components/dietComponents/DietEndSubscription'
 
 const MyDietScreen = () => {
 
@@ -51,20 +52,39 @@ const MyDietScreen = () => {
   // useEffect(() => {
   //   navigation.navigate("DietCategoryTab",{activationDiet:true})
   // }, [])
-  
+
 
   const renderDiet = () => {
     if (dietNew.isOld) {
       if (diet.isActive && fastingDiet.isActive == false) {
-        return (
-          <DietplanOld
-          // diet={diet}
-          // lang={lang}
-          // onPress={onDietPressed}
-          />
-        )
+        if (diet.isBuy == true) {
+          return (
+            <DietplanOld
+            // diet={diet}
+            // lang={lang}
+            // onPress={onDietPressed}
+            />
+          )
+        } else {
+          return (
+            <DietEndSubscription
+              lang={lang}
+
+            />
+          );
+        }
+
       } else if (diet.isActive && fastingDiet.isActive) {
-        return <FastingDietplan />
+        if (diet.isBuy == true) {
+          return <FastingDietplan />
+        }else{
+          return (
+            <DietEndSubscription
+              lang={lang}
+
+            />
+          );
+        }
       } else {
         return (
           <View style={{ height: dimensions.WINDOW_HEIGTH * 0.8, alignItems: "center", justifyContent: "center" }}>
@@ -74,37 +94,56 @@ const MyDietScreen = () => {
               autoPlay={true}
               loop={true}
             />
-              <Text style={[styles.text2, { fontFamily: lang.font,lineHeight:moderateScale(25)}]}>
+            <Text style={[styles.text2, { fontFamily: lang.font, lineHeight: moderateScale(25) }]}>
               {`هنوز برنامه غذایی ندارین ! \nبرای دریافت برنامه غذایی`}
-                <Text onPress={() => navigation.navigate('DietStartScreen')} style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
+              <Text onPress={() => navigation.navigate('DietStartScreen')} style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
             </Text>
           </View>
         )
       }
     } else {
       if (dietNew.isActive && fastingDiet.isActive == false) {
-        return (
-          <DietPlan
-          // diet={diet}
-          // lang={lang}
-          // onPress={onDietPressed}
-          />
-        )
-      } else if (dietNew.isActive && fastingDiet.isActive) {
+        if (diet.isBuy == true) {
+          return (
+            <DietPlan
+            // diet={diet}
+            // lang={lang}
+            // onPress={onDietPressed}
+            />
+          )
+        }else{
+          return (
+            <DietEndSubscription
+              lang={lang}
 
-        return <FastingDietplanNew />
+            />
+          );
+        }
+        
+      } else if (dietNew.isActive && fastingDiet.isActive) {
+        if (diet.isBuy == true) {
+          return <FastingDietplanNew />
+
+        }else{
+          return (
+            <DietEndSubscription
+              lang={lang}
+
+            />
+          );
+        }
       } else {
         return (
           <>
             <AnimatedLottieView
               source={require('../../../res/animations/mealplan.json')}
-              style={{ width: dimensions.WINDOW_WIDTH * 0.4 }}
+              style={{ width: dimensions.WINDOW_WIDTH * 0.3 }}
               autoPlay={true}
               loop={true}
             />
-            <Text style={[styles.text2, { fontFamily: lang.font,lineHeight:moderateScale(25)}]}>
+            <Text style={[styles.text2, { fontFamily: lang.font, lineHeight: moderateScale(25) }]}>
               {`هنوز برنامه غذایی ندارین ! \nبرای دریافت برنامه غذایی`}
-                <Text onPress={() => navigation.navigate('DietCategoryTab')} style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
+              <Text onPress={() => navigation.navigate('DietCategoryTab')} style={[styles.text2, { color: defaultTheme.green, fontFamily: lang.font, }]}> کلیک کنین </Text>
             </Text>
           </>
         )
@@ -151,7 +190,7 @@ export default MyDietScreen
 const styles = StyleSheet.create({
   container: {
     maxHeight: dimensions.WINDOW_HEIGTH,
-    minHeight:dimensions.WINDOW_HEIGTH*0.7,
+    minHeight: dimensions.WINDOW_HEIGTH * 0.7,
     // paddingVertical: moderateScale(10),
     alignItems: "center",
     justifyContent: "center",

@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import { dimensions } from '../../constants/Dimensions'
 import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image'
 
 const DietCategoryItems = ({ lang, item }) => {
     const navigation = useNavigation()
-
+    const [loading, setLoading] = useState(true)
     const onPressCategory = () => {
         navigation.navigate("MyDietTab")
         navigation.navigate("DietStartScreen", item)
@@ -22,8 +22,18 @@ const DietCategoryItems = ({ lang, item }) => {
                 <FastImage
                     source={{ uri: item.image }}
                     style={{ width: '100%', height: moderateScale(100), resizeMode: "center", borderRadius: moderateScale(8) }}
-
+                    onLoadEnd={() => {
+                        setLoading(false)
+                    }}
                 />
+                {
+                    loading &&
+                    <View style={{ width: '100%', height: moderateScale(100), resizeMode: "center", borderRadius: moderateScale(8), position: "absolute", alignItems: "center", justifyContent: "center" }}>
+                        <ActivityIndicator size={'large'} color={defaultTheme.primaryColor} />
+                    </View>
+                }
+
+
             </View>
             <Text style={[styles.text, { fontFamily: lang.font }]}>{item.name[lang.langName]}</Text>
         </TouchableOpacity>

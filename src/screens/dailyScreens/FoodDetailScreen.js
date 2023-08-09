@@ -1074,7 +1074,7 @@ const FoodDetailScreen = (props) => {
               // setErrorVisible(true)
               // setErrorContext(lang.noInternet)
               Toast.show({
-                type: 'seccess',
+                type: 'error',
                 props: { text2: lang.noInternet, style: { fontFamily: lang.font } },
                 visibilityTime: 800
               });

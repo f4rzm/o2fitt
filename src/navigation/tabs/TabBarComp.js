@@ -57,14 +57,14 @@ export default function TabBarComp({ state, descriptors, navigation, position, l
             style={{ flex: 1, borderBottomColor: defaultTheme.primaryColor, borderBottomWidth: opacity == 1 ? 1 : 0, paddingVertical: moderateScale(10), alignItems: "center" }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-
-              <Animated.Text style={{fontFamily: lang.font,}}>
+          
+              <Animated.Text style={{ color: "black", fontFamily: lang.font, transform: [{ scale: scale }], color: defaultTheme.darkText, marginHorizontal: moderateScale(10) }}>
                 {label}
               </Animated.Text>
               <Animated.Text style={{ position: "absolute", opacity: opacity, color: "black", fontFamily: lang.font, transform: [{ scale: scale }], color: defaultTheme.primaryColor, marginHorizontal: moderateScale(10) }}>
                 {label}
               </Animated.Text>
-              <View style={{ alignItems: "flex-end" }}>
+              <View style={{ alignItems: "flex-end",marginHorizontal:moderateScale(10) }}>
                 {
                   options.tabBarIcon &&
                   <Animated.Image
@@ -95,8 +95,6 @@ export default function TabBarComp({ state, descriptors, navigation, position, l
 const styles = StyleSheet.create({
   textAnimation: {
     color: "black",
-    
-    transform: [{ scale: scale }],
     color: defaultTheme.darkText,
     marginHorizontal: moderateScale(10)
   }

@@ -46,7 +46,7 @@ const DietCategoryScreen = (props) => {
     useEffect(() => {
         console.warn('sssssssss',props);
         if (props.route && props.route.params && props.route.params.activationDiet) {
-            Alert.alert("ok")
+            // Alert.alert("ok")
             console.warn(props.route.params.activationDiet);
             navigation.navigate("MyDietTab")
         }
@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
     },
     subCatText: {
         fontSize: moderateScale(16),
-        padding: moderateScale(10)
+        padding: moderateScale(10),
+        color:defaultTheme.darkText
     },
     tryAgain: {
         backgroundColor: defaultTheme.transparent,

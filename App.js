@@ -222,8 +222,8 @@ const persistConfig = {
   storage: AsyncStorage,
   whitelist: ['pedometer', 'diet', 'starRating', 'syncedDate', 'fastingDiet',"dietNew"],
 };
-const persistedReducer = persistReducer(persistConfig, reducers);
 
+const persistedReducer = persistReducer(persistConfig, reducers);
 let store = createStore(persistedReducer, applyMiddleware(ReduxThunk));
 const persistor = persistStore(store);
 // const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' })

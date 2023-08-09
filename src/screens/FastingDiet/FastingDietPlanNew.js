@@ -52,12 +52,12 @@ const FastingDietplanNew = (props) => {
 
     React.useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
-            props.navigation.popToTop()
+            navigation.popToTop()
             return true
         });
 
         return () => BackHandler.removeEventListener("hardwareBackPress", () => {
-            props.navigation.popToTop()
+            navigation.popToTop()
             return true
         });
     }, [])
@@ -259,10 +259,8 @@ const FastingDietplanNew = (props) => {
                 ))
                 setFastingPlan(randomPack[selectedDate])
             } else {
-                Alert.alert("ok")
-
+                // Alert.alert("ok")
                 // setDiet()
-
             }
         }
     }, [selectedDate])

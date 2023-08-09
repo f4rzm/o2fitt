@@ -6,7 +6,7 @@ export const urls = {
     foodBaseUrl2: "https://gateway.o2fitt.com/food/api/v2/",
     workoutBaseUrl: "https://gateway.o2fitt.com/workout/api/v1/",
     blogBaseUrl: "https://gateway.o2fitt.com/blog/api/v1/",
-    socialBaseUrl: "https://gateway.o2fitt.com/social/api/v1/",
+    socialBaseUrl: "https://gateway.o2fitt.com/socialtest/api/v1/",
     orderBaseUrl: "https://gateway.o2fitt.com/order/api/v1/",
     orderBaseUrl2: "https://gateway.o2fitt.com/order/api/v2/",
     adBaseUrl: "https://advertise.o2fitt.com/api/v1/",

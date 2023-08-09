@@ -15,7 +15,6 @@ import { ConfirmButton, Toolbar } from '../../components'
 import { BlurView } from '@react-native-community/blur'
 import { moderateScale } from 'react-native-size-matters'
 import { dimensions } from '../../constants/Dimensions'
-import Power from '../../../res/img/power.svg'
 import { clearDiet, setDietMeal, shutDownDiet } from '../../redux/actions/dietNew'
 import { advices } from '../../utils/Advice'
 import AnimatedLottieView from 'lottie-react-native'
@@ -27,6 +26,8 @@ import { useNavigation } from '@react-navigation/native'
 import EndingPlan from '../../components/EndingPlan'
 import DietProgresstion from '../../components/dietComponents/DietProgresstion'
 import ShutDownDietModal from '../../components/dietComponents/ShutDownDietModal'
+import InformationModal from '../../components/modals/InformationModal'
+import { setIsActive } from '../../redux/actions/dietOld'
 PouchDB.plugin(pouchdbSearch);
 const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
@@ -48,6 +49,7 @@ const DietPlan = (props) => {
     const [shutownLoading, setShutownLoading] = useState(false)
     const [advice, setAdvice] = useState()
     const [isCheetDay, setIsCheetDay] = useState(false)
+    const [cheetDayModal, setCheetDayModal] = useState(false)
     const translateY = useRef(new Animated.Value(100)).current
     const [selectedMEalName, setSelectedMEalName] = useState()
     const navigation = useNavigation()
@@ -182,6 +184,8 @@ const DietPlan = (props) => {
         analytics().logEvent('shutdown_diet')
         setShutownLoading(true)
         dispatch(shutDownDiet())
+        dispatch(clearDiet())
+        // dispatch(setIsActive(false))
         setShutownLoading(false)
         // props.navigation.popToTop()
     }
@@ -212,7 +216,7 @@ const DietPlan = (props) => {
                 //     load(false)
                 // }, 500)
             } else {
-                // setCheetDayModal(true)
+                setCheetDayModal(true)
                 // load(false)
             }
         }
@@ -320,7 +324,7 @@ const DietPlan = (props) => {
                                                     fastingDiet={diet}
                                                     diet={diet}
                                                     icon={require("../../../res/img/breakfast.png")}
-                                                    setDisableAdding={(isDisable)=>setDisableAddBtn(isDisable)}
+                                                    setDisableAdding={(isDisable) => setDisableAddBtn(isDisable)}
                                                     disableAddBtn={disableAddBtn}
                                                 />
                                                 <DietPlanRow
@@ -354,7 +358,7 @@ const DietPlan = (props) => {
                                                     fastingDiet={diet}
                                                     diet={diet}
                                                     icon={require("../../../res/img/snack.png")}
-                                                    setDisableAdding={(isDisable)=>setDisableAddBtn(isDisable)}
+                                                    setDisableAdding={(isDisable) => setDisableAddBtn(isDisable)}
                                                     disableAddBtn={disableAddBtn}
                                                 />
                                                 <DietPlanRow
@@ -388,7 +392,7 @@ const DietPlan = (props) => {
                                                     fastingDiet={diet}
                                                     diet={diet}
                                                     icon={require("../../../res/img/lunch.png")}
-                                                    setDisableAdding={(isDisable)=>setDisableAddBtn(isDisable)}
+                                                    setDisableAdding={(isDisable) => setDisableAddBtn(isDisable)}
                                                     disableAddBtn={disableAddBtn}
                                                 />
                                                 <DietPlanRow
@@ -422,7 +426,7 @@ const DietPlan = (props) => {
                                                     fastingDiet={diet}
                                                     diet={diet}
                                                     icon={require("../../../res/img/snack.png")}
-                                                    setDisableAdding={(isDisable)=>setDisableAddBtn(isDisable)}
+                                                    setDisableAdding={(isDisable) => setDisableAddBtn(isDisable)}
                                                     disableAddBtn={disableAddBtn}
                                                 />
                                                 <DietPlanRow
@@ -456,7 +460,7 @@ const DietPlan = (props) => {
                                                     fastingDiet={diet}
                                                     diet={diet}
                                                     icon={require("../../../res/img/dinner.png")}
-                                                    setDisableAdding={(isDisable)=>setDisableAddBtn(isDisable)}
+                                                    setDisableAdding={(isDisable) => setDisableAddBtn(isDisable)}
                                                     disableAddBtn={disableAddBtn}
                                                 />
                                                 <DietPlanRow
@@ -490,7 +494,7 @@ const DietPlan = (props) => {
                                                     fastingDiet={diet}
                                                     diet={diet}
                                                     icon={require("../../../res/img/snack-icon.png")}
-                                                    setDisableAdding={(isDisable)=>setDisableAddBtn(isDisable)}
+                                                    setDisableAdding={(isDisable) => setDisableAddBtn(isDisable)}
                                                     disableAddBtn={disableAddBtn}
                                                 />
                                             </>
@@ -560,13 +564,34 @@ const DietPlan = (props) => {
                 }}
                 style={{ alignItems: 'center', justifyContent: "center" }}
             >
-                 <ShutDownDietModal
+                <ShutDownDietModal
                     lang={lang}
                     shutownLoading={shutownLoading}
                     shutDownWholeDiet={shutDownWholeDiet}
                     reject={()=>setShowShutDownModal(false)}
                 />
             </Modal>
+            {cheetDayModal &&
+                <InformationModal
+                    lang={lang}
+                    showMainButton={true}
+                    onRequestClose={() => setCheetDayModal(false)}
+                    context={"از همه ی روز های ازاد استفاده کردی"}
+                />
+            }
+            {
+                cheetDayModal ?
+                    <TouchableWithoutFeedback onPress={() => setCheetDayModal(false)}>
+                        <View style={styles.wrapper}>
+                            <BlurView
+                                style={styles.absolute}
+                                blurType="light"
+                                blurAmount={6}
+                                reducedTransparencyFallbackColor="white"
+                            />
+                        </View>
+                    </TouchableWithoutFeedback> : null
+            }
         </SafeAreaView>
     )
 }
@@ -591,19 +616,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    shutDownText: {
-        fontSize: moderateScale(18),
-        color: defaultTheme.darkText,
-        textAlign: "center"
-    },
-    shutDownContainer: {
-        width: dimensions.WINDOW_WIDTH * 0.9,
-        borderRadius: 15,
-        backgroundColor: defaultTheme.lightBackground,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: defaultTheme.primaryColor
-    },
+    
     tipsContainer: {
         width: dimensions.WINDOW_WIDTH * 0.9,
         alignSelf: "center",
