@@ -157,7 +157,7 @@ function ChooseDietTargetScreen(props) {
                     style={styles.set}
                     title={lang.continuation}
                     leftImage={require('../../../res/img/done.png')}
-                    onPress={() => props.navigation.navigate("chooseActivityDietScreen", { targetWeight: `${selectedTergetKG}.${selectedTergetGR}`, weight: `${selectedKG}.${selectedGR}`,dietId:props.route.params.dietId })}
+                    onPress={() => props.navigation.navigate("chooseActivityDietScreen", { targetWeight: `${selectedTergetKG}.${selectedTergetGR}`, weight: `${selectedKG}.${selectedGR}`,dietId:props.route.params.dietId,  dietName:props.route.params.dietName })}
                 />
             </View>
             <Modal

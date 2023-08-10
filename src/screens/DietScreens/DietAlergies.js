@@ -54,7 +54,8 @@ function DietAlergies(props) {
             weight: props.route.params.weight,
             activityRate: props.route.params.activityRate,
             dietId: props.route.params.dietId,
-            alergiesId: alergiesId
+            alergiesId: alergiesId,
+            dietName:props.route.params.dietName
         })
     }
 

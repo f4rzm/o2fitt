@@ -59,7 +59,6 @@ const DietPlan = (props) => {
             navigation.goBack()
             return true
         });
-
         return () => BackHandler.removeEventListener("hardwareBackPress", () => {
             navigation.goBack()
             return true

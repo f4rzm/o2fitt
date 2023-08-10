@@ -141,7 +141,8 @@ function DietDifficulty(props) {
             targetWeight: props.route.params.targetWeight,
             weightChangeRate: weightChangeRateId,
             dietId: props.route.params.dietId,
-            alergiesId: props.route.params.alergiesId
+            alergiesId: props.route.params.alergiesId,
+            dietName:props.route.params.dietName
         })
 
     }

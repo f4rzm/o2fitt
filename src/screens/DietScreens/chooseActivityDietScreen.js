@@ -89,7 +89,8 @@ function ChooseDietActivityScreen(props) {
                             targetWeight: props.route.params.targetWeight,
                             weight: props.route.params.weight,
                             activityRate: TargetActivityARaet,
-                            dietId: props.route.params.dietId
+                            dietId: props.route.params.dietId,
+                            dietName:props.route.params.dietName
                         })
                     }
                     }

@@ -115,19 +115,18 @@ function DietStartScreen(props) {
     const shutDownWholeDiet = async () => {
         dispatch(shutDownDiet())
         dispatch(clearDiet())
-        if (dietCategory.id!==66) {
+        if (dietCategory.id !== 66) {
             dispatch(shutDownFastingDiet(false))
             dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))
 
-            props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id, dietName: dietCategory.name[lang.langName] })
         }
         else {
             dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true, endDate: null }))
-            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 66 })
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 66, dietName: dietCategory.name[lang.langName] })
         }
         // dispatch(shutDownFastingDiet())
         analytics().logEvent('get_new_diet')
-
         setAutoFuces(false)
     }
 

@@ -24,6 +24,8 @@ import SoundPlayer from 'react-native-sound-player'
 import UpArrow from '../../../res/img/greenArrow.svg'
 import DownArrow from '../../../res/img/redArrow.svg'
 import axios from 'axios';
+import DietGoalCard from '../../components/dietComponents/DietGoalCard';
+import { useNavigation } from '@react-navigation/native';
 
 const model = {
     "weightSize": 0,
@@ -50,11 +52,12 @@ const GoalWeightScreen = props => {
     const user = useSelector(state => state.user)
     const specification = useSelector(state => state.specification)
     const diet = useSelector(state => state.diet)
+    const dietNew = useSelector(state => state.dietNew)
     const auth = useSelector(state => state.auth)
     const fastingDiet = useSelector(state => state.fastingDiet)
     const [optionalDialogVisible, setOptionalDialogVisible] = React.useState(false)
     const [showCaution, setCautionVisible] = React.useState(false)
-
+    const navigation=useNavigation()
     const pkExpireDate = moment(profile.pkExpireDate, "YYYY-MM-DDTHH:mm:ss")
     const today = moment()
     const hasCredit = pkExpireDate.diff(today, "seconds") > 0 ? true : false
@@ -373,7 +376,18 @@ const GoalWeightScreen = props => {
                     />
 
                 </View>
-
+                <DietGoalCard
+                    lang={lang}
+                    diet={diet}
+                    dietNew={dietNew}
+                    profile={profile}
+                    user={user}
+                    fastingDiet={fastingDiet}
+                    navigation={navigation}
+                    specification={specification}
+                    
+                    
+                />
                 {/* <RowSpaceBetween style={styles.row}>
                     <ConfirmButton
                         style={styles.button}
