@@ -104,7 +104,7 @@ const MainRoute = props => {
                 animationEnabled: true,
                 // cardStyleInterpolator:CardStyleInterpolators.forFadeFromCenter
             }}
-        // initialRouteName={"FastingDietplan"}
+        // initialRouteName={"TestScreen"}
         >
             {
                 app.appIsLoading ?

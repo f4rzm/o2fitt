@@ -144,7 +144,7 @@ function ChooseDietTargetScreen(props) {
                         <Info
                             width={moderateScale(20)}
                         />
-                        <Text style={{ textAlign:"left",lineHeight: moderateScale(23), fontFamily: lang.font, width: dimensions.WINDOW_WIDTH * 0.77, marginHorizontal: moderateScale(5) }}>اگر میخواین وزن فعلی و وزن هدف رو تغییر بدین روی آیکون بعلاوه
+                        <Text style={{ textAlign: "left", lineHeight: moderateScale(23), fontFamily: lang.font, width: dimensions.WINDOW_WIDTH * 0.77, marginHorizontal: moderateScale(5) }}>اگر میخواین وزن فعلی و وزن هدف رو تغییر بدین روی آیکون بعلاوه
                             کنار هر کدوم بزنین و وزن رو ثبت کنین در غیر اینصورت ادامه رو بزنین</Text>
                     </View>
 
@@ -157,7 +157,14 @@ function ChooseDietTargetScreen(props) {
                     style={styles.set}
                     title={lang.continuation}
                     leftImage={require('../../../res/img/done.png')}
-                    onPress={() => props.navigation.navigate("chooseActivityDietScreen", { targetWeight: `${selectedTergetKG}.${selectedTergetGR}`, weight: `${selectedKG}.${selectedGR}`,dietId:props.route.params.dietId })}
+                    onPress={() => [
+                        props.navigation.navigate("chooseActivityDietScreen",
+                            {
+                                targetWeight: `${selectedTergetKG}.${selectedTergetGR}`,
+                                weight: `${selectedKG}.${selectedGR}`,
+                                dietId: props.route.params.dietId,
+                                dietName:props.route.params.dietName
+                            })]}
                 />
             </View>
             <Modal

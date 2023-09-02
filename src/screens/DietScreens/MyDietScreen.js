@@ -24,7 +24,7 @@ const MyDietScreen = () => {
   const lang = useSelector(state => state.lang)
   const specification = useSelector(state => state.specification)
   const navigation = useNavigation()
-  console.warn('diets', fastingDiet.endDate, dietNew.isOld, dietNew.allBreakfast.length);
+  console.warn('diets', dietNew.dietName);
 
   const onDietPressed = () => {
 

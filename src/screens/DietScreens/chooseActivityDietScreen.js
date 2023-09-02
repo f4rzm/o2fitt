@@ -20,7 +20,7 @@ import { updateTarget } from '../../redux/actions'
 function ChooseDietActivityScreen(props) {
     const lastPageData = props.route.params
     const dispatch = useDispatch()
-
+    
     const lang = useSelector(state => state.lang)
     const user = useSelector(state => state.user)
     const app = useSelector(state => state.app)
@@ -89,7 +89,8 @@ function ChooseDietActivityScreen(props) {
                             targetWeight: props.route.params.targetWeight,
                             weight: props.route.params.weight,
                             activityRate: TargetActivityARaet,
-                            dietId: props.route.params.dietId
+                            dietId: props.route.params.dietId,
+                            dietName:props.route.params.dietName
                         })
                     }
                     }

@@ -10,7 +10,7 @@ import BreakFast from '../../../res/img/breakfast.svg'
 import ChangePackage from '../../../res/img/changePackage.svg'
 import { Modal } from 'react-native-paper'
 import Info from '../../../res/img/info5.svg'
-import {  saveOldData, shutDownDiet } from '../../redux/actions/dietNew'
+import { saveOldData, shutDownDiet } from '../../redux/actions/dietNew'
 import { clearDiet } from '../../redux/actions/dietOld'
 
 import analytics from '@react-native-firebase/analytics';
@@ -115,19 +115,18 @@ function DietStartScreen(props) {
     const shutDownWholeDiet = async () => {
         dispatch(shutDownDiet())
         dispatch(clearDiet())
-        if (dietCategory.id!==66) {
+        if (dietCategory.id !== 66) {
             dispatch(shutDownFastingDiet(false))
             dispatch(setActivaitonAndDeativation({ endDate: moment().subtract(1, 'day').format("YYYY-MM-DD"), isActive: false }))
 
-            props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id })
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: dietCategory.id, dietName: dietCategory.name[lang.langName] })
         }
         else {
             dispatch(setActivaitonAndDeativation({ startDate: moment().format("YYYY-MM-DD"), isActive: true, endDate: null }))
-            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 66 })
+            props.navigation.navigate("ChooseDietTargetScreen", { dietId: 66, dietName: dietCategory.name[lang.langName] })
         }
         // dispatch(shutDownFastingDiet())
         analytics().logEvent('get_new_diet')
-
         setAutoFuces(false)
     }
 

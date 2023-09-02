@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { updateTarget } from '../../redux/actions'
 import moment from 'moment'
 import { BlurView } from '@react-native-community/blur'
+import { calculateCalorieForDietPackage } from '../../functions/CalculateDailyCalorie'
 
 function DietDifficulty(props) {
     const dispatch = useDispatch()
@@ -25,76 +26,20 @@ function DietDifficulty(props) {
     const [weightChangeRateId, setWeightChangeRateId] = useState()
     const [hardshipdata, setHardshipdata] = useState([])
     const [noResult, setNoResult] = useState(false)
-
     const [loading, setLoading] = useState(false)
 
-    const calCalorie = (WCR) => {
-        const birthdayMoment = moment(profile.birthDate.split('/').join('-'));
-        const nowMoment = moment();
-        const age = nowMoment.diff(birthdayMoment, 'years');
-        const height = profile.heightSize;
-        const weight = parseFloat(props.route.params.weight).toFixed(1);
-        const wrist = specification[0].wristSize;
-        const targetWeight = parseFloat(props.route.params.targetWeight).toFixed(1)
-        let bmr = 1;
-        let factor = height / wrist;
-        let bodyType = 1;
-        let targetCalorie = 0;
+    const calCalorie=(weightChangeRate)=>{
+        return calculateCalorieForDietPackage({
+            profile: profile,
+            specification: specification,
+            user: user,
+            weightChangeRate: weightChangeRate,
+            weight: props.route.params.weight,
+            activityRate: props.route.params.activityRate,
+            targetWeight: props.route.params.targetWeight
+        }).targetCalorie
+    }
 
-        // console.log(age);
-        // console.log(height);
-        // console.log(weight);
-        // console.log(wrist);
-        if (profile.gender == 1) {
-            bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-            if (factor > 10.4) bodyType = 1;
-            else if (factor < 9.6) bodyType = 3;
-            else bodyType = 2;
-        } else {
-            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-            if (factor > 11) bodyType = 1;
-            else if (factor < 10.1) bodyType = 3;
-            else bodyType = 2;
-        }
-
-        // console.log('profile.dailyActivityRate', profile.dailyActivityRate);
-        switch (parseInt(props.route.params.activityRate)) {
-            case 10:
-                targetCalorie = bmr * 1;
-                break;
-            case 20:
-                targetCalorie = bmr * 1.2;
-                break;
-            case 30:
-                targetCalorie = bmr * 1.375;
-                break;
-            case 40:
-                targetCalorie = bmr * 1.465;
-                break;
-            case 50:
-                targetCalorie = bmr * 1.55;
-                break;
-            case 60:
-                targetCalorie = bmr * 1.725;
-                break;
-            case 70:
-                targetCalorie = bmr * 1.9;
-                break;
-        }
-        const targetCaloriPerDay = (7700 * WCR * 0.001) / 7;
-        // checkForZigZagi
-        if (parseFloat(weight) > parseFloat(targetWeight)) {
-            console.error("this lost");
-            targetCalorie -= targetCaloriPerDay;
-        }
-        if (parseFloat(weight) < parseFloat(targetWeight)) {
-            console.error("this gain");
-
-            targetCalorie += targetCaloriPerDay;
-        }
-
-        return targetCalorie.toFixed(0);
-    };
     const weightLostData = [
         { id: 200, calCalrie: calCalorie(200), name: "خیلی آسان", title: "کاهش 0.8 کیلوگرم در ماه" },
         { id: 400, calCalrie: calCalorie(400), name: "آسان", title: "کاهش 1.5 کیلوگرم در ماه" },
@@ -134,14 +79,15 @@ function DietDifficulty(props) {
             setWeightChangeRateId(0)
         }
     }, [])
-    const onConfirmHarfShip = () => {
+    const onConfirmHardShip = () => {
         props.navigation.navigate("DietConfirmation", {
             activityRate: props.route.params.activityRate,
             weight: props.route.params.weight,
             targetWeight: props.route.params.targetWeight,
             weightChangeRate: weightChangeRateId,
             dietId: props.route.params.dietId,
-            alergiesId: props.route.params.alergiesId
+            alergiesId: props.route.params.alergiesId,
+            dietName:props.route.params.dietName
         })
 
     }
@@ -246,7 +192,7 @@ function DietDifficulty(props) {
                         width: dimensions.WINDOW_WIDTH * 0.45,
                         height: moderateScale(45)
                     }}
-                    onPress={onConfirmHarfShip}
+                    onPress={onConfirmHardShip}
                     isLoading={loading}
                 />
             </View>

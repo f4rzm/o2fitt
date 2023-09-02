@@ -10,7 +10,8 @@ const INITIAL_STATE = {
     isOld:true,
     isBuy:false,
     percent:0,
-    cheetDays:[]
+    cheetDays:[],
+    dietName:null
 }
 
 export const dietNew = (state = INITIAL_STATE, action) => {

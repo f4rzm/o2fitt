@@ -22,6 +22,7 @@ import { useNavigation } from '@react-navigation/native'
 function DietConfirmation(props) {
     const navigation = useNavigation()
     const alergies = props.route.params.alergiesId
+    console.warn(props.route.params.dietName);
     const dispatch = useDispatch()
     const getDiet = async (calorie) => {
         // const data = require('../../utils/diet/dietPackage.json')
@@ -38,7 +39,7 @@ function DietConfirmation(props) {
 
         const RC = new RestController()
         let url = urls.baseDiet + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=${targetCaloriePerDay.targetCalorie}`
-        // let url = urls.baseDiet + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=1200`
+        // let url = urls.baseDiet + urls.DietPack + urls.GetUserPackage + `?DietCategoryId=${props.route.params.dietId}&DailyCalorie=1001`
         if (alergies.length > 0) {
             alergies.map((item, index) => {
                 if (index == 0) {
@@ -60,9 +61,15 @@ function DietConfirmation(props) {
 
     const onFailure = (err) => {
         console.error(err);
-        setLoading(false)
-        setErrorVisible(true)
-        setErrorContext(lang.serverError)
+        if (err.statusCode == 400) {
+            setErrorContext("پکیجی رژیمی موجود نیست")
+            setErrorVisible(true)
+        } else {
+            setLoading(false)
+            setErrorVisible(true)
+            setErrorContext(lang.serverError)
+        }
+
     }
 
     const randomGenerator = (data) => {
@@ -109,45 +116,51 @@ function DietConfirmation(props) {
                 }
             })
 
-
-            const randomGenerators = {
-                [moment().format("YYYY-MM-DD")]: {
-                    '9': randomGenerator(sahars),
-                    "6": randomGenerator(eftars),
-                    "7": randomGenerator(snack1),
-                    "3": randomGenerator(dinners),
-                    "8": randomGenerator(snack2),
+            if (snack1.length == 0 || snack2.length == 0 || dinners.length == 0 || eftars.length == 0 || sahars.length == 0) {
+                setErrorContext("پکیجی رژیمی موجود نیست")
+                setErrorVisible(true)
+            } else {
+                const randomGenerators = {
+                    [moment().format("YYYY-MM-DD")]: {
+                        '9': randomGenerator(sahars),
+                        "6": randomGenerator(eftars),
+                        "7": randomGenerator(snack1),
+                        "3": randomGenerator(dinners),
+                        "8": randomGenerator(snack2),
+                    }
                 }
+                dispatch(setFastingMeal(
+                    {
+                        [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+                        allDinner: dinners,
+                        allSahar: sahars,
+                        allSnack1: snack1,
+                        allSnack2: snack2,
+                        allEftar: eftars,
+                        startDate: moment().format("YYYY-MM-DD"),
+                        dietName: props.route.params.dietName
+                    }
+                ))
+                // console.warn({
+                //     // [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+                //     allDinner: dinners,
+                //     allSahar: sahars,
+                //     allSnack1: snack1,
+                //     allSnack2: snack2,
+                //     allEftar: eftars
+                // });
+                dispatch(setOldDietFalse())
+                dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
+                dispatch(setIsActive(true))
+                dispatch(setActivaitonAndDeativation(true))
+                setTimeout(() => {
+                    // navigation.popToTop()
+                    navigation.navigate("Drawer", { activationDiet: true })
+                }, 300);
             }
-            dispatch(setFastingMeal(
-                {
-                    [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
-                    allDinner: dinners,
-                    allSahar: sahars,
-                    allSnack1: snack1,
-                    allSnack2: snack2,
-                    allEftar: eftars,
-                    startDate:moment().format("YYYY-MM-DD")
-                }
-            ))
-            console.warn({
-                // [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
-                allDinner: dinners,
-                allSahar: sahars,
-                allSnack1: snack1,
-                allSnack2: snack2,
-                allEftar: eftars
-            });
-            dispatch(setOldDietFalse())
-            dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
-            dispatch(setIsActive(true))
-            dispatch(setActivaitonAndDeativation(true))
-            setTimeout(() => {
-                // navigation.popToTop()
-                navigation.navigate("Drawer", { activationDiet: true })
-            }, 300);
-        } else {
-            // Alert.alert('not fasting')
+
+        }
+        else {
             const data = res.data.data
             let breakfast = [];
             let lunch = [];
@@ -176,39 +189,44 @@ function DietConfirmation(props) {
                     snack3 = [...snack3, item]
                 }
             })
-
-            const randomGenerators = {
-                [moment().format("YYYY-MM-DD")]: {
-                    '0': { ...randomGenerator(breakfast), isAte: false },
-                    "1": { ...randomGenerator(lunch), isAte: false },
-                    "2": { ...randomGenerator(snack1), isAte: false },
-                    "3": { ...randomGenerator(dinners), isAte: false },
-                    "4": { ...randomGenerator(snack2), isAte: false },
-                    "5": { ...randomGenerator(snack3), isAte: false },
+            if (snack1.length == 0 || snack2.length == 0 || dinners.length == 0 || breakfast.length == 0 || lunch.length == 0 || snack3.length == 0) {
+                setErrorContext("پکیجی رژیمی موجود نیست")
+                setErrorVisible(true)
+            } else {
+                const randomGenerators = {
+                    [moment().format("YYYY-MM-DD")]: {
+                        '0': { ...randomGenerator(breakfast), isAte: false },
+                        "1": { ...randomGenerator(lunch), isAte: false },
+                        "2": { ...randomGenerator(snack1), isAte: false },
+                        "3": { ...randomGenerator(dinners), isAte: false },
+                        "4": { ...randomGenerator(snack2), isAte: false },
+                        "5": { ...randomGenerator(snack3), isAte: false },
+                    }
                 }
+                dispatch(setDietMeal(
+                    {
+                        [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
+                        allDinner: dinners,
+                        allBreakfast: breakfast,
+                        allSnack1: snack1,
+                        allSnack2: snack2,
+                        allSnack3: snack3,
+                        allLunch: lunch,
+                        isActive: true,
+                        endDate: moment().add(31, 'days').format("YYYY-MM-DD"),
+                        startDate: moment().format("YYYY-MM-DD"),
+                        dietName: props.route.params.dietName
+                    }
+                ))
+                dispatch(setOldDietFalse())
+                // dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
+                dispatch(setIsActive(true))
+                setTimeout(() => {
+                    // navigation.popToTop()
+                    navigation.navigate("Drawer", { activationDiet: true })
+
+                }, 300);
             }
-            dispatch(setDietMeal(
-                {
-                    [moment().format("YYYY-MM-DD")]: randomGenerators[moment().format("YYYY-MM-DD")],
-                    allDinner: dinners,
-                    allBreakfast: breakfast,
-                    allSnack1: snack1,
-                    allSnack2: snack2,
-                    allSnack3: snack3,
-                    allLunch: lunch,
-                    isActive: true,
-                    endDate: moment().add(31, 'days').format("YYYY-MM-DD"),
-                    startDate:moment().format("YYYY-MM-DD")
-                }
-            ))
-            dispatch(setOldDietFalse())
-            // dispatch(dietStartDate(moment().format("YYYY-MM-DD")))
-            dispatch(setIsActive(true))
-            setTimeout(() => {
-                // navigation.popToTop()
-                navigation.navigate("Drawer", { activationDiet: true })
-
-            }, 300);
         }
 
 
@@ -335,7 +353,6 @@ function DietConfirmation(props) {
     const onConfirm = () => {
         if (fastingDiet.isActive) {
             setLoading(true)
-           
             setTimeout(() => {
                 dispatch(
                     updateTarget(

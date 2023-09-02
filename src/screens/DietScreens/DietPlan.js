@@ -240,7 +240,6 @@ const DietPlan = (props) => {
                 fastingDiet={fastingDiet}
                 diet={diet}
                 onPressShutDown={onPressShutDown}
-
             />
             <ScrollView
                 contentContainerStyle={{ alignItems: 'center', flexGrow: 1, paddingTop: moderateScale(10), paddingBottom: moderateScale(100) }}
@@ -568,7 +567,7 @@ const DietPlan = (props) => {
                     lang={lang}
                     shutownLoading={shutownLoading}
                     shutDownWholeDiet={shutDownWholeDiet}
-                    reject={()=>setShowShutDownModal(false)}
+                    reject={() => setShowShutDownModal(false)}
                 />
             </Modal>
             {cheetDayModal &&
@@ -616,7 +615,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    
+
     tipsContainer: {
         width: dimensions.WINDOW_WIDTH * 0.9,
         alignSelf: "center",

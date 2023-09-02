@@ -24,7 +24,7 @@ const DietBanner = ({ lang, item }) => {
             {
                 loading &&
                 <View style={[styles.bannerImage, { position: "absolute" }]}>
-                    <ActivityIndicator size={'large'} color={defaultTheme.primaryColor}/>
+                    <ActivityIndicator size={'large'} color={defaultTheme.primaryColor} />
                 </View>
 
             }
@@ -32,7 +32,8 @@ const DietBanner = ({ lang, item }) => {
             <View style={styles.footerContainer}>
                 <Text style={[styles.text, { fontFamily: lang.font, }]}>{item.name[lang.langName]}</Text>
                 <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.description, { fontFamily: lang.font, }]}>
-                    {item.description[lang.langName]}</Text>
+                    {item.description[lang.langName]}
+                </Text>
             </View>
         </TouchableOpacity>
     )

@@ -18,7 +18,8 @@ const INITIAL_STATE = {
     cheetDays: [],
     dietStartDate: "",
     oldData: null,
-    isForceUpdate: false
+    isForceUpdate: false,
+    dietName:null
 }
 
 export const diet = (state = INITIAL_STATE, action) => {

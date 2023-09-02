@@ -5,7 +5,7 @@ import { moderateScale } from 'react-native-size-matters'
 import { defaultTheme } from '../../constants/theme'
 import { Bar } from 'react-native-progress'
 
-const DietProgresstion = ({diet,lang}) => {
+const DietProgresstion = ({diet,lang,containerStyle,textStyle}) => {
   return (
     <View style={{
         width: dimensions.WINDOW_WIDTH * 0.9, padding: moderateScale(5), alignSelf: "center", backgroundColor: defaultTheme.lightBackground, borderRadius: 10, elevation: 4, paddingBottom: moderateScale(35), marginTop: moderateScale(20), shadowColor: "#000",
@@ -15,8 +15,9 @@ const DietProgresstion = ({diet,lang}) => {
         },
         shadowOpacity: 0.34,
         shadowRadius: 2.27,
+        ...containerStyle
     }}>
-        <Text style={{ fontFamily: lang.titleFont, fontSize: moderateScale(15), padding: moderateScale(5), color: defaultTheme.darkText, textAlign: "left" }}> نمودار پیشرفت</Text>
+        <Text style={{ fontFamily: lang.titleFont, fontSize: moderateScale(15), padding: moderateScale(5), color: defaultTheme.darkText, textAlign: "left" ,...textStyle}}> نمودار پیشرفت</Text>
         <Bar
             progress={diet.percent.toFixed(0) * 0.01}
             width={dimensions.WINDOW_WIDTH * 0.85}

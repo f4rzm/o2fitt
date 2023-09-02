@@ -946,5 +946,8 @@ export const fa =
     "bakingType": "نوع پخت",
     "myDiets":"برنامه های من",
     "diets":"برنامه",
-    "wrongTargetWeightError":"وزن هدف نباید کمتر از 30 و بیشتر از 160 کیلو باشد"
+    "wrongTargetWeightError":"وزن هدف نباید کمتر از 30 و بیشتر از 160 کیلو باشد",
+    "dietName":"اسم برنامه",
+    "cheetDay":"روز آزاد",
+    "usedCheetDays":"روز آزاد استفاده شده"
 }

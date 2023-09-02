@@ -93,10 +93,10 @@ const DietCategoryScreen = () => {
             {
                 parents.map((item) => {
                     return (
-                        <View style={{ alignItems: "baseline",marginTop:moderateScale(20) }}>
+                        <View style={{ alignItems: "baseline", marginTop: moderateScale(20) }}>
                             <Text style={[styles.subCatText, { fontFamily: lang.font }]}>{dietCategory.find(el => el.id == item).name[lang.langName]}</Text>
                             <View style={styles.itemContainer}>
-                                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{flexGrow:1}}>
+                                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
                                     {
                                         dietCategory.filter(element => element.parentId == item)
                                             .map((res) => {
