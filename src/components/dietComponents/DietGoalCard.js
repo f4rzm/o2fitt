@@ -65,30 +65,30 @@ const DietGoalCard = ({ diet, dietNew, fastingDiet, lang, navigation, profile, u
         )
 
     }
-    else if (diet.isActive || dietNew.isOld) {
-        return (
-            <View style={styles.container}>
-                <RowSpaceBetween style={styles.rowSpaceContainer}>
-                    <Text style={[styles.text, { fontFamily: lang.titleFont }]}>هدف برنامه</Text>
-                </RowSpaceBetween>
-                <DietProgresstion
-                    lang={lang}
-                    diet={dietNew}
-                    containerStyle={{ shadowOpacity: 0, padding: 0 }}
-                    textStyle={{ padding: 0, paddingHorizontal: moderateScale(10) }}
-                />
-                <RowSpaceBetween style={styles.rowSpaceContainer}>
-                    <Text style={[styles.text, { fontFamily: lang.font }]}>{lang.usedCheetDays}</Text>
-                    <Text style={[styles.text, { fontFamily: lang.font }]}>{diet.cheetDays.length}</Text>
-                </RowSpaceBetween>
-                {/* <RowSpaceBetween style={styles.rowSpaceContainer}>
-                    <Text style={[styles.text, { fontFamily: lang.font }]}>هدف برنامه</Text>
-                    <Text style={[styles.text, { fontFamily: lang.font }]}>{specification[0].weightSize>profile.targetWeight?"کاهش وزن":profile.targetWeight<specification[0].targetWeight?"افزایش وزن":'ثبات وزن'}</Text>
-                </RowSpaceBetween> */}
-            </View>
-        )
+    // else if (diet.isActive || dietNew.isOld) {
+    //     return (
+    //         <View style={styles.container}>
+    //             <RowSpaceBetween style={styles.rowSpaceContainer}>
+    //                 <Text style={[styles.text, { fontFamily: lang.titleFont }]}>هدف برنامه</Text>
+    //             </RowSpaceBetween>
+    //             <DietProgresstion
+    //                 lang={lang}
+    //                 diet={dietNew}
+    //                 containerStyle={{ shadowOpacity: 0, padding: 0 }}
+    //                 textStyle={{ padding: 0, paddingHorizontal: moderateScale(10) }}
+    //             />
+    //             <RowSpaceBetween style={styles.rowSpaceContainer}>
+    //                 <Text style={[styles.text, { fontFamily: lang.font }]}>{lang.usedCheetDays}</Text>
+    //                 <Text style={[styles.text, { fontFamily: lang.font }]}>{diet.cheetDays.length}</Text>
+    //             </RowSpaceBetween>
+    //             {/* <RowSpaceBetween style={styles.rowSpaceContainer}>
+    //                 <Text style={[styles.text, { fontFamily: lang.font }]}>هدف برنامه</Text>
+    //                 <Text style={[styles.text, { fontFamily: lang.font }]}>{specification[0].weightSize>profile.targetWeight?"کاهش وزن":profile.targetWeight<specification[0].targetWeight?"افزایش وزن":'ثبات وزن'}</Text>
+    //             </RowSpaceBetween> */}
+    //         </View>
+    //     )
 
-    }
+    // }
     else {
         return (
             <Pressable

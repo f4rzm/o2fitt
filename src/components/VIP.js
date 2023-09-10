@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image, TouchableOpacity, Platform } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Platform, StyleSheet } from 'react-native'
 import { dimensions } from '../constants/Dimensions'
 import { BlurView } from '@react-native-community/blur'
 import LottieView from 'lottie-react-native'
@@ -55,8 +55,8 @@ export default function VIP(props) {
 
     }
     return (
-        <View>
-            {/* <BlurView
+        <View style={{position:"absolute",alignItems:"center",justifyContent:"center",width:dimensions.WINDOW_WIDTH,height:dimensions.WINDOW_HEIGTH}}>
+         <BlurView
                 style={{
                     position: 'absolute',
                     top: 0,
@@ -64,11 +64,11 @@ export default function VIP(props) {
                     right: 0,
                     bottom: 0,
                 }} blurType="dark" blurAmount={1}
-            /> */}
-            <View style={{ backgroundColor: defaultTheme.white, width: dimensions.WINDOW_WIDTH * 0.9, borderRadius: moderateScale(10), alignItems: "center", justifyContent: "center", padding: moderateScale(5), borderWidth: 1, borderColor: defaultTheme.green }}>
+            />
+            <View style={styles.container}>
                 <TouchableOpacity
                     onPress={() => props.crossPressed()}
-                    style={{ alignSelf: "baseline", top: moderateScale(15), left: moderateScale(20), borderWidth: 1, padding: moderateScale(7), borderRadius: moderateScale(20), borderColor: defaultTheme.mainText }}>
+                    style={styles.imageContainer}>
                     <Image
                         source={require('../../res/img/cross.png')}
                         style={{ width: moderateScale(20), height: moderateScale(20), resizeMode: "contain", tintColor: defaultTheme.mainText }}
@@ -125,3 +125,25 @@ export default function VIP(props) {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: defaultTheme.white,
+        width: dimensions.WINDOW_WIDTH * 0.9,
+        borderRadius: moderateScale(10),
+        alignItems: "center",
+        justifyContent: "center",
+        padding: moderateScale(5),
+        borderWidth: 1,
+        borderColor: defaultTheme.green
+    },
+    imageContainer: {
+        alignSelf: "baseline",
+        top: moderateScale(15),
+        left: moderateScale(20),
+        borderWidth: 1,
+        padding: moderateScale(7),
+        borderRadius: moderateScale(20),
+        borderColor: defaultTheme.mainText
+    }
+})

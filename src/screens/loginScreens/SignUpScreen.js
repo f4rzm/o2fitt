@@ -10,7 +10,8 @@ import {
   TouchableWithoutFeedback,
   BackHandler,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  Alert
 } from 'react-native';
 import { ConfirmButton, CustomInput, CheckBox, Information, Toolbar } from '../../components';
 import { useSelector, useDispatch } from 'react-redux'
@@ -212,15 +213,14 @@ const SignUpScreen = props => {
           setReferralcodeCheck(true)
         } else {
           referralSignUp()
-        }
-
+        }    
       },
       (err) => { console.error(err) },
     )
-
   }
 
   const onSignUpSuccess = response => {
+    console.warn(response);
     setReferralcodeCheck(false)
     // console.warn(response.data.statusCode);
     if (response.data.statusCode !== 0) {
@@ -276,6 +276,7 @@ const SignUpScreen = props => {
 
   }
   const referralSignUp = () => {
+
     if (mobile.length > 10 || email.length > 10) {
       setIsLoading(true)
       const url = urls.identityBaseUrl2 + urls.user
@@ -289,6 +290,7 @@ const SignUpScreen = props => {
         "startOfWeek": parseInt(user.startOfWeek),
 
       }
+      console.warn(params);
       const header = {}
       const RC = new RestController()
       RC.post(
@@ -298,6 +300,7 @@ const SignUpScreen = props => {
         onSignUpSuccess,
         onSignUpFailure,
       )
+
     } else {
       if(user.countryId==128){
 

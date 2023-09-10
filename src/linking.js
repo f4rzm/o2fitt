@@ -40,8 +40,8 @@ const config = {
 }
 
 const linking = {
-    // prefixes: ["o2fitt://CountStepScreen", "https://bank.o2fitt.com", "https://test.o2fitt.com"],
-    prefixes: ["o2fitt://app"],
+    prefixes: ["o2fitt://CountStepScreen", "https://bank.o2fitt.com", "https://test.o2fitt.com"],
+    // prefixes: ["o2fitt://app"],
     config
 }
 

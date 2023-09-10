@@ -54,6 +54,7 @@ const DietPlan = (props) => {
     const [selectedMEalName, setSelectedMEalName] = useState()
     const navigation = useNavigation()
     const [disableAddBtn, setDisableAddBtn] = useState(false)
+    
     React.useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
             navigation.goBack()

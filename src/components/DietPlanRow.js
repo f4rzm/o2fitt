@@ -13,6 +13,7 @@ import { calculatePercent, setDietMeal } from '../redux/actions/dietNew'
 import ChangePackage from '../../res/img/changePackage.svg'
 import PouchDB from '../../pouchdb'
 import pouchdbSearch from 'pouchdb-find';
+import { RestController } from '../classess/RestController'
 
 PouchDB.plugin(pouchdbSearch);
 
@@ -20,9 +21,10 @@ const foodDB = new PouchDB('food', { adapter: 'react-native-sqlite' });
 const mealDB = new PouchDB('meal', { adapter: 'react-native-sqlite' });
 const offlineDB = new PouchDB('offline', { adapter: 'react-native-sqlite' });
 
-const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, selectedDate, fastingDiet, diet, icon,setDisableAdding,disableAddBtn }) => {
+const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, selectedDate, fastingDiet, diet, icon, setDisableAdding, disableAddBtn }) => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
+
     const getFromDb = async () => {
         setLoading(true)
 
@@ -31,11 +33,46 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
                 .then(async (records) => {
                     saveServer(records, item, index)
                 }).catch((err) => {
-                    // console.error(err);
+                    getFoodFromServer(item, index)
                 })
         })
         analytics().logEvent('diet_post');
     }
+
+    const getFoodFromServer = (item, index) => {
+        const url = urls.foodBaseUrl + urls.food + `?foodId=${item.foodId}`;
+        const header = {
+            headers: {
+                Authorization: 'Bearer ' + auth.access_token,
+                Language: lang.capitalName,
+            },
+        };
+        const params = {};
+        const RC = new RestController();
+        RC.checkPrerequisites(
+            'get',
+            url,
+            params,
+            header,
+            (res) => {
+                saveServer(res.data.data, item, index)
+                const fName = res.data.data.name[lang.langName]
+                foodDB
+                    .put({
+                        ...res.data.data,
+                        _id: fName + '_' + res.data.data.foodId,
+                        name: fName,
+                        foodName: fName,
+                    })
+                    .catch((e) => { });
+            },
+            () => { },
+            auth,
+            () => { },
+            () => { },
+        );
+    }
+
     const saveServer = (food, packageItem, index) => {
         setDisableAdding(true)
         const filteredMeasureUnit = allMeasureUnits.filter((item) => item.id == packageItem.measureUnitId)
@@ -52,7 +89,7 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
             measureUnitId: packageItem.measureUnitId,
             measureUnitName: packageItem.measureUnitName,
             personalFoodId: '',
-            _id: `${user.id}${Math.random(Math.floor()*1000)}${Date.now().toString()}`
+            _id: `${user.id}${Math.random(Math.floor() * 1000)}${Date.now().toString()}`
         }
 
 
@@ -191,7 +228,7 @@ const DietPlanRow = ({ pack, meal, title, lang, onChangepackage, user, auth, sel
             </View>
             {pack.dietPackFoods &&
                 pack.dietPackFoods.map((item) => (
-                    <FastingFoodRow item={item} foodDB={foodDB} lang={lang} selectedDate={selectedDate} />
+                    <FastingFoodRow item={item} foodDB={foodDB} lang={lang} selectedDate={selectedDate} auth={auth} />
                 ))
             }
 

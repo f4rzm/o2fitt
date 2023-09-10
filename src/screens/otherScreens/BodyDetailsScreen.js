@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -17,28 +17,28 @@ import {
   DropDown,
   ColumnStart,
 } from '../../components';
-import {useSelector, useDispatch} from 'react-redux';
-import {defaultTheme} from '../../constants/theme';
-import {dimensions} from '../../constants/Dimensions';
-import {moderateScale} from 'react-native-size-matters';
+import { useSelector, useDispatch } from 'react-redux';
+import { defaultTheme } from '../../constants/theme';
+import { dimensions } from '../../constants/Dimensions';
+import { moderateScale } from 'react-native-size-matters';
 import {
   updateProfileLocaly,
   updateSpecificationLocaly,
 } from '../../redux/actions';
 import moment from 'moment-jalaali';
-import {SpecificationDBController} from '../../classess/SpecificationDBController';
-import {BlurView} from '@react-native-community/blur';
+import { SpecificationDBController } from '../../classess/SpecificationDBController';
+import { BlurView } from '@react-native-community/blur';
 import CustomDropDown from '../../components/CustomDropDown';
 import BlurItemList from '../../components/BlurItemList';
-import {useRef} from 'react';
+import { useRef } from 'react';
 import Toast from 'react-native-toast-message';
 // import Orientation from 'react-native-orientation-locker';
-import {WheelPicker} from 'react-native-wheel-picker-android';
+import { WheelPicker } from 'react-native-wheel-picker-android';
 
-const days = Array.from({length: 31}, (x, i) => (i + 1).toString());
-const months = Array.from({length: 12}, (x, i) => (i + 1).toString());
-const yearsFa = Array.from({length: 81}, (x, i) => (i + 1306).toString());
-const yearsEn = Array.from({length: 81}, (x, i) => (i + 1927).toString());
+const days = Array.from({ length: 31 }, (x, i) => (i + 1).toString());
+const months = Array.from({ length: 12 }, (x, i) => (i + 1).toString());
+const yearsFa = Array.from({ length: 81 }, (x, i) => (i + 1306).toString());
+const yearsEn = Array.from({ length: 81 }, (x, i) => (i + 1927).toString());
 
 const BodyDetailsScreen = (props) => {
   const profile = useSelector((state) => state.profile);
@@ -67,16 +67,16 @@ const BodyDetailsScreen = (props) => {
   const [ideal, setIdeal] = React.useState(20);
   const [tx, setTx] = React.useState(0);
 
-  const height = Array.from({length: 76}, (x, i) => (i + 140).toString());
-  const weight = Array.from({length: 126}, (x, i) => (i + 35).toString());
+  const height = Array.from({ length: 76 }, (x, i) => (i + 140).toString());
+  const weight = Array.from({ length: 126 }, (x, i) => (i + 35).toString());
   let flatListRef = useRef();
 
-  const arrayDay = days.map((item, index) => ({id: item, name: item}));
+  const arrayDay = days.map((item, index) => ({ id: item, name: item }));
 
-  const arrayMonth = months.map((item, index) => ({id: item, name: item}));
+  const arrayMonth = months.map((item, index) => ({ id: item, name: item }));
 
   try {
-    if(lang.langName=="persian"){
+    if (lang.langName == "persian") {
       I18nManager.allowRTL(true)
       I18nManager.forceRTL(true)
       I18nManager.swapLeftAndRightInRTL(true);
@@ -88,8 +88,8 @@ const BodyDetailsScreen = (props) => {
 
   const arrayYear =
     user.countryId != 128
-      ? yearsEn.map((item, index) => ({id: item, name: item}))
-      : yearsFa.map((item, index) => ({id: item, name: item}));
+      ? yearsEn.map((item, index) => ({ id: item, name: item }))
+      : yearsFa.map((item, index) => ({ id: item, name: item }));
 
   const [year, setYear] = React.useState(
     user.countryId != 128 ? '1995' : '1370',
@@ -172,14 +172,14 @@ const BodyDetailsScreen = (props) => {
       // setErrorVisible(true);
       Toast.show({
         type: 'error',
-        props: {text2: lang.fillAllFild, style: {fontFamily: lang.font}},
+        props: { text2: lang.fillAllFild, style: { fontFamily: lang.font } },
         visibilityTime: 2000,
       });
     } else {
       if (birthDate < moment().subtract(15, 'years')) {
         Toast.show({
           type: 'error',
-          props: {text2: lang.wrongAge, style: {fontFamily: lang.font}},
+          props: { text2: lang.wrongAge, style: { fontFamily: lang.font } },
           visibilityTime: 2000,
         });
       } else {
@@ -237,7 +237,7 @@ const BodyDetailsScreen = (props) => {
   };
 
   const renderItem = (items) => (
-    <BlurItemList {...{items, selectMeasureUnit}} />
+    <BlurItemList {...{ items, selectMeasureUnit }} />
   );
 
   const keyExtractor = (item, index) => `item-${index}-measureUnit`;
@@ -259,12 +259,12 @@ const BodyDetailsScreen = (props) => {
 
   useEffect(() => {
     if (flatListRef.current && eachData === 3) {
-      flatListRef.current.scrollToIndex({animated: true, index: 50});
+      flatListRef.current.scrollToIndex({ animated: true, index: 50 });
     }
   }, []);
 
   const getItemLayout = (data, index) => {
-    return {length: 40, offset: 40 * index, index};
+    return { length: 40, offset: 40 * index, index };
   };
 
   const onWeightSelected = useCallback(
@@ -281,12 +281,12 @@ const BodyDetailsScreen = (props) => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.titleContainer}>
         <Text
-          style={[styles.title2, {fontFamily: lang.titleFont}]}
+          style={[styles.title2, { fontFamily: lang.titleFont }]}
           allowFontScaling={false}>
           {lang.setYourPhicicalInfo}
         </Text>
       </View>
-      <View style={{alignItems: 'center', top: moderateScale(-25)}}>
+      <View style={{ alignItems: 'center', top: moderateScale(-25) }}>
         <View style={styles.subContainer}>
           <View
             style={{
@@ -295,10 +295,10 @@ const BodyDetailsScreen = (props) => {
               justifyContent: 'space-around',
               marginBottom: 50,
             }}>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Text
                 style={{
-                  fontFamily:lang.langName!=="english"?lang.font:lang.titleFont,
+                  fontFamily: lang.langName !== "english" ? lang.font : lang.titleFont,
                   fontSize: moderateScale(18),
                   color: defaultTheme.darkText,
                 }}>
@@ -317,10 +317,10 @@ const BodyDetailsScreen = (props) => {
                 selectedItemTextColor={defaultTheme.green}
               />
             </View>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Text
                 style={{
-                  fontFamily:lang.langName!=="english"?lang.font:lang.titleFont,
+                  fontFamily: lang.langName !== "english" ? lang.font : lang.titleFont,
                   fontSize: moderateScale(18),
                   color: defaultTheme.darkText,
                 }}>
@@ -370,7 +370,7 @@ const BodyDetailsScreen = (props) => {
         /> */}
         </View>
         <View
-          style={[styles.subContainer, {marginVertical: moderateScale(-10)}]}>
+          style={[styles.subContainer, { marginVertical: moderateScale(-10) }]}>
           {/* <CustomInput
           value={weight}
           keyboardType="decimal-pad"
@@ -402,13 +402,13 @@ const BodyDetailsScreen = (props) => {
 
         <View style={styles.subContainer2}>
           <Text
-            style={[styles.title, { fontFamily:lang.langName!=="english"?lang.font:lang.titleFont}]}
+            style={[styles.title, { fontFamily: lang.langName !== "english" ? lang.font : lang.titleFont }]}
             allowFontScaling={false}>
             {lang.birth}
           </Text>
 
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{fontFamily:lang.font,fontSize:moderateScale(16)}}>{lang.day}</Text>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16) }}>{lang.day}</Text>
             <CustomDropDown
               {...{
                 pressCustomDropDown,
@@ -418,8 +418,8 @@ const BodyDetailsScreen = (props) => {
               }}
             />
           </View>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{fontFamily:lang.font,fontSize:moderateScale(16)}}>{lang.month}</Text>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16) }}>{lang.month}</Text>
             <CustomDropDown
               {...{
                 pressCustomDropDown,
@@ -429,8 +429,8 @@ const BodyDetailsScreen = (props) => {
               }}
             />
           </View>
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{fontFamily:lang.font,fontSize:moderateScale(16)}}>{lang.year}</Text>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontFamily: lang.font, fontSize: moderateScale(16) }}>{lang.year}</Text>
             <CustomDropDown
               {...{
                 pressCustomDropDown,
@@ -449,15 +449,15 @@ const BodyDetailsScreen = (props) => {
         <View
           style={[
             styles.subContainer,
-            {paddingEnd: moderateScale(35), top: moderateScale(20)},
+            { paddingEnd: moderateScale(35), top: moderateScale(20) },
           ]}>
           <Image
             style={styles.image}
             source={require('../../../res/img/wrist.png')}
             resizeMode="contain"
           />
-          <View style={{alignItems: 'center'}}>
-            <Text style={{ fontFamily:lang.langName!=="english"?lang.font:lang.titleFont, fontSize: moderateScale(16),color:defaultTheme.darkText}}>
+          <View style={{ alignItems: 'center' }}>
+            <Text style={{ fontFamily: lang.langName !== "english" ? lang.font : lang.titleFont, fontSize: moderateScale(16), color: defaultTheme.darkText }}>
               {lang.wristCm}
             </Text>
             <CustomInput
@@ -479,7 +479,7 @@ const BodyDetailsScreen = (props) => {
                 fontSize: moderateScale(17),
                 padding: 0,
                 marginVertical: 2,
-                
+
               }}
               placeholder={`(${lang.optional})`}
               lang={lang}
@@ -512,7 +512,7 @@ const BodyDetailsScreen = (props) => {
               fontSize: moderateScale(13),
               marginHorizontal: 16,
               lineHeight: moderateScale(20),
-              textAlign:"left"
+              textAlign: "left"
             },
           ]}
           allowFontScaling={false}>
@@ -574,7 +574,7 @@ const BodyDetailsScreen = (props) => {
               initialScrollIndex={0}
               getItemLayout={getItemLayout}
               initialNumToRender={100}
-              
+
             />
           </View>
         </TouchableWithoutFeedback>
@@ -697,8 +697,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
-    borderWidth:0.5,
-    borderColor:defaultTheme.lightGray,
+    borderWidth: 0.5,
+    borderColor: defaultTheme.lightGray,
     elevation: 9,
     maxHeight: dimensions.WINDOW_HEIGTH * 0.7,
     minHeight: moderateScale(50),

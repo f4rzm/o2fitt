@@ -4,14 +4,16 @@ import { allMeasureUnits } from '../utils/measureUnits'
 import { dimensions } from '../constants/Dimensions'
 import { defaultTheme } from '../constants/theme'
 import { moderateScale } from 'react-native-size-matters'
+import { urls } from '../utils/urls'
+import { RestController } from '../classess/RestController'
 
-const FastingFoodRow = ({ foodDB, item, lang, selectedDate }) => {
+const FastingFoodRow = ({ foodDB, item, lang, selectedDate,auth }) => {
     const value = parseFloat(item.value)
     // const [measureunit, setMeasureunit] = useState(allMeasureUnits.filter((measure) => measure.id == item.measureUnitId))
     const [food, setFood] = useState({
         nutrientValue: [10],
     })
-    
+
     const measureunit = allMeasureUnits.filter((measure) => measure.id == item.measureUnitId)
     const foodValue = parseFloat(item.value)
 
@@ -20,9 +22,50 @@ const FastingFoodRow = ({ foodDB, item, lang, selectedDate }) => {
         DB.get(`${item.foodName}_${item.foodId}`)
             .then((records) => {
                 setFood(records)
+            }).catch(() => {
+                getFoodFromServer()
             })
 
     }, [item])
+    const getFoodFromServer = () => {
+        const url = urls.foodBaseUrl + urls.food + `?foodId=${item.foodId}`;
+        const header = {
+            headers: {
+                Authorization: 'Bearer ' + auth.access_token,
+                Language: lang.capitalName,
+            },
+        };
+
+        const params = {};
+        const RC = new RestController();
+        RC.checkPrerequisites(
+            'get',
+            url,
+            params,
+            header,
+            (res) => {
+                const fName = res.data.data.name[lang.langName]
+                foodDB
+                    .put({
+                        ...res.data.data,
+                        _id: fName + '_' + res.data.data.foodId,
+                        name: fName,
+                        foodName: fName,
+                    })
+                    .catch((e) => { });
+                    setFood({
+                        ...res.data.data,
+                        _id: fName + '_' + res.data.data.foodId,
+                        name: fName,
+                        foodName: fName,
+                    })
+            },
+            () => { },
+            auth,
+            () => { },
+            () => { },
+        );
+    }
 
     return (
         <View style={{ width: dimensions.WINDOW_WIDTH * 0.9, justifyContent: 'center', borderBottomWidth: 1, borderColor: defaultTheme.border, paddingVertical: moderateScale(5) }}>

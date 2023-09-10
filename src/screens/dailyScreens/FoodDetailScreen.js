@@ -507,7 +507,6 @@ const FoodDetailScreen = (props) => {
           name: unit[lang.langName],
           value: unit.value,
         })),
-
       });
     }
     else {

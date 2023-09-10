@@ -10,6 +10,7 @@ import { Toolbar } from '../../components'
 import AnimatedLottieView from 'lottie-react-native'
 
 const ChangeFastingModal = (props) => {
+    
     const lang = useSelector(state => state.lang)
     const allPacks = props.route.params.selectedPackageForChange
     const meal = props.route.params.meal

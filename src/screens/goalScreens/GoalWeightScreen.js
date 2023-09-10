@@ -57,7 +57,7 @@ const GoalWeightScreen = props => {
     const fastingDiet = useSelector(state => state.fastingDiet)
     const [optionalDialogVisible, setOptionalDialogVisible] = React.useState(false)
     const [showCaution, setCautionVisible] = React.useState(false)
-    const navigation=useNavigation()
+    const navigation = useNavigation()
     const pkExpireDate = moment(profile.pkExpireDate, "YYYY-MM-DDTHH:mm:ss")
     const today = moment()
     const hasCredit = pkExpireDate.diff(today, "seconds") > 0 ? true : false
@@ -172,7 +172,7 @@ const GoalWeightScreen = props => {
         }, Platform.OS === "ios" ? 500 : 50)
     }
 
-    
+
 
     const calCalorie = (specification, profile) => {
         const birthdayMoment = moment((profile.birthDate.split("/")).join("-"))
@@ -269,14 +269,14 @@ const GoalWeightScreen = props => {
 
         if (diet.isActive == true && diet.isBuy == true) {
             if (parseInt(moment(fastingDiet.startDate).format("YYYYMMDD")) <= parseInt(moment().format("YYYYMMDD"))
-              &&
-              (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)) {
-      
+                &&
+                (fastingDiet.endDate ? parseInt(moment(fastingDiet.endDate).format("YYYYMMDD")) >= parseInt(moment().format("YYYYMMDD")) : true)) {
+
                 props.navigation.navigate("FastingDietplan")
-            }else{
-              props.navigation.navigate("DietPlanScreen")
+            } else {
+                props.navigation.navigate("DietPlanScreen")
             }
-          } else if (diet.isActive == false && diet.isBuy == true) {
+        } else if (diet.isActive == false && diet.isBuy == true) {
             props.navigation.navigate("DietStartScreen")
         } else if (diet.isActive == true && diet.isBuy == false) {
             props.navigation.navigate("PackagesScreen")
@@ -299,7 +299,7 @@ const GoalWeightScreen = props => {
                                 data: new Array(7).fill(profile.targetWeight),
                                 color: (opacity = 1) => chartData[chartData.length - 1].weightSize == profile.targetWeight ? defaultTheme.green : defaultTheme.lightGray,
                                 strokeWidth: "3",
-                                withDots: true, 
+                                withDots: true,
                                 colors: (value, index) => console.error(value, index),
 
 
@@ -340,8 +340,8 @@ const GoalWeightScreen = props => {
                             },
                             style: { margin: 0, padding: 0 },
                             propsForVerticalLabels: { fontSize: moderateScale(11) },
-                            propsForDots:{
-                                r:"5"
+                            propsForDots: {
+                                r: "5"
                             }
                         }}
 
@@ -363,13 +363,13 @@ const GoalWeightScreen = props => {
                         segments={7}
                         withShadow={true}
                         getDotProps={(value, index, item) => {
-                            if(value==profile.targetWeight){
-                                return({
-                                    r:"0"
+                            if (value == profile.targetWeight) {
+                                return ({
+                                    r: "0"
                                 })
-                            }else{
-                                return({
-                                    r:"4",
+                            } else {
+                                return ({
+                                    r: "4",
                                 })
                             }
                         }}
@@ -381,12 +381,9 @@ const GoalWeightScreen = props => {
                     diet={diet}
                     dietNew={dietNew}
                     profile={profile}
-                    user={user}
-                    fastingDiet={fastingDiet}
-                    navigation={navigation}
                     specification={specification}
-                    
-                    
+                    fastingDiet={fastingDiet}
+                    navigation={props.navigation}
                 />
                 {/* <RowSpaceBetween style={styles.row}>
                     <ConfirmButton
@@ -551,7 +548,7 @@ const GoalWeightScreen = props => {
                     loop={true}
                 />
             }
-        <View style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(50) }} />
+            <View style={{ width: dimensions.WINDOW_WIDTH, height: moderateScale(50) }} />
 
         </View>
     );

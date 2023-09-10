@@ -87,7 +87,7 @@ const DietCategoryScreen = (props) => {
                     :
                     serverError ? (
                         <>
-                            <Text style={[{ fontFamily: lang.font }, styles.errorText]}>{lang.serverError}</Text>
+                            <Text style={[{ fontFamily: lang.font,lineHeight:moderateScale(25) }, styles.errorText]}>{lang.serverError}</Text>
                             <ConfirmButton
                                 title={"تلاش مجدد"}
                                 lang={lang}
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         backgroundColor: defaultTheme.transparent,
         borderColor: defaultTheme.primaryColor,
         borderWidth: 1,
-        marginTop: moderateScale(10)
+        marginTop: moderateScale(20)
     },
     errorText: {
         fontSize: moderateScale(16),

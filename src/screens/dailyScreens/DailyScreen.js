@@ -1332,7 +1332,7 @@ const DailyScreen = props => {
               image={require('../../../res/img/snack.png')}
               title={lang.snack}
               addPressed={addSnack}
-              data={meals.filter(item => item.foodMeal === 2)}
+              data={meals.filter(item => item.foodMeal === 2 || item.foodMeal === 4 || item.foodMeal === 5)}
               edit={editMeal}
               remove={item => {
                 setDeleteAction(item);
